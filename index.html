@@ -5,62 +5,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transit Meeting Point Finder</title>
     <style>
+        :root {
+            color-scheme: dark;
+            --bg: #020617;
+            --panel: #0f172a;
+            --panel-soft: #111b33;
+            --panel-muted: #1e293b;
+            --text: #e2e8f0;
+            --subtle-text: #94a3b8;
+            --accent: #38bdf8;
+            --accent-strong: #0ea5e9;
+            --border: rgba(148, 163, 184, 0.2);
+            --success: #22c55e;
+            --warning: #fbbf24;
+            --danger: #f87171;
+        }
+        * {
+            box-sizing: border-box;
+        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background: #f5f5f5;
+            background: radial-gradient(circle at top, #0f172a, var(--bg));
+            color: var(--text);
         }
         .container {
-            background: white;
+            background: var(--panel);
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 18px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--border);
         }
         h1 {
-            color: #2c3e50;
-            border-bottom: 3px solid #3498db;
+            color: var(--text);
+            border-bottom: 2px solid var(--accent);
             padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        p {
+            color: var(--subtle-text);
         }
         .upload-section {
             margin: 20px 0;
             padding: 20px;
-            background: #ecf0f1;
-            border-radius: 5px;
+            background: var(--panel-soft);
+            border-radius: 12px;
+            border: 1px solid var(--border);
         }
         .input-group {
             margin: 15px 0;
         }
         label {
             display: block;
-            font-weight: bold;
+            font-weight: 600;
             margin-bottom: 5px;
-            color: #34495e;
+            color: var(--text);
         }
         input[type="text"], input[type="time"] {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #bdc3c7;
-            border-radius: 5px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
             font-size: 14px;
+            background: var(--panel-muted);
+            color: var(--text);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input[type="text"]::placeholder {
+            color: var(--subtle-text);
+        }
+        input[type="text"]:focus, input[type="time"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.35);
         }
         button {
-            background: #3498db;
-            color: white;
+            background: linear-gradient(120deg, var(--accent-strong), var(--accent));
+            color: #0f172a;
+            font-weight: 600;
             padding: 12px 30px;
             border: none;
-            border-radius: 5px;
+            border-radius: 999px;
             font-size: 16px;
             cursor: pointer;
             margin: 10px 5px 10px 0;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
         button:hover {
-            background: #2980b9;
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.35);
         }
         button:disabled {
-            background: #95a5a6;
+            background: #475569;
+            color: #cbd5f5;
             cursor: not-allowed;
+            box-shadow: none;
         }
         #status {
             margin: 15px 0;
@@ -68,39 +109,44 @@
             border-radius: 5px;
         }
         .status-loading {
-            background: #fff3cd;
-            color: #856404;
+            background: rgba(251, 191, 36, 0.15);
+            color: #fcd34d;
+            border: 1px solid rgba(251, 191, 36, 0.4);
         }
         .status-success {
-            background: #d4edda;
-            color: #155724;
+            background: rgba(34, 197, 94, 0.15);
+            color: #86efac;
+            border: 1px solid rgba(34, 197, 94, 0.4);
         }
         .status-error {
-            background: #f8d7da;
-            color: #721c24;
+            background: rgba(248, 113, 113, 0.15);
+            color: #fecaca;
+            border: 1px solid rgba(248, 113, 113, 0.4);
         }
         #results {
             margin-top: 20px;
         }
         .result-header {
-            background: #2ecc71;
+            background: linear-gradient(120deg, #0f766e, #0ea5e9);
             color: white;
-            padding: 15px;
-            border-radius: 5px;
+            padding: 18px;
+            border-radius: 14px;
             margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .person-result {
-            background: #ecf0f1;
-            padding: 15px;
+            background: var(--panel-soft);
+            padding: 18px;
             margin: 10px 0;
-            border-radius: 5px;
-            border-left: 4px solid #3498db;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+            border: 1px solid var(--border);
         }
         .step {
-            margin: 5px 0;
-            padding: 8px;
-            background: white;
-            border-radius: 3px;
+            margin: 6px 0;
+            padding: 10px;
+            background: var(--panel-muted);
+            border-radius: 8px;
             font-size: 13px;
         }
         .file-input {
@@ -112,12 +158,13 @@
             color: #7f8c8d;
         }
         pre {
-            background: #2c3e50;
-            color: #ecf0f1;
+            background: #0f172a;
+            color: var(--text);
             padding: 15px;
-            border-radius: 5px;
+            border-radius: 8px;
             overflow-x: auto;
             font-size: 12px;
+            border: 1px solid var(--border);
         }
     </style>
 </head>
