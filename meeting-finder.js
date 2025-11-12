@@ -135,6 +135,16 @@ function sec2hm(sec) {
     return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 }
 
+function formatMinutes(seconds) {
+    const minutes = seconds / 60;
+    // Use a single decimal place for fractional minutes while keeping
+    // whole-minute values as integers to avoid misleading truncation.
+    if (Math.abs(minutes - Math.round(minutes)) < 1e-6) {
+        return `${Math.round(minutes)} min`;
+    }
+    return `${minutes.toFixed(1)} min`;
+}
+
 function haversineM(lat1, lon1, lat2, lon2) {
     const R = 6371000.0;
     const phi1 = lat1 * Math.PI / 180;
@@ -749,8 +759,8 @@ function displayResults(meeting, persons, startTimeStr) {
             <p><strong>Location:</strong> ${fmtStopLabel(stopId)}</p>
             <p><strong>Start Time:</strong> ${startTimeStr}</p>
             <p><strong>Meeting Time:</strong> ${sec2hm(meetTime)}</p>
-            <p><strong>Fairness:</strong> ${arrivals.map(a => `${a.label}: ${Math.floor(a.elapsed / 60)} min`).join(', ')} |
-               Max: ${Math.floor(maxElapsed / 60)} min | Diff: ${Math.floor((maxElapsed - minElapsed) / 60)} min</p>
+            <p><strong>Fairness:</strong> ${arrivals.map(a => `${a.label}: ${formatMinutes(a.elapsed)}`).join(', ')} |
+               Max: ${formatMinutes(maxElapsed)} | Diff: ${formatMinutes(maxElapsed - minElapsed)}</p>
         </div>
     `;
 
