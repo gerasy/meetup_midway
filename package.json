@@ -1,0 +1,13 @@
+{
+  "name": "meetup_midway",
+  "version": "1.0.0",
+  "description": "A web-based tool to find optimal meeting points for multiple people using public transit data (GTFS format).",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
