@@ -22,6 +22,11 @@ let parsedData = {
     grid: new Map()
 };
 
+let isDataProcessed = false;
+let stationLookupList = [];
+let stationSearchInitialized = false;
+
+const MAX_STATION_SUGGESTIONS = 25;
 const WALK_SPEED_MPS = 1.3;
 const MAX_WALK_TIME_S = 10 * 60;
 const MAX_WALK_RADIUS_M = WALK_SPEED_MPS * MAX_WALK_TIME_S;
@@ -65,7 +70,8 @@ async function loadGTFSFiles() {
             }
         }
 
-        setStatus('GTFS files loaded successfully! Ready to find meeting points.', 'success');
+        setStatus('GTFS files loaded. Processing data...', 'loading');
+        processGTFSData();
         document.getElementById('findMeeting').disabled = false;
     } catch (error) {
         setStatus('Error loading GTFS files: ' + error.message, 'error');
@@ -144,6 +150,10 @@ function cellFor(lat, lon) {
 }
 
 function processGTFSData() {
+    if (isDataProcessed) {
+        return;
+    }
+
     setStatus('Processing GTFS data...', 'loading');
 
     // Build stop lookup
@@ -276,7 +286,64 @@ function processGTFSData() {
         }
     });
 
+    stationLookupList = Array.from(parsedData.stationToName.entries()).map(([stationId, name]) => ({
+        stationId,
+        name,
+        lowerName: name.toLowerCase()
+    })).sort((a, b) => a.name.localeCompare(b.name));
+
+    isDataProcessed = true;
+    initializeStationSearchInputs();
     setStatus('GTFS data processed successfully!', 'success');
+}
+
+function initializeStationSearchInputs() {
+    if (stationSearchInitialized) {
+        return;
+    }
+
+    const inputs = document.querySelectorAll('input[data-station-input]');
+    if (inputs.length === 0) {
+        return;
+    }
+
+    const updateSuggestions = (input, datalist) => {
+        const query = input.value.trim().toLowerCase();
+        let matches;
+
+        if (!query) {
+            matches = stationLookupList.slice(0, MAX_STATION_SUGGESTIONS);
+        } else {
+            matches = stationLookupList
+                .filter(item => item.lowerName.includes(query))
+                .slice(0, MAX_STATION_SUGGESTIONS);
+        }
+
+        datalist.innerHTML = '';
+        matches.forEach(({ name }) => {
+            const option = document.createElement('option');
+            option.value = name;
+            datalist.appendChild(option);
+        });
+    };
+
+    inputs.forEach(input => {
+        const listId = input.getAttribute('list');
+        if (!listId) {
+            return;
+        }
+        const datalist = document.getElementById(listId);
+        if (!datalist) {
+            return;
+        }
+
+        const handler = () => updateSuggestions(input, datalist);
+        input.addEventListener('input', handler);
+        input.addEventListener('focus', handler);
+        handler();
+    });
+
+    stationSearchInitialized = true;
 }
 
 function resolveStation(query) {
@@ -530,7 +597,6 @@ function findMeetingPoint() {
             return;
         }
 
-        setStatus('Processing GTFS data...', 'loading');
         processGTFSData();
 
         const startTimeStr = document.getElementById('startTime').value + ':00';
