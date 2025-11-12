@@ -1,0 +1,635 @@
+stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,location_type,parent_station,wheelchair_boarding,platform_code,zone_id,level_id
+de:11000:900007104::2,5,S Nordbahnhof (Berlin),Tram u. Bussteig Invalidenstraße ht. Gartenstraße,52.531683000000,13.388813000000,0,,0,,5555 S Nordbahnhof (Berlin),4
+de:11000:900120005:1:50,,S Ostbahnhof (Berlin),Bahnsteig Gleis 1,52.510244000000,13.434586000000,0,de:11000:900120005,0,1,5555 S Ostbahnhof (Berlin),107
+de:11000:900120005:2:51,,S Ostbahnhof (Berlin),Bahnsteig Gleis 2,52.510179000000,13.434942000000,0,de:11000:900120005,0,2,5555 S Ostbahnhof (Berlin),107
+de:11000:900120005:2:52,,S Ostbahnhof (Berlin),Bahnsteig Gleis 3,52.510253000000,13.435024000000,0,de:11000:900120005,0,3,5555 S Ostbahnhof (Berlin),107
+de:11000:900120005:3:53,,S Ostbahnhof (Berlin),Bahnsteig Gleis 6,52.510413000000,13.435172000000,0,de:11000:900120005,0,6,5555 S Ostbahnhof (Berlin),107
+de:11000:900120005:3:54,,S Ostbahnhof (Berlin),Bahnsteig Gleis 7,52.510474000000,13.435240000000,0,de:11000:900120005,0,7,5555 S Ostbahnhof (Berlin),107
+de:11000:900100003:1:50,,S+U Alexanderplatz Bhf (Berlin),Bahnsteig Gleis 1,52.521450000000,13.411009000000,0,de:11000:900100003,0,1,5555 S+U Alexanderplatz Bhf (Berlin),15
+de:11000:900100001:1:50,,S+U Friedrichstr. Bhf (Berlin),Bahnsteig Gleis 1,52.520125000000,13.386598000000,0,de:11000:900100001,0,1,5555 S+U Friedrichstr. Bhf (Berlin),23
+de:11000:900100001:2:52,,S+U Friedrichstr. Bhf (Berlin),Bahnsteig Gleis 3,52.520274000000,13.386683000000,0,de:11000:900100001,0,3,5555 S+U Friedrichstr. Bhf (Berlin),23
+de:11000:900100001:2:53,,S+U Friedrichstr. Bhf (Berlin),Bahnsteig Gleis 4,52.520362000000,13.386730000000,0,de:11000:900100001,0,4,5555 S+U Friedrichstr. Bhf (Berlin),23
+de:11000:900003201:3:54,,S+U Berlin Hauptbahnhof,S-Bahnsteig Gleis 15,52.525147000000,13.369354000000,0,de:11000:900003201,0,15,5555 S+U Berlin Hauptbahnhof,1
+de:11000:900003201:3:55,,S+U Berlin Hauptbahnhof,S-Bahnsteig Gleis 16,52.525261000000,13.369313000000,0,de:11000:900003201,0,16,5555 S+U Berlin Hauptbahnhof,1
+de:11000:900100001:3:54,,S+U Friedrichstr. Bhf (Berlin),S-Bahnsteig Gleis 5,52.520364000000,13.387160000000,0,de:11000:900100001,0,,5555 S+U Friedrichstr. Bhf (Berlin),23
+de:11000:900100001:3:55,,S+U Friedrichstr. Bhf (Berlin),S-Bahnsteig Gleis 6,52.520458000000,13.387211000000,0,de:11000:900100001,0,,5555 S+U Friedrichstr. Bhf (Berlin),23
+de:11000:900100002:1:50,,S Hackescher Markt (Berlin),S-Bahnsteig Gleis 3,52.522663000000,13.402462000000,0,de:11000:900100002,0,,5555 S Hackescher Markt (Berlin),5
+de:11000:900100002:1:51,,S Hackescher Markt (Berlin),S-Bahnsteig Gleis 4,52.522726000000,13.402430000000,0,de:11000:900100002,0,,5555 S Hackescher Markt (Berlin),5
+de:11000:900100003:2:52,,S+U Alexanderplatz Bhf (Berlin),S-Bahnsteig Gleis 3,52.521520000000,13.411226000000,0,de:11000:900100003,0,,5555 S+U Alexanderplatz Bhf (Berlin),15
+de:11000:900100003:2:53,,S+U Alexanderplatz Bhf (Berlin),S-Bahnsteig Gleis 4,52.521589000000,13.411357000000,0,de:11000:900100003,0,,5555 S+U Alexanderplatz Bhf (Berlin),15
+de:11000:900100004:1:50,,S+U Jannowitzbrücke (Berlin),S-Bahnsteig Gleis 3,52.514193000000,13.419471000000,0,de:11000:900100004,0,,5555 S+U Jannowitzbrücke (Berlin),93
+de:11000:900100004:1:51,,S+U Jannowitzbrücke (Berlin),S-Bahnsteig Gleis 4,52.514250000000,13.419526000000,0,de:11000:900100004,0,,5555 S+U Jannowitzbrücke (Berlin),93
+de:11000:900110002:1:50,,S Prenzlauer Allee (Berlin),S-Bahnsteig Gleis 1,52.544757000000,13.425865000000,0,de:11000:900110002,0,1,5555 S Prenzlauer Allee (Berlin),127
+de:11000:900110002:1:51,,S Prenzlauer Allee (Berlin),S-Bahnsteig Gleis 2,52.544860000000,13.425975000000,0,de:11000:900110002,0,2,5555 S Prenzlauer Allee (Berlin),127
+de:11000:900120005:4:55,,S Ostbahnhof (Berlin),S-Bahnsteig Gleis 8,52.510515000000,13.435336000000,0,de:11000:900120005,0,8,5555 S Ostbahnhof (Berlin),107
+de:11000:900120005:4:56,,S Ostbahnhof (Berlin),S-Bahnsteig Gleis 9,52.510594000000,13.435426000000,0,de:11000:900120005,0,9,5555 S Ostbahnhof (Berlin),107
+de:11000:900120005:5:57,,S Ostbahnhof (Berlin),S-Bahnsteig Gleis 10,52.510646000000,13.435474000000,0,de:11000:900120005,0,10,5555 S Ostbahnhof (Berlin),107
+de:11000:900120005:5:58,,S Ostbahnhof (Berlin),S-Bahnsteig Gleis 11,52.510717000000,13.435552000000,0,de:11000:900120005,0,11,5555 S Ostbahnhof (Berlin),107
+de:11000:900012101::1,,S Anhalter Bahnhof (Berlin),Bushalt Schöneberger Straße vor Stresemannstraße,52.504341000000,13.382057000000,0,,0,,5555 S Anhalter Bahnhof (Berlin),9
+de:11000:900100020::1,8,S+U Potsdamer Platz Bhf (Berlin),Bushalt Stresemannstr. ht. Potsdamer Platz Pos. 8,52.508307000000,13.377322000000,0,,0,,5555 S+U Potsdamer Platz Bhf (Berlin),9
+de:11000:900100001::6,,S+U Friedrichstr. Bhf (Berlin),Bushalt Friedrichstraße ht. Georgenstraße,52.520531000000,13.388330000000,0,,0,,5555 S+U Friedrichstr. Bhf (Berlin),4
+de:11000:900003201:1:51,,S+U Berlin Hauptbahnhof,Bahnsteig Gleis 12,52.524881000000,13.369627000000,0,de:11000:900003201,0,12,5555 S+U Berlin Hauptbahnhof,1
+de:11000:900003201:1:50,,S+U Berlin Hauptbahnhof,Bahnsteig Gleis 11,52.524789000000,13.369667000000,0,de:11000:900003201,0,11,5555 S+U Berlin Hauptbahnhof,1
+de:11000:900003201:2:52,,S+U Berlin Hauptbahnhof,Bahnsteig Gleis 13,52.524969000000,13.369527000000,0,de:11000:900003201,0,13,5555 S+U Berlin Hauptbahnhof,1
+de:11000:900003201:2:53,,S+U Berlin Hauptbahnhof,Bahnsteig Gleis 14,52.525070000000,13.369501000000,0,de:11000:900003201,0,14,5555 S+U Berlin Hauptbahnhof,1
+de:11000:900003200:2:52,,S+U Berlin Hauptbahnhof,Bahnsteig Gleis 3,52.525060000000,13.369167000000,0,de:11000:900003201,0,3,5555 S+U Berlin Hauptbahnhof,3
+de:11000:900003200:2:53,,S+U Berlin Hauptbahnhof,Bahnsteig Gleis 4,52.525096000000,13.369321000000,0,de:11000:900003201,0,4,5555 S+U Berlin Hauptbahnhof,3
+de:11000:900003200:3:54,,S+U Berlin Hauptbahnhof,Bahnsteig Gleis 5,52.525109000000,13.369472000000,0,de:11000:900003201,0,5,5555 S+U Berlin Hauptbahnhof,3
+de:11000:900003200:3:55,,S+U Berlin Hauptbahnhof,Bahnsteig Gleis 6,52.525142000000,13.369612000000,0,de:11000:900003201,0,6,5555 S+U Berlin Hauptbahnhof,3
+de:11000:900003200:4:56,,S+U Berlin Hauptbahnhof,Bahnsteig Gleis 7,52.525189000000,13.369752000000,0,de:11000:900003201,0,7,5555 S+U Berlin Hauptbahnhof,3
+de:11000:900012101:1:51,,S Anhalter Bahnhof (Berlin),S-Bahnsteig Gleis 2,52.503564000000,13.381396000000,0,de:11000:900012101,0,2,5555 S Anhalter Bahnhof (Berlin),68
+de:11000:900012101:2:52,,S Anhalter Bahnhof (Berlin),S-Bahnsteig Gleis 3,52.503542000000,13.381498000000,0,de:11000:900012101,0,3,5555 S Anhalter Bahnhof (Berlin),68
+de:11000:900012101:2:53,,S Anhalter Bahnhof (Berlin),S-Bahnsteig Gleis 4,52.503514000000,13.381617000000,0,de:11000:900012101,0,4,5555 S Anhalter Bahnhof (Berlin),68
+de:11000:900100020:3:54,,S+U Potsdamer Platz Bhf (Berlin),S-Bahnsteig Gleis 11,52.509605000000,13.376454000000,0,de:11000:900100020,0,,5555 S+U Potsdamer Platz Bhf (Berlin),19
+de:11000:900100020:3:55,,S+U Potsdamer Platz Bhf (Berlin),S-Bahnsteig Gleis 12,52.509605000000,13.376579000000,0,de:11000:900100020,0,,5555 S+U Potsdamer Platz Bhf (Berlin),19
+de:11000:900100020:4:56,,S+U Potsdamer Platz Bhf (Berlin),S-Bahnsteig Gleis 13,52.509638000000,13.376708000000,0,de:11000:900100020,0,,5555 S+U Potsdamer Platz Bhf (Berlin),19
+de:11000:900100020:4:57,,S+U Potsdamer Platz Bhf (Berlin),S-Bahnsteig Gleis 14,52.509635000000,13.376837000000,0,de:11000:900100020,0,,5555 S+U Potsdamer Platz Bhf (Berlin),19
+de:11000:900007104:1:50,,S Nordbahnhof (Berlin),S-Bahnsteig Gleis 1,52.532334000000,13.387507000000,0,de:11000:900007104,0,,5555 S Nordbahnhof (Berlin),3
+de:11000:900007104:2:52,,S Nordbahnhof (Berlin),S-Bahnsteig Gleis 3,52.532421000000,13.387655000000,0,de:11000:900007104,0,,5555 S Nordbahnhof (Berlin),3
+de:11000:900100001:4:56,,S+U Friedrichstr. Bhf (Berlin),S-Bahnsteig Gleis 11,52.520479000000,13.386234000000,0,de:11000:900100001,0,,5555 S+U Friedrichstr. Bhf (Berlin),22
+de:11000:900100001:4:57,,S+U Friedrichstr. Bhf (Berlin),S-Bahnsteig Gleis 12,52.520424000000,13.386350000000,0,de:11000:900100001,0,,5555 S+U Friedrichstr. Bhf (Berlin),22
+de:11000:900100007:1:50,,S Oranienburger Str. (Berlin),S-Bahnsteig Gleis 1,52.525287000000,13.392985000000,0,de:11000:900100007,0,,5555 S Oranienburger Str. (Berlin),68
+de:11000:900100007:1:51,,S Oranienburger Str. (Berlin),S-Bahnsteig Gleis 2,52.525264000000,13.393093000000,0,de:11000:900100007,0,,5555 S Oranienburger Str. (Berlin),68
+de:11000:900100025:1:51,,S+U Brandenburger Tor (Berlin),S-Bahnsteig Gleis 2,52.516351000000,13.381690000000,0,de:11000:900100025,0,2,5555 S+U Brandenburger Tor (Berlin),135
+de:11000:900100025:1:50,,S+U Brandenburger Tor (Berlin),S-Bahnsteig Gleis 1,52.516483000000,13.381658000000,0,de:11000:900100025,0,1,5555 S+U Brandenburger Tor (Berlin),135
+de:11000:900100003:1:51,,S+U Alexanderplatz Bhf (Berlin),Bahnsteig Gleis 2,52.521510000000,13.411127000000,0,de:11000:900100003,0,2,5555 S+U Alexanderplatz Bhf (Berlin),15
+de:11000:900110003:1:50,,S Greifswalder Str. (Berlin),S-Bahnsteig Gleis 1,52.540109000000,13.439108000000,0,de:11000:900110003,0,1,5555 S Greifswalder Str. (Berlin),107
+de:11000:900110003:1:51,,S Greifswalder Str. (Berlin),S-Bahnsteig Gleis 2,52.540212000000,13.439227000000,0,de:11000:900110003,0,2,5555 S Greifswalder Str. (Berlin),107
+de:11000:900110004:1:50,,S Landsberger Allee (Berlin),S-Bahnsteig Gleis 1,52.529316000000,13.454840000000,0,de:11000:900110004,0,1,5555 S Landsberger Allee (Berlin),49
+de:11000:900110004:1:51,,S Landsberger Allee (Berlin),S-Bahnsteig Gleis 2,52.529386000000,13.454998000000,0,de:11000:900110004,0,2,5555 S Landsberger Allee (Berlin),49
+de:11000:900100022::1,4,S Potsdamer Platz Bhf/Voßstr. (Berlin),Bushalt Ebertstraße ht. Potsdamer Platz Pos. 4,52.510168000000,13.376763000000,0,,0,,5555 S Potsdamer Platz Bhf/Voßstr. (Berlin),4
+de:11000:900100543::1,,Behrenstr./Wilhelmstr. (Berlin),Bushalt Wilhelmstraße hinter Behrenstraße,52.514806000000,13.381608000000,0,,0,,5555 Behrenstr./Wilhelmstr. (Berlin),4
+de:11000:900003205::4,11,S+U Hauptbahnhof/Washingtonplatz (Berlin),Bushalt R.-Hirsch-Str. ht. Fr.-List-Ufer,52.523340000000,13.370221000000,0,,0,,5555 S+U Hauptbahnhof/Washingtonplatz (Berlin),4
+de:11000:900120010::1,,S Ostbahnhof/Erich-Steinfurth-Str. (Berlin),Bushaltestelle Straße der Pariser Kommune hinter An der Ostbahn,52.510746000000,13.437419000000,0,,0,,5555 S Ostbahnhof/Erich-Steinfurth-Str. (Berlin),4
+de:11000:900100031::3,2,S+U Alexanderplatz Bhf/Memhardstr. (Berlin),Bushalt Karl-Liebknecht-S. vor Dircksenstr. Pos. 2,52.522941000000,13.410162000000,0,,0,,5555 S+U Alexanderplatz Bhf/Memhardstr. (Berlin),4
+de:11000:900100004::9,,S+U Jannowitzbrücke (Berlin),Bushalt Stralauer Straße ht. Alexanderstraße,52.515792000000,13.417591000000,0,,0,,5555 S+U Jannowitzbrücke (Berlin),4
+de:11000:900100519::1,,Holzmarktstr. (Berlin),Bushalt Holzmarktstraße vor An der Michaelbrücke,52.513525000000,13.423650000000,0,,0,,5555 Holzmarktstr. (Berlin),4
+de:11000:900007110::5,,U Bernauer Str. (Berlin),Bushalt Brunnenstraße ht. Bernauer Straße,52.538805000000,13.395740000000,0,,0,,5555 U Bernauer Str. (Berlin),4
+de:11000:900100510::3,,Tucholskystr. (Berlin),Bushalt Torstraße vor Kleine Hamburger Straße,52.528337000000,13.393101000000,0,,0,,5555 Tucholskystr. (Berlin),4
+de:11000:900004105::1,,Platz der Republik (Berlin),Bushalt John-Forster-Dulles-Allee vor Yitzhak-Rab-,52.517633000000,13.369755000000,0,,0,,5555 Platz der Republik (Berlin),4
+de:11000:900014103::1,,Adalbertstr./Oranienstr. (Berlin),Bushaltestelle Oranienstraße vor Adalbertstraße,52.501343000000,13.418956000000,0,,0,,5555 Adalbertstr./Oranienstr. (Berlin),4
+de:11000:900013104::1,,Prinzenstr./Ritterstr. (Berlin),Bushaltestelle Ritterstraße hinter Prinzenstraße,52.501587000000,13.409712000000,0,,0,,5555 Prinzenstr./Ritterstr. (Berlin),4
+de:11000:900007103::3,,U Voltastr. (Berlin),Bushalt Usedomer Straße vor Brunnenstraße,52.540884000000,13.393122000000,0,,0,,5555 U Voltastr. (Berlin),4
+de:11000:900012151::1,,Willy-Brandt-Haus (Berlin),Bushalt Stresemannstraße ht. Großbeerenstraße,52.500388000000,13.387306000000,0,,0,,5555 Willy-Brandt-Haus (Berlin),4
+de:11000:900012151::2,,Willy-Brandt-Haus (Berlin),Bushalt Stresemannstraße vor Großbeerenstraße,52.500923000000,13.387004000000,0,,0,,5555 Willy-Brandt-Haus (Berlin),4
+de:11000:900012101::2,,S Anhalter Bahnhof (Berlin),Bushalt Stresemannstraße hinter Anhalter Straße,52.504839000000,13.382061000000,0,,0,,5555 S Anhalter Bahnhof (Berlin),9
+de:11000:900013103::3,,U Prinzenstr. (Berlin),Bushalt Prinzenstraße ht. Gitschiner Straße,52.498712000000,13.406950000000,0,,0,,5555 U Prinzenstr. (Berlin),4
+de:11000:900013102::12,,U Kottbusser Tor (Berlin) [Reichenberger Str.],Bushalt Reichenberger Straße vor Skalitzer Straße,52.499431000000,13.416983000000,0,,0,,5555 U Kottbusser Tor (Berlin) [Reichenberger Str.],4
+de:11000:900014103::2,,Adalbertstr./Oranienstr. (Berlin),Bushaltestelle Adalbertstraße hinter Oranienstraße,52.501525000000,13.419507000000,0,,0,,5555 Adalbertstr./Oranienstr. (Berlin),4
+de:11000:900014151::1,,Waldemarstr./Adalbertstr. (Berlin),Bushalt Waldemarstraße ht. Adalbertstraße,52.503083000000,13.421114000000,0,,0,,5555 Waldemarstr./Adalbertstr. (Berlin),4
+de:11000:900014152::1,,Mariannenplatz (Berlin),Bushalt Waldemarstraße ggü. Mariannenplatz,52.502146000000,13.424464000000,0,,0,,5555 Mariannenplatz (Berlin),4
+de:11000:900014105::1,,Waldemarstr./Audre-Lorde-Str. (Berlin),Bushalt Waldemarstraße vor Audre-Lorde-Straße,52.501244000000,13.427802000000,0,,0,,5555 Waldemarstr./Audre-Lorde-Str. (Berlin),4
+de:11000:900014153::1,,Wrangelstr. (Berlin),Bushalt Manteuffelstraße vor Wrangelstraße,52.503335000000,13.429922000000,0,,0,,5555 Wrangelstr. (Berlin),4
+de:11000:900014104::1,,Audre-Lorde-Str. (Berlin),Bushalt Audre-Lorde-Str. vor Köpenicker Str.,52.505526000000,13.431805000000,0,,0,,5555 Audre-Lorde-Str. (Berlin),4
+de:11000:900014154::1,,Eisenbahnstr. (Berlin),Bushalt Köpenicker Straße vor Eisenbahnstraße,52.504562000000,13.434544000000,0,,0,,5555 Eisenbahnstr. (Berlin),4
+de:11000:900014102::3,,U Schlesisches Tor (Berlin),Bushalt Köpenicker Straße vor Skalitzer Straße,52.501345000000,13.441386000000,0,,0,,5555 U Schlesisches Tor (Berlin),9
+de:11000:900014102::4,,U Schlesisches Tor (Berlin),Bushalt Köpenicker Straße hinter Oberbaumstraße,52.501506000000,13.441297000000,0,,0,,5555 U Schlesisches Tor (Berlin),9
+de:11000:900014154::2,,Eisenbahnstr. (Berlin),Bushalt Köpenicker Straße vor Brommystraße,52.504389000000,13.435298000000,0,,0,,5555 Eisenbahnstr. (Berlin),4
+de:11000:900014104::2,,Audre-Lorde-Str. (Berlin),Bushalt Audre-Lorde-Str. hinter Köpenicker Str.,52.505547000000,13.431772000000,0,,0,,5555 Audre-Lorde-Str. (Berlin),4
+de:11000:900014153::2,,Wrangelstr. (Berlin),Bushalt Manteuffelstraße vor Wrangelstraße,52.503666000000,13.430095000000,0,,0,,5555 Wrangelstr. (Berlin),4
+de:11000:900014105::2,,Waldemarstr./Audre-Lorde-Str. (Berlin),Bushalt Waldemarstraße ht. Audre-Lorde-Straße,52.501328000000,13.427727000000,0,,0,,5555 Waldemarstr./Audre-Lorde-Str. (Berlin),4
+de:11000:900014152::2,,Mariannenplatz (Berlin),Bushalt Waldemarstraße am Mariannenplatz,52.502268000000,13.424355000000,0,,0,,5555 Mariannenplatz (Berlin),4
+de:11000:900014151::2,,Waldemarstr./Adalbertstr. (Berlin),Bushalt Waldemarstraße vor Adalbertstraße,52.503195000000,13.420947000000,0,,0,,5555 Waldemarstr./Adalbertstr. (Berlin),4
+de:11000:900014103::3,,Adalbertstr./Oranienstr. (Berlin),Bushaltestelle Adalbertstraße hinter Oranienstraße,52.501062000000,13.419094000000,0,,0,,5555 Adalbertstr./Oranienstr. (Berlin),4
+de:11000:900013104::2,,Prinzenstr./Ritterstr. (Berlin),Bushaltestelle Prinzenstraße hinter Ritterstraße,52.501463000000,13.408944000000,0,,0,,5555 Prinzenstr./Ritterstr. (Berlin),4
+de:11000:900013103::4,,U Prinzenstr. (Berlin),Bushalt Prinzenstraße vor Gitschiner Straße,52.498727000000,13.406758000000,0,,0,,5555 U Prinzenstr. (Berlin),4
+de:11000:900013151::1,,Segitzdamm (Berlin),Bushalt Ritterstraße vor Erkelenzdamm,52.500194000000,13.414369000000,0,,0,,5555 Segitzdamm (Berlin),4
+de:11000:900013151::2,,Segitzdamm (Berlin),Bushalt Ritterstraße vor Segitzdamm,52.500298000000,13.414179000000,0,,0,,5555 Segitzdamm (Berlin),4
+de:11000:900007170::2,,U Bernauer Str./Schönholzer Str. (Berlin),Bushalt Schönholzer Straße vor Brunnenstraße,52.537907000000,13.397459000000,0,,0,,5555 U Bernauer Str./Schönholzer Str. (Berlin),4
+de:11000:900014103::4,,Adalbertstr./Oranienstr. (Berlin),Bushaltestelle Oranienstraße hinter Adalbertstraße,52.501424000000,13.418944000000,0,,0,,5555 Adalbertstr./Oranienstr. (Berlin),4
+de:11000:900013172::1,,U Kottbusser Tor (Berlin),Bushalt Adalbertstraße vor Reichenberger Straße,52.499858000000,13.418168000000,0,,0,,5555 U Kottbusser Tor (Berlin),4
+de:11000:900014102::5,,U Schlesisches Tor (Berlin),Bushalt Skalitzer Straße hinter Köpenicker Straße,52.501132000000,13.441356000000,0,,0,,5555 U Schlesisches Tor (Berlin),9
+de:11000:900007170::1,,U Bernauer Str./Schönholzer Str. (Berlin),Bushalt Schönholzer Staße vor Brunnenstraße,52.537849000000,13.397253000000,0,,0,,5555 U Bernauer Str./Schönholzer Str. (Berlin),4
+de:11000:900007112::1,,Gartenplatz (Berlin),Bushalt Ackerstraße vor Feldstraße,52.538167000000,13.384738000000,0,,0,,5555 Gartenplatz (Berlin),4
+de:11000:900005208::1,1,Varian-Fry-Str./Potsdamer Platz (Berlin),Bushalt Potsdamer Str. ht. Varian-Fry-Str. Pos. 1,52.509231000000,13.374744000000,0,,0,,5555 Varian-Fry-Str./Potsdamer Platz (Berlin),4
+de:11000:900012156::1,,Alexandrinenstr. (Berlin),Bushalt Oranienstraße vor Alexandrinenstraße,52.504996000000,13.406117000000,0,,0,,5555 Alexandrinenstr. (Berlin),4
+de:11000:900016103::1,,Zossener Brücke (Berlin),Bushalt Gitschiner Straße hinter Lindenstraße,52.498325000000,13.395319000000,0,,0,,5555 Zossener Brücke (Berlin),4
+de:11000:900005208::2,2,Varian-Fry-Str./Potsdamer Platz (Berlin),Bushalt Potsdamer Str. ht. Potsdamer Pl. Pos. 2,52.509447000000,13.373993000000,0,,0,,5555 Varian-Fry-Str./Potsdamer Platz (Berlin),4
+de:11000:900012155::1,,Waldeckpark (Berlin),Bushalt Oranienstraße ht. Alte Jakobstraße,52.505890000000,13.402327000000,0,,0,,5555 Waldeckpark (Berlin),4
+de:11000:900013152::1,,Oranienplatz (Berlin),Bushalt Oranienstraße vor Dresdner Straße,52.502234000000,13.415309000000,0,,0,,5555 Oranienplatz (Berlin),4
+de:11000:900016255::1,,Kottbusser Brücke (Berlin),Bushalt Kottbusser Straße vor Kohlfurter Straße,52.496758000000,13.419382000000,0,,0,,5555 Kottbusser Brücke (Berlin),4
+de:11000:900016255::2,,Kottbusser Brücke (Berlin),Bushalt Kottbusser Damm vor Maybachufer,52.495448000000,13.420749000000,0,,0,,5555 Kottbusser Brücke (Berlin),4
+de:11000:900013172::2,,U Kottbusser Tor (Berlin),Bushalt Adalbertstraße ht. Reichenberger Straße,52.499885000000,13.418385000000,0,,0,,5555 U Kottbusser Tor (Berlin),4
+de:11000:900007154::1,,Demminer Str. (Berlin),Bushalt Graunstraße vor Demminer Straße,52.542942000000,13.399336000000,0,,0,,5555 Demminer Str. (Berlin),4
+de:11000:900013101::3,,U Moritzplatz (Berlin),Bushalt Prinzenstraße vor Moritzplatz,52.504241000000,13.411075000000,0,,0,,5555 U Moritzplatz (Berlin),9
+de:11000:900007181::1,,Usedomer Str. (Berlin),Bushalt Usedomer Straße hinter Jasmunder Straße,52.539667000000,13.388895000000,0,,0,,5555 Usedomer Str. (Berlin),4
+de:11000:900007181::2,,Usedomer Str. (Berlin),Bushalt Usedomer Straße hinter Wattstraße,52.540036000000,13.389643000000,0,,0,,5555 Usedomer Str. (Berlin),4
+de:11000:900007105::1,,"Berlin, Wolliner Str.",Bushaltestelle Wolliner Straße vor Bernauer Straße,52.540068000000,13.401312000000,0,,0,,"5555 Berlin, Wolliner Str.",4
+de:11000:900013152::2,,Oranienplatz (Berlin),Bushalt Oranienstraße vor Oranienplatz,52.502464000000,13.415532000000,0,,0,,5555 Oranienplatz (Berlin),4
+de:11000:900013101::4,,U Moritzplatz (Berlin),Bushalt Prinzenstraße ht. Moritzplatz,52.504157000000,13.411243000000,0,,0,,5555 U Moritzplatz (Berlin),9
+de:11000:900012155::2,,Waldeckpark (Berlin),Bushalt Oranienstraße vor Alte Jakobstraße,52.506091000000,13.402096000000,0,,0,,5555 Waldeckpark (Berlin),4
+de:11000:900007103::4,,U Voltastr. (Berlin),Bushalt Brunnenstraße vor Lortzingstraße,52.542343000000,13.393028000000,0,,0,,5555 U Voltastr. (Berlin),4
+de:11000:900013101::5,,U Moritzplatz (Berlin),Bushalt Oranienstraße vor Stallschreiberstraße,52.503950000000,13.409927000000,0,,0,,5555 U Moritzplatz (Berlin),9
+de:11000:900014103::5,,Adalbertstr./Oranienstr. (Berlin),Bushaltestelle Oranienstraße hinter Adalbertstraße,52.501154000000,13.419671000000,0,,0,,5555 Adalbertstr./Oranienstr. (Berlin),4
+de:11000:900014156::1,,Rio-Reiser-Platz (Berlin),Bushalt Oranienstraße vor Heinrichplatz,52.500378000000,13.422443000000,0,,0,,5555 Rio-Reiser-Platz (Berlin),4
+de:11000:900014101::3,,U Görlitzer Bahnhof (Berlin),Bushalt Wiener Straße ht. Skalitzer Straße,52.498922000000,13.427273000000,0,,0,,5555 U Görlitzer Bahnhof (Berlin),4
+de:11000:900015152::1,,Spreewaldplatz (Berlin),Bushalt Wiener Straße vor Ohlauer Straße,52.497428000000,13.431699000000,0,,0,,5555 Spreewaldplatz (Berlin),4
+de:11000:900014101::4,,U Görlitzer Bahnhof (Berlin),Bushalt Wiener Straße vor Skalitzer Straße,52.498904000000,13.427978000000,0,,0,,5555 U Görlitzer Bahnhof (Berlin),4
+de:11000:900014156::2,,Rio-Reiser-Platz (Berlin),Bushalt Oranienstraße hinter Mariannenstraße,52.500477000000,13.422334000000,0,,0,,5555 Rio-Reiser-Platz (Berlin),4
+de:11000:900012102::3,,U Kochstr./Checkpoint Charlie (Berlin),Bushalt Kochstraße ht. Friedrichstraße,52.506737000000,13.390016000000,0,,0,,5555 U Kochstr./Checkpoint Charlie (Berlin),4
+de:11000:900012101::3,,S Anhalter Bahnhof (Berlin),Bushalt Schöneberger Straße hinter Stresemannstraße,52.504214000000,13.381650000000,0,,0,,5555 S Anhalter Bahnhof (Berlin),9
+de:11000:900007156::1,,Swinemünder Str. (Berlin),Bushalt Rügener Straße hinter Swinemünder Straße,52.545976000000,13.394850000000,0,,0,,5555 Swinemünder Str. (Berlin),4
+de:11000:900007157::1,,Rügener Str. (Berlin),Bushalt Brunnenstraße vor Rügener Straße,52.545128000000,13.390834000000,0,,0,,5555 Rügener Str. (Berlin),4
+de:11000:900014101::5,,U Görlitzer Bahnhof (Berlin),Bushalt Skalitzer Straße ht. Oranienstraße,52.499261000000,13.425522000000,0,,0,,5555 U Görlitzer Bahnhof (Berlin),4
+de:11000:900013102::5,,U Kottbusser Tor (Berlin),Bushalt Skalitzer Straße ht. Reichenberger Straße,52.498916000000,13.416352000000,0,,0,,5555 U Kottbusser Tor (Berlin),4
+de:11000:900016254::2,,Wilmsstr. (Berlin),Bushalt Baerwaldstraße ht. Wilmsstraße,52.495422000000,13.404762000000,0,,0,,5555 Wilmsstr. (Berlin),4
+de:11000:900013103::5,,U Prinzenstr. (Berlin),Bushalt Gitschiner Straße ht. Prinzenstraße,52.498494000000,13.405869000000,0,,0,,5555 U Prinzenstr. (Berlin),4
+de:11000:900013103::6,,U Prinzenstr. (Berlin),Bushalt Gitschiner Straße vor Prinzenstraße,52.498286000000,13.406096000000,0,,0,,5555 U Prinzenstr. (Berlin),4
+de:11000:900013102::6,,U Kottbusser Tor (Berlin),Bushalt Skalitzer Straße vor Admiralstraße,52.498755000000,13.416642000000,0,,0,,5555 U Kottbusser Tor (Berlin),4
+de:11000:900012102::4,,U Kochstr./Checkpoint Charlie (Berlin),Bushalt Friedrichstraße vor Kochstraße,52.506852000000,13.390392000000,0,,0,,5555 U Kochstr./Checkpoint Charlie (Berlin),4
+de:11000:900012156::2,,Alexandrinenstr. (Berlin),Bushalt Oranienstraße vor Alexandrinenstraße,52.505186000000,13.404870000000,0,,0,,5555 Alexandrinenstr. (Berlin),4
+de:11000:900007156::2,,Swinemünder Str. (Berlin),Bushalt Rügener Straße vor Swinemünder Straße,52.545877000000,13.394928000000,0,,0,,5555 Swinemünder Str. (Berlin),4
+de:11000:900007103::5,,U Voltastr. (Berlin),Bushalt Brunnenstraße vor Usedomer Straße,52.541366000000,13.393395000000,0,,0,,5555 U Voltastr. (Berlin),4
+de:11000:900007112::2,,Gartenplatz (Berlin),Bushalt Ackerstraße vor Max-Urich-Straße,52.538588000000,13.384006000000,0,,0,,5555 Gartenplatz (Berlin),4
+de:11000:900007106::1,,Hussitenstr. (Berlin),Bushalt Usedomer Straße ht. Hussitenstraße,52.538984000000,13.386508000000,0,,0,,5555 Hussitenstr. (Berlin),4
+de:11000:900013101::6,,U Moritzplatz (Berlin),Bushalt Oranienstraße vor Moritzplatz,52.503795000000,13.409993000000,0,,0,,5555 U Moritzplatz (Berlin),9
+de:11000:900007105::2,,"Berlin, Wolliner Str.",Bushaltestelle Wolliner Straße hinter Bernauer Straße,52.540078000000,13.401459000000,0,,0,,"5555 Berlin, Wolliner Str.",4
+de:11000:900004104::1,,Reichstag/Bundestag (Berlin),Bushalt Scheidemannstraße vor Ebertstraße,52.517727000000,13.376511000000,0,,0,,5555 Reichstag/Bundestag (Berlin),4
+de:11000:900007154::2,,Demminer Str. (Berlin),Bushalt Wolliner Straße vor Demminer Straße,52.542382000000,13.399660000000,0,,0,,5555 Demminer Str. (Berlin),4
+de:11000:900007103::6,,U Voltastr. (Berlin),Bushalt Usedomer Straße ht. Brunnenstraße,52.540966000000,13.392899000000,0,,0,,5555 U Voltastr. (Berlin),4
+de:11000:900007106::2,,Hussitenstr. (Berlin),Bushalt Usedomer Straße vor Hussitenstraße,52.539135000000,13.386508000000,0,,0,,5555 Hussitenstr. (Berlin),4
+de:11000:900015152::2,,Spreewaldplatz (Berlin),Bushalt Wiener Straße am Spreewaldplatz,52.497850000000,13.430944000000,0,,0,,5555 Spreewaldplatz (Berlin),4
+de:11000:900007110::6,,U Bernauer Str. (Berlin),Bushalt Bernauer Straße ht. Brunnenstraße,52.538435000000,13.396910000000,0,,0,,5555 U Bernauer Str. (Berlin),4
+de:11000:900007108::1,1,S Nordbahnhof/Gartenstr. (Berlin),Bushalt Gartenstr. ht. Bernauer Str.,52.533735000000,13.387202000000,0,,0,,5555 S Nordbahnhof/Gartenstr. (Berlin),4
+de:11000:900007113::1,,Theodor-Heuss-Weg (Berlin),Bushalt Gartenstraße vor Theodor-Heuss-Weg,52.535132000000,13.385457000000,0,,0,,5555 Theodor-Heuss-Weg (Berlin),4
+de:11000:900007113::2,,Theodor-Heuss-Weg (Berlin),Bushalt Gartenstraße hinter Theodor-Heuss-Weg,52.535067000000,13.385438000000,0,,0,,5555 Theodor-Heuss-Weg (Berlin),4
+de:11000:900007114::1,,Gartenstr./Feldstr. (Berlin),Bushalt Gartenstraße hinter Feldstraße,52.537090000000,13.383142000000,0,,0,,5555 Gartenstr./Feldstr. (Berlin),4
+de:11000:900007114::2,,Gartenstr./Feldstr. (Berlin),Bushalt Gartenstraße hinter Feldstraße,52.536465000000,13.383745000000,0,,0,,5555 Gartenstr./Feldstr. (Berlin),4
+de:11000:900012105::1,,Abgeordnetenhaus (Berlin),Bushalt Stresemannstraße hinter Dessauer Straße,52.506112000000,13.380041000000,0,,0,,5555 Abgeordnetenhaus (Berlin),4
+de:11000:900012105::2,,Abgeordnetenhaus (Berlin),Bushalt Stresemannstraße vor Niederkirchnerstraße,52.506456000000,13.379986000000,0,,0,,5555 Abgeordnetenhaus (Berlin),4
+de:11000:900014106::1,,Lausitzer Platz (Berlin),Bushalt Skalitzer Straße hinter Görlitzer Straße,52.499358000000,13.432439000000,0,,0,,5555 Lausitzer Platz (Berlin),4
+de:11000:900014106::2,,Lausitzer Platz (Berlin),Bushalt Skalitzer Straße hinter Zeughofstraße,52.499633000000,13.432774000000,0,,0,,5555 Lausitzer Platz (Berlin),4
+de:11000:900012161::1,,Wilhelmstr./Franz-Klühs-Str. (Berlin),Bushalt Wilhelmstraße ht. Franz-Klühs-Straße,52.501113000000,13.388719000000,0,,0,,5555 Wilhelmstr./Franz-Klühs-Str. (Berlin),4
+de:11000:900012101::4,,S Anhalter Bahnhof (Berlin),Bushalt Stresemannstraße hinter Schöneberger Straße,52.504141000000,13.382631000000,0,,0,,5555 S Anhalter Bahnhof (Berlin),9
+de:11000:900012161::2,,Wilhelmstr./Franz-Klühs-Str. (Berlin),Bushalt Wilhelmstraße vor Franz-Klühs-Straße,52.500905000000,13.388570000000,0,,0,,5555 Wilhelmstr./Franz-Klühs-Str. (Berlin),4
+de:11000:900007111::1,,Lortzingstr. (Berlin),Bushalt Graunstraße vor Lortzingstraße,52.544119000000,13.399294000000,0,,0,,5555 Lortzingstr. (Berlin),4
+de:11000:900007111::2,,Lortzingstr. (Berlin),Bushalt Graunstraße vor Lortzingstraße,52.544515000000,13.398976000000,0,,0,,5555 Lortzingstr. (Berlin),4
+de:11000:900004104::2,,Reichstag/Bundestag (Berlin),Bushalt Scheidemannstraße hinter Ebertstraße,52.517804000000,13.373610000000,0,,0,,5555 Reichstag/Bundestag (Berlin),4
+de:11000:900012153::1,,Wilhelmstr./Kochstr. (Berlin),Bushalt Wilhelmstraße vor Kochstraße,52.506081000000,13.386340000000,0,,0,,5555 Wilhelmstr./Kochstr. (Berlin),4
+de:11000:900012102::5,,U Kochstr./Checkpoint Charlie (Berlin),Bushalt Kochstraße vor Friedrichstraße,52.506606000000,13.389733000000,0,,0,,5555 U Kochstr./Checkpoint Charlie (Berlin),4
+de:11000:900012154::1,,Charlottenstr. (Berlin),Bushaltestelle R-Dutschke-Str ht Charlottenstr,52.506811000000,13.392993000000,0,,0,,5555 Charlottenstr. (Berlin),4
+de:11000:900012104::1,,"Berlin, Lindenstr./Oranienstr.",Bushaltestelle Oranienstraße hinter Lindenstraße,52.506834000000,13.398931000000,0,,0,,"5555 Berlin, Lindenstr./Oranienstr.",4
+de:11000:900012104::2,,"Berlin, Lindenstr./Oranienstr.",Bushaltestelle Oranienstraße vor Axel-Springer-Straße,52.506996000000,13.398828000000,0,,0,,"5555 Berlin, Lindenstr./Oranienstr.",4
+de:11000:900012154::2,,Charlottenstr. (Berlin),Bushaltestelle R-Dutschke-Str vor Charlottenstr,52.506917000000,13.392832000000,0,,0,,5555 Charlottenstr. (Berlin),4
+de:11000:900012153::2,,Wilhelmstr./Kochstr. (Berlin),Bushalt Wilhelmstraße vor Anhalter Straße,52.505702000000,13.386336000000,0,,0,,5555 Wilhelmstr./Kochstr. (Berlin),4
+de:11000:900004105::2,,Platz der Republik (Berlin),Bushalt John-Foster-Dulles-Allee ht H-v-Gagern-Str,52.517813000000,13.370276000000,0,,0,,5555 Platz der Republik (Berlin),4
+de:11000:900016103::2,,Zossener Brücke (Berlin),Bushalt Lindenstraße hinter Gitschiner Straße,52.498633000000,13.395969000000,0,,0,,5555 Zossener Brücke (Berlin),4
+de:11000:900012158::1,,Franz-Klühs-Str. (Berlin),Bushalt Lindenstraße hinter Alte Jakobstraße,52.500452000000,13.394967000000,0,,0,,5555 Franz-Klühs-Str. (Berlin),4
+de:11000:900012157::1,,Jüdisches Museum (Berlin),Bushalt Lindenstraße hinter Markgrafenstraße,52.503699000000,13.395898000000,0,,0,,5555 Jüdisches Museum (Berlin),4
+de:11000:900012104::3,,"Berlin, Lindenstr./Oranienstr.",Bushaltestelle Lindenstraße hinter Rudi-Dutschke-Straße,52.506865000000,13.397966000000,0,,0,,"5555 Berlin, Lindenstr./Oranienstr.",4
+de:11000:900012157::2,,Jüdisches Museum (Berlin),Bushalt Lindenstraße vor Markgrafenstraße,52.503499000000,13.395386000000,0,,0,,5555 Jüdisches Museum (Berlin),4
+de:11000:900012158::2,,Franz-Klühs-Str. (Berlin),Bushalt Lindenstraße hinter Franz-Klühs-Straße,52.500236000000,13.394676000000,0,,0,,5555 Franz-Klühs-Str. (Berlin),4
+de:11000:900012104::4,,"Berlin, Lindenstr./Oranienstr.",Bushaltestelle Axel-Springer-Straße hinter Oranienstraße,52.507322000000,13.398600000000,0,,0,,"5555 Berlin, Lindenstr./Oranienstr.",4
+de:11000:900014101::6,,U Görlitzer Bahnhof (Berlin),Bushalt Skalitzer Straße ht. Wiener Straße,52.499152000000,13.428136000000,0,,0,,5555 U Görlitzer Bahnhof (Berlin),4
+de:11000:900007155::1,,Gleimstr. (Berlin),Bushalt Graunstraße hinter Gleimstraße,52.546003000000,13.398046000000,0,,0,,5555 Gleimstr. (Berlin),4
+de:11000:900007155::2,,Gleimstr. (Berlin),Bushalt Graunstraße vor Gleimstraße,52.546060000000,13.398079000000,0,,0,,5555 Gleimstr. (Berlin),4
+de:11000:900007104::1,6,S Nordbahnhof (Berlin),Tram u. Bussteig Invalidenstraße vor Gartenstraße,52.531641000000,13.388912000000,0,,0,,5555 S Nordbahnhof (Berlin),4
+de:11000:900100726::01,,Fischerinsel (Berlin),Bushalt Fischerinsel ht. Gertraudenstraße,52.513600000000,13.406261000000,0,,0,,5555 Fischerinsel (Berlin),4
+de:11000:900120020::1,,Helsingforser Platz (Berlin),Bushalt Marchlewskistraße vor Revaler Straße,52.507962000000,13.449427000000,0,,0,,5555 Helsingforser Platz (Berlin),4
+de:11000:900120005::1,,S Ostbahnhof (Berlin),Bushalt Parkplatz Am Ostbahnhof hinter Andreasstraße,52.510204000000,13.431718000000,0,,0,,5555 S Ostbahnhof (Berlin),9
+de:11000:900120015::1,,Franz-Mehring-Platz (Berlin),Bushalt Franz-Mehring-Platz hinter Am Wriezener,52.513106000000,13.439269000000,0,,0,,5555 Franz-Mehring-Platz (Berlin),4
+de:11000:900120019::1,,Platz der Vereinten Nationen (Berlin),Bushalt Pl. d. Vereinten Nationen vor Friedenstr.,52.523400000000,13.433096000000,0,,0,,5555 Platz der Vereinten Nationen (Berlin),4
+de:11000:900120510::1,,Weinstr. (Berlin),Bushalt Friedenstraße vor Weinstraße,52.526218000000,13.428711000000,0,,0,,5555 Weinstr. (Berlin),4
+de:11000:900110019::1,,"Berlin, Am Friedrichshain",Bushalt Friedenstraße vor Am Friedrichshain,52.527645000000,13.425907000000,0,,0,,"5555 Berlin, Am Friedrichshain",4
+de:11000:900100016::5,1,U Rosa-Luxemburg-Platz (Berlin),Bushalt Torstraße ht. Schönhauser Allee Pos. 1,52.529040000000,13.408794000000,0,,0,,5555 U Rosa-Luxemburg-Platz (Berlin),4
+de:11000:900100023::7,5,U Rosenthaler Platz (Berlin),Bushalt Torstraße vor Rosenthaler Platz Pos. 5,52.529887000000,13.402685000000,0,,0,,5555 U Rosenthaler Platz (Berlin),4
+de:11000:900100510::1,,Tucholskystr. (Berlin),Bushalt Torstraße vor Gartenstraße,52.528733000000,13.394514000000,0,,0,,5555 Tucholskystr. (Berlin),4
+de:11000:900100506::2,,Hannoversche Str. (Berlin),Bushalt Torstraße vor Chausseestraße,52.527431000000,13.388216000000,0,,0,,5555 Hannoversche Str. (Berlin),4
+de:11000:900100036::2,,Robert-Koch-Platz (Berlin),Bushaltestelle Hannoversche Straße vor Hessische Straße,52.528319000000,13.380153000000,0,,0,,5555 Robert-Koch-Platz (Berlin),4
+de:11000:900100506::7,,Hannoversche Str. (Berlin),Bushalt Hannoversche Str. vor Friedrichstraße,52.527035000000,13.386331000000,0,,0,,5555 Hannoversche Str. (Berlin),4
+de:11000:900100023::8,6,U Rosenthaler Platz (Berlin),Bushalt Torstraße ht. Rosenthaler Platz Pos. 6,52.529660000000,13.402881000000,0,,0,,5555 U Rosenthaler Platz (Berlin),4
+de:11000:900100016::6,4,U Rosa-Luxemburg-Platz (Berlin),Bushalt Torstraße ht. Rosa-Luxemburg-Straße Pos. 4,52.528359000000,13.410988000000,0,,0,,5555 U Rosa-Luxemburg-Platz (Berlin),4
+de:11000:900110019::2,,"Berlin, Am Friedrichshain",Bushalt Friedenstraße ht. Georgenkirchstraße,52.527379000000,13.426247000000,0,,0,,"5555 Berlin, Am Friedrichshain",4
+de:11000:900120510::2,,Weinstr. (Berlin),Bushalt Friedenstraße vor Büschingstraße,52.525878000000,13.428962000000,0,,0,,5555 Weinstr. (Berlin),4
+de:11000:900120019::2,,Platz der Vereinten Nationen (Berlin),Bushalt Friedenstr. vor Strausberger Straße,52.522831000000,13.433656000000,0,,0,,5555 Platz der Vereinten Nationen (Berlin),4
+de:11000:900100013::4,,U Spittelmarkt (Berlin),Bushalt Axel-Springer-Straße ht. Leipziger Straße,52.510804000000,13.401165000000,0,,0,,5555 U Spittelmarkt (Berlin),4
+de:11000:900120015::2,,Franz-Mehring-Platz (Berlin),Bushalt Franz-Mehring-Platz ht. Rüdersdorfer Str.,52.513042000000,13.439021000000,0,,0,,5555 Franz-Mehring-Platz (Berlin),4
+de:11000:900100036::3,,Robert-Koch-Platz (Berlin),Bushaltestelle Hannoversche Straße vor Platz vor dem Neuen Tor,52.528335000000,13.379460000000,0,,0,,5555 Robert-Koch-Platz (Berlin),4
+de:11000:900100528::1,3,U Stadtmitte (Berlin),Bushalt Leipziger Straße vor Friedrichstr. Pos. 3,52.510254000000,13.389519000000,0,,0,,5555 U Stadtmitte (Berlin),4
+de:11000:900100527::1,,Jerusalemer Str. (Berlin),Bushalt Leipziger Straße vor Jerusalemer Straße,52.510716000000,13.395913000000,0,,0,,5555 Jerusalemer Str. (Berlin),4
+de:11000:900100544::1,,Heinrich-Heine-Platz (Berlin),Bushalt Heinrich-Heine Platz vor Legiendamm,52.506619000000,13.417561000000,0,,0,,5555 Heinrich-Heine-Platz (Berlin),4
+de:11000:900100014::5,,U Märkisches Museum (Berlin),Bushalt Neue Roßstraße hinter Wallstraße,52.511236000000,13.409421000000,0,,0,,5555 U Märkisches Museum (Berlin),4
+de:11000:900100008::5,,U Heinrich-Heine-Str. (Berlin),Bushalt Köpenicker Straße vor Brückenstraße,52.510883000000,13.417151000000,0,,0,,5555 U Heinrich-Heine-Str. (Berlin),4
+de:11000:900100004::6,,S+U Jannowitzbrücke (Berlin),Bushalt Brückenstraße vor Holzmarktstraße,52.514784000000,13.418055000000,0,,0,,5555 S+U Jannowitzbrücke (Berlin),4
+de:11000:900120023::1,,Andreasstr./Lange Str. (Berlin),Bushalt Andreasstraße vor Lange Straße,52.512343000000,13.431012000000,0,,0,,5555 Andreasstr./Lange Str. (Berlin),4
+de:11000:900120022::1,,Singerstr. (Berlin),Bushalt Andreasstraße hinter Singerstraße,52.515464000000,13.432154000000,0,,0,,5555 Singerstr. (Berlin),4
+de:11000:900120006::3,,U Strausberger Platz (Berlin),Bushalt Lebuser Straße ht. Karl-Marx-Allee,52.518514000000,13.433138000000,0,,0,,5555 U Strausberger Platz (Berlin),4
+de:11000:900120525::1,,Friedrichsberger Str. (Berlin),Bushaltestelle Friedrichsberger Straße hinter Friedenstraße,52.521347000000,13.434966000000,0,,0,,5555 Friedrichsberger Str. (Berlin),4
+de:11000:900120006::4,,U Strausberger Platz (Berlin),Bushalt Lebuser Straße vor Karl-Marx-Allee,52.518410000000,13.432926000000,0,,0,,5555 U Strausberger Platz (Berlin),4
+de:11000:900120022::2,,Singerstr. (Berlin),Bushalt Andreasstraße hinter Singerstraße,52.514736000000,13.431757000000,0,,0,,5555 Singerstr. (Berlin),4
+de:11000:900100519::2,,Holzmarktstr. (Berlin),Bushalt Holzmarktstraße hinter Lichtenberger Str.,52.514103000000,13.422615000000,0,,0,,5555 Holzmarktstr. (Berlin),4
+de:11000:900100004::7,,S+U Jannowitzbrücke (Berlin),Bushalt Brückenstraße vor Märkisches Ufer,52.514912000000,13.417799000000,0,,0,,5555 S+U Jannowitzbrücke (Berlin),4
+de:11000:900100008::6,,U Heinrich-Heine-Str. (Berlin),Bushalt Heinrich-Heine-Str. vor Köpenicker Straße,52.510234000000,13.416000000000,0,,0,,5555 U Heinrich-Heine-Str. (Berlin),4
+de:11000:900100032::1,,Heinrich-Heine-Str./Annenstr. (Berlin),Bushalt Annenstraße hinter Heinrich-Heine-Straße,52.508683000000,13.412985000000,0,,0,,5555 Heinrich-Heine-Str./Annenstr. (Berlin),4
+de:11000:900100014::4,,U Märkisches Museum (Berlin),Bushalt Neue Roßstraße vor Wallstraße,52.511465000000,13.409328000000,0,,0,,5555 U Märkisches Museum (Berlin),4
+de:11000:900100526::1,,Fischerinsel (Berlin),Bushalt Gertraudenstraße ht. Breite Straße,52.513759000000,13.405084000000,0,,0,,5555 Fischerinsel (Berlin),4
+de:11000:900100527::2,,Jerusalemer Str. (Berlin),Bushalt Leipziger Straße ht. Jerusalemer Straße,52.510994000000,13.395714000000,0,,0,,5555 Jerusalemer Str. (Berlin),4
+de:11000:900100528::2,4,U Stadtmitte (Berlin),Bushalt Leipziger Straße vor Friedrichstr. Pos. 4,52.510447000000,13.390306000000,0,,0,,5555 U Stadtmitte (Berlin),4
+de:11000:900100535::1,,Leipziger Str./Wilhelmstr. (Berlin),Bushaltestelle Leipziger Straße hinter Wilhelmstraße,52.509916000000,13.382449000000,0,,0,,5555 Leipziger Str./Wilhelmstr. (Berlin),4
+de:11000:900120014::1,,Grünberger Str./Warschauer Str. (Berlin),Bushalt Grünberger Straße ht. Warschauer Straße,52.512621000000,13.451841000000,0,,0,,5555 Grünberger Str./Warschauer Str. (Berlin),4
+de:11000:900120014::2,,Grünberger Str./Warschauer Str. (Berlin),Bushalt Grünberger Straße vor Warschauer Straße,52.512656000000,13.451237000000,0,,0,,5555 Grünberger Str./Warschauer Str. (Berlin),4
+de:11000:900100004::4,,S+U Jannowitzbrücke (Berlin),Bushalt Alexanderstraße ht. Holzmarktstraße,52.515985000000,13.418333000000,0,,0,,5555 S+U Jannowitzbrücke (Berlin),4
+de:11000:900100041::1,,"Berlin, Brunnenstr./Invalidenstr.",Bushaltestelle Brunnenstraße vor Invalidenstraße,52.533020000000,13.398709000000,0,,0,,"5555 Berlin, Brunnenstr./Invalidenstr.",4
+de:11000:900100005::5,,U Alexanderplatz (Berlin) [Tram],Bushalt Alexanderstraße vor Alexanderplatz Pos. 10,52.522646000000,13.414723000000,0,,0,,5555 U Alexanderplatz (Berlin) [Tram],4
+de:11000:900100518::1,,Alexanderstr. (Berlin),Bushalt Alexanderstraße hinter Voltairestraße,52.516831000000,13.418072000000,0,,0,,5555 Alexanderstr. (Berlin),4
+de:11000:900100008::3,,U Heinrich-Heine-Str. (Berlin),Bushalt Köpenicker Straße ht. Heinrich-Heine-Str.,52.510779000000,13.417073000000,0,,0,,5555 U Heinrich-Heine-Str. (Berlin),4
+de:11000:900100521::1,,Michaelkirchstr. (Berlin),Bushalt Köpenicker Straße ht. Michaelkirchstraße,52.509614000000,13.421513000000,0,,0,,5555 Michaelkirchstr. (Berlin),4
+de:11000:900100544::2,,Heinrich-Heine-Platz (Berlin),Bushalt Heinrich-Heine-Platz ht Michaelkirchplatz,52.506727000000,13.417454000000,0,,0,,5555 Heinrich-Heine-Platz (Berlin),4
+de:11000:900100530::1,,Werderscher Markt (Berlin),Bushalt Werderscher Markt vor Oberwallstraße,52.515344000000,13.397182000000,0,,0,,5555 Werderscher Markt (Berlin),4
+de:11000:900100546::1,,Adalbertstr. (Berlin),Bushalt Bethaniendamm hinter Adalbertstraße,52.505044000000,13.422303000000,0,,0,,5555 Adalbertstr. (Berlin),4
+de:11000:900100530::2,,Werderscher Markt (Berlin),Bushalt Werderscher Markt ht. Oberwallstraße,52.515265000000,13.397329000000,0,,0,,5555 Werderscher Markt (Berlin),4
+de:11000:900100521::2,,Michaelkirchstr. (Berlin),Bushalt Köpenicker Straße vor Michaelkirchstraße,52.509703000000,13.421759000000,0,,0,,5555 Michaelkirchstr. (Berlin),4
+de:11000:900100518::2,,Alexanderstr. (Berlin),Bushalt Alexanderstraße vor Magazinstraße,52.517779000000,13.418149000000,0,,0,,5555 Alexanderstr. (Berlin),4
+de:11000:900100041::2,,"Berlin, Brunnenstr./Invalidenstr.",Bushaltestelle Brunnenstraße hinter Veteranenstraße,52.533101000000,13.398782000000,0,,0,,"5555 Berlin, Brunnenstr./Invalidenstr.",4
+de:11000:900100537::1,,U Museumsinsel (Berlin),Bushalt Schloßplatz ht. ggü. Am Lustgarten,52.518387000000,13.401620000000,0,,0,,5555 U Museumsinsel (Berlin),9
+de:11000:900100537::2,,U Museumsinsel (Berlin),Bushalt Schloßplatz ht. Am Lustgarten,52.518037000000,13.400068000000,0,,0,,5555 U Museumsinsel (Berlin),9
+de:11000:900120525::2,,Friedrichsberger Str. (Berlin),Bushaltestelle Friedrichsberger Straße vor Friedenstraße,52.521363000000,13.435112000000,0,,0,,5555 Friedrichsberger Str. (Berlin),4
+de:11000:900100013::5,,U Spittelmarkt (Berlin),Bushalt Spittelmarkt ht. Seydelstraße,52.511551000000,13.402301000000,0,,0,,5555 U Spittelmarkt (Berlin),4
+de:11000:900100013::6,,U Spittelmarkt (Berlin),Bushalt Leipziger Straße ht. Niederwallstraße,52.511254000000,13.400308000000,0,,0,,5555 U Spittelmarkt (Berlin),4
+de:11000:900100041::3,,"Berlin, Brunnenstr./Invalidenstr.",Tram- und Bussteig Brunnenstraße vor Veteranenstraße,52.531970000000,13.399466000000,0,,0,,"5555 Berlin, Brunnenstr./Invalidenstr.",4
+de:11000:900100504::1,,Pappelplatz (Berlin),Tramhalt und Bushalt Invalidenstraße vor Bergstraße,52.532302000000,13.394622000000,0,,0,,5555 Pappelplatz (Berlin),4
+de:11000:900007108::3,2,S Nordbahnhof/Gartenstr. (Berlin),Bushalt Gartenstr. ht. Julie-Wolfthorn-Str.,52.532472000000,13.388706000000,0,,0,,5555 S Nordbahnhof/Gartenstr. (Berlin),4
+de:11000:900100526::2,,Fischerinsel (Berlin),Bushalt Mühlendamm ht. Fischerinsel,52.514319000000,13.406334000000,0,,0,,5555 Fischerinsel (Berlin),4
+de:11000:900100045::1,,Jüdenstr. (Berlin),Bushaltestelle Grunerstraße hinter Molkenmarkt,52.517252000000,13.409854000000,0,,0,,5555 Jüdenstr. (Berlin),4
+de:11000:900100006::6,18,S+U Alexanderplatz Bhf/Grunerstr. (Berlin),Bushalt Alexanderstraße ht. Grunerstraße Pos. 18,52.519926000000,13.416071000000,0,,0,,5555 S+U Alexanderplatz Bhf/Grunerstr. (Berlin),4
+de:11000:900100043::1,,Sredzkistr. (Berlin),Bushalt Schönhauser Allee vor Sredzkistraße,52.537839000000,13.412471000000,0,,0,,5555 Sredzkistr. (Berlin),4
+de:11000:900100043::02,,Sredzkistr. (Berlin),Bushalt Schönhauser Allee vor Choriner Straße,52.538154000000,13.411985000000,0,,0,,5555 Sredzkistr. (Berlin),4
+de:11000:900110526::1,,Storkower Str./Gewerbegebiet (Berlin),Bushalt Storkower Straße vor Kniprodestraße,52.534996000000,13.451807000000,0,,0,,5656 Storkower Str./Gewerbegebiet (Berlin),4
+de:11000:900110516::1,,Rietzestr. (Berlin),Bushalt Hosemannstraße vor Grellstraße,52.543137000000,13.435010000000,0,,0,,5656 Rietzestr. (Berlin),4
+de:11000:900110002::3,,S Prenzlauer Allee (Berlin),Bushalt Grellstraße vor Prenzlauer Allee,52.545354000000,13.428837000000,0,,0,,5555 S Prenzlauer Allee (Berlin),128
+de:11000:900110002::4,,S Prenzlauer Allee (Berlin),Bushalt Grellstraße ht. Prenzlauer Allee,52.545277000000,13.428350000000,0,,0,,5555 S Prenzlauer Allee (Berlin),128
+de:11000:900110516::2,,Rietzestr. (Berlin),Bushalt Hosemannstraße hinter Rietzestraße,52.543787000000,13.435781000000,0,,0,,5656 Rietzestr. (Berlin),4
+de:11000:900110026::02,,Kniprodestr./Storkower Str. (Berlin),Bushalt Kniprodestraße hinter Storkower Straße,52.536857000000,13.448764000000,0,,0,,5656 Kniprodestr./Storkower Str. (Berlin),4
+de:11000:900110527::1,,Storkower Str./Einkaufszentrum (Berlin),Bushalt Storkower Str. hinter Kniprodestr.,52.533380000000,13.453193000000,0,,0,,5656 Storkower Str./Einkaufszentrum (Berlin),4
+de:11000:900110027::01,,Conrad-Blenkle-Str. (Berlin),Bushalt Kniprodestr. vor Conrad-Conrad-Blenkle-Straße,52.534202000000,13.444579000000,0,,0,,5555 Conrad-Blenkle-Str. (Berlin),4
+de:11000:900110021::7,,Kniprodestr./Danziger Str. (Berlin),Ersatzhalt Kniprodestraße ht. Danziger Straße,52.532643000000,13.442553000000,0,,0,,5555 Kniprodestr./Danziger Str. (Berlin),4
+de:11000:900110522::1,,Am Friedrichshain/Hufelandstr. (Berlin),Bushalt Am Friedrichshain hinter Hufelandstraße,52.529548000000,13.436363000000,0,,0,,5555 Am Friedrichshain/Hufelandstr. (Berlin),4
+de:11000:900110520::1,,Bötzowstr. (Berlin),Bushalt Am Friedrichshain hinter Bötzowstraße,52.528765000000,13.429802000000,0,,0,,5555 Bötzowstr. (Berlin),4
+de:11000:900110019::3,,"Berlin, Am Friedrichshain",Bushalt Am Friedrichshain ht. Am Schweizer Garten,52.528344000000,13.426046000000,0,,0,,"5555 Berlin, Am Friedrichshain",4
+de:11000:900100040::1,2,Mollstr./Otto-Braun-Str. (Berlin),Bushalt Otto-Braun-Str. vor Mollstr. Pos. 2,52.526057000000,13.420508000000,0,,0,,5555 Mollstr./Otto-Braun-Str. (Berlin),4
+de:11000:900110022::1,7,Mollstr./Prenzlauer Allee (Berlin),Bushalt Karl-Liebknecht-Str. ht. Torstraße Pos. 7,52.526436000000,13.414722000000,0,,0,,5555 Mollstr./Prenzlauer Allee (Berlin),4
+de:11000:900100503::1,,"Berlin, Invalidenpark",Bushalt Invalidenstraße vor Scharnhorststraße,52.528706000000,13.376274000000,0,,0,,"5555 Berlin, Invalidenpark",4
+de:11000:900100502::1,,Habersaathstr. (Berlin),Bushalt Scharnhorststraße hinter Habersaathstraße,52.530862000000,13.373671000000,0,,0,,5555 Habersaathstr. (Berlin),4
+de:11000:900100502::2,,Habersaathstr. (Berlin),Bushalt Scharnhorststraße hinter Habersaathstraße,52.530322000000,13.374125000000,0,,0,,5555 Habersaathstr. (Berlin),4
+de:11000:900100503::2,,"Berlin, Invalidenpark",Tram- u. Bussteig Invalidenstr. vor Schwarzer Weg,52.528659000000,13.376728000000,0,,0,,"5555 Berlin, Invalidenpark",4
+de:11000:900100009::10,3,U Naturkundemuseum (Berlin),Tram- u. Bushalt Invaliden vor Chausseestr. Pos. 3,52.530415000000,13.382777000000,0,,0,,5555 U Naturkundemuseum (Berlin),4
+de:11000:900110019::4,,"Berlin, Am Friedrichshain",Bushalt Am Friedrichshain ht. Friedenstraße,52.528293000000,13.426580000000,0,,0,,"5555 Berlin, Am Friedrichshain",4
+de:11000:900110520::2,,Bötzowstr. (Berlin),Bushalt Am Friedrichshain hinter Bötzowstraße,52.528838000000,13.431007000000,0,,0,,5555 Bötzowstr. (Berlin),4
+de:11000:900110522::2,,Am Friedrichshain/Hufelandstr. (Berlin),Bushalt Am Friedrichshain vor Virchowstraße,52.529512000000,13.437137000000,0,,0,,5555 Am Friedrichshain/Hufelandstr. (Berlin),4
+de:11000:900110021::2,,Kniprodestr./Danziger Str. (Berlin),Bushalt Kniprodestraße vor Danziger Straße,52.531478000000,13.440765000000,0,,0,,5555 Kniprodestr./Danziger Str. (Berlin),4
+de:11000:900110027::2,,Conrad-Blenkle-Str. (Berlin),Bushalt Kniprodestraße hinter Conrad-Blenkle-Straße,52.534019000000,13.444725000000,0,,0,,5555 Conrad-Blenkle-Str. (Berlin),4
+de:11000:900120005::2,,S Ostbahnhof (Berlin),Bushalt Am Ostbahnhof hinter Straße der Pariser Kommune,52.509569000000,13.434353000000,0,,0,,5555 S Ostbahnhof (Berlin),9
+de:11000:900120005::3,,S Ostbahnhof (Berlin),Bushalt Am Ostbahnhof vor Straße der Pariser Kommune,52.509700000000,13.433800000000,0,,0,,5555 S Ostbahnhof (Berlin),9
+de:11000:900120023::2,,Andreasstr./Lange Str. (Berlin),Bushalt Andreasstraße hinter Lange Straße,52.512226000000,13.430858000000,0,,0,,5555 Andreasstr./Lange Str. (Berlin),4
+de:11000:900100008::4,,U Heinrich-Heine-Str. (Berlin),Bushalt Köpenicker Straße vor Heinrich-Heine-Str.,52.511119000000,13.415765000000,0,,0,,5555 U Heinrich-Heine-Str. (Berlin),4
+de:11000:900100503::5,,"Berlin, Invalidenpark",Bushalt Scharnhorststraße ht. Invalidenstraße,52.528712000000,13.375801000000,0,,0,,"5555 Berlin, Invalidenpark",4
+de:11000:900014107::1,,Bethaniendamm (Berlin),Bushaltestelle Köpenicker Straße vor Bethaniendamm,52.507305000000,13.428614000000,0,,0,,5555 Bethaniendamm (Berlin),4
+de:11000:900014107::2,,Bethaniendamm (Berlin),Bushaltestelle Köpenicker Straße hinter Bethaniendamm,52.507077000000,13.428691000000,0,,0,,5555 Bethaniendamm (Berlin),4
+de:11000:900100508::1,,Philippstr. (Berlin),Bushalt Hannoversche Straße hinter Philippstraße,52.527248000000,13.382996000000,0,,0,,5555 Philippstr. (Berlin),4
+de:11000:900120534::1,,Wedekindstr. (Berlin),Bushaltestelle Wedekindstraße vor Marchlewskistraße,52.512838000000,13.445855000000,0,,0,,5555 Wedekindstr. (Berlin),4
+de:11000:900100543::2,,Behrenstr./Wilhelmstr. (Berlin),Bushalt  Behrenstraße hinter Wilhelmstraße,52.515175000000,13.382297000000,0,,0,,5555 Behrenstr./Wilhelmstr. (Berlin),4
+de:11000:900100025::3,,S+U Brandenburger Tor (Berlin),Bushalt Unter den Linden ht. Wilhelmstraße,52.516401000000,13.382423000000,0,,0,,5555 S+U Brandenburger Tor (Berlin),9
+de:11000:900014107::3,,Bethaniendamm (Berlin),Bushaltestelle Bethaniendamm vor Köpenicker Straße,52.507099000000,13.428118000000,0,,0,,5555 Bethaniendamm (Berlin),4
+de:11000:900100513::1,2,U Unter den Linden (Berlin),Bushalt Friedrichstraße ht. Unter den Linden,52.517331000000,13.388688000000,0,,0,,5555 U Unter den Linden (Berlin),9
+de:11000:900100027::3,,Französische Str. (Berlin),"Bushaltestelle, Französische Straße, hinter Friedrichstraße",52.514736000000,13.389621000000,0,,0,,5555 Französische Str. (Berlin),4
+de:11000:900100027::4,,Französische Str. (Berlin),"Bushaltestelle, Französische Straße, vor Friedrichstraße",52.514841000000,13.389633000000,0,,0,,5555 Französische Str. (Berlin),4
+de:11000:900100513::2,3,U Unter den Linden (Berlin),Bushalt Unter den Linden vor Friedrichstraße,52.516699000000,13.388974000000,0,,0,,5555 U Unter den Linden (Berlin),9
+de:11000:900100528::4,1,U Stadtmitte (Berlin),Bushalt Friedrichstraße ht. Leipziger Str. Pos. 1,52.510052000000,13.389850000000,0,,0,,5555 U Stadtmitte (Berlin),4
+de:11000:900100516::1,,U Märkisches Museum/Inselstr. (Berlin),Bushalt Wallstraße vor Inselstraße,52.512389000000,13.410473000000,0,,0,,5555 U Märkisches Museum/Inselstr. (Berlin),4
+de:11000:900100014::3,,U Märkisches Museum (Berlin),Bushalt Wallstraße hinter Neue Roßstraße,52.512235000000,13.410018000000,0,,0,,5555 U Märkisches Museum (Berlin),4
+de:11000:900120534::2,,Wedekindstr. (Berlin),Bushaltestelle Wedekindstraße vor Gubener Straße,52.513140000000,13.447113000000,0,,0,,5555 Wedekindstr. (Berlin),4
+de:11000:900100523::1,,Köpenicker Str./Adalbertstr. (Berlin),Bushalt Köpenicker Straße vor Adalbertstraße,52.508865000000,13.424217000000,0,,0,,5555 Köpenicker Str./Adalbertstr. (Berlin),4
+de:11000:900100523::2,,Köpenicker Str./Adalbertstr. (Berlin),Bushalt Köpenicker Straße ht. Adalbertstraße,52.508925000000,13.424530000000,0,,0,,5555 Köpenicker Str./Adalbertstr. (Berlin),4
+de:11000:900014104::3,,Audre-Lorde-Str. (Berlin),Bushalt Köpenicker Str. hinter Audre-Lorde-Str.,52.505588000000,13.432293000000,0,,0,,5555 Audre-Lorde-Str. (Berlin),4
+de:11000:900100022::2,3,S Potsdamer Platz Bhf/Voßstr. (Berlin),Bushalt Ebertstraße vor Potsdamer Platz Pos. 3,52.510206000000,13.376538000000,0,,0,,5555 S Potsdamer Platz Bhf/Voßstr. (Berlin),4
+de:11000:900014104::4,,Audre-Lorde-Str. (Berlin),Bushalt Köpenicker Str. vor ggü. Audre-Lorde-Str.,52.505734000000,13.432092000000,0,,0,,5555 Audre-Lorde-Str. (Berlin),4
+de:11000:900100531::1,,Neumannsgasse (Berlin),Bushalt Breite Straße hinter Neumannsgasse,52.515198000000,13.404126000000,0,,0,,5555 Neumannsgasse (Berlin),4
+de:11000:900100040::2,4,Mollstr./Otto-Braun-Str. (Berlin),Bushalt Otto-Braun-Str. hinter Mollstr. Pos. 4,52.525959000000,13.421221000000,0,,0,,5555 Mollstr./Otto-Braun-Str. (Berlin),4
+de:11000:900100006::5,17,S+U Alexanderplatz Bhf/Grunerstr. (Berlin),Bushalt Grunerstraße vor Dircksenstraße Pos. 17,52.520202000000,13.413872000000,0,,0,,5555 S+U Alexanderplatz Bhf/Grunerstr. (Berlin),4
+de:11000:900100045::2,,Jüdenstr. (Berlin),Bushaltestelle Grunerstraße vor Jüdenstraße,52.518313000000,13.410393000000,0,,0,,5555 Jüdenstr. (Berlin),4
+de:11000:900100531::2,,Neumannsgasse (Berlin),Bushalt Breite Straße hinter Neumanngasse,52.515504000000,13.403858000000,0,,0,,5555 Neumannsgasse (Berlin),4
+de:11000:900100016::7,5,U Rosa-Luxemburg-Platz (Berlin),Bushalt Rosa-Luxemburg-Straße vor Torstraße Pos. 5,52.528216000000,13.410369000000,0,,0,,5555 U Rosa-Luxemburg-Platz (Berlin),4
+de:11000:900100002::5,4,S Hackescher Markt (Berlin),Bushalt An der Spandauer Brücke Pos. 6,52.522463000000,13.404127000000,0,,0,,5555 S Hackescher Markt (Berlin),4
+de:11000:900100504::2,,Pappelplatz (Berlin),Tramhalt und Bushalt Invalidenstraße hinter Bergstraße,52.532236000000,13.394629000000,0,,0,,5555 Pappelplatz (Berlin),4
+de:11000:900100041::4,,"Berlin, Brunnenstr./Invalidenstr.",Tram- und Bussteig Invalidenstraße vor Elisabethkirchstraße,52.532469000000,13.397430000000,0,,0,,"5555 Berlin, Brunnenstr./Invalidenstr.",4
+de:11000:900100002::7,5,S Hackescher Markt (Berlin),Bushalt An der Spandauer Brücke Pos. 5,52.522584000000,13.404127000000,0,,0,,5555 S Hackescher Markt (Berlin),4
+de:11000:900014107::4,,Bethaniendamm (Berlin),Bushaltestelle Engeldamm hinter Köpenicker Straße,52.507330000000,13.427450000000,0,,0,,5555 Bethaniendamm (Berlin),4
+de:11000:900100008::7,,U Heinrich-Heine-Str. (Berlin),Bushalt Heinrich-Heine-Str. ht. Köpenicker Straße,52.510740000000,13.416142000000,0,,0,,5555 U Heinrich-Heine-Str. (Berlin),4
+de:11000:900007110::7,,U Bernauer Str. (Berlin),Bushalt Brunnenstraße ht. Bernauer Straße,52.537929000000,13.396121000000,0,,0,,5555 U Bernauer Str. (Berlin),4
+de:11000:900120534::3,,Wedekindstr. (Berlin),Bushaltestelle Marchlewskistraße vor Wedekindstraße,52.512987000000,13.445169000000,0,,0,,5555 Wedekindstr. (Berlin),4
+de:11000:900120535::1,,Pillauer Str. (Berlin),Bushalt Marchlewskistraße vor Pillauer Straße,52.510737000000,13.447043000000,0,,0,,5555 Pillauer Str. (Berlin),4
+de:11000:900120020::2,,Helsingforser Platz (Berlin),Bushalt Marchlewskistraße vor Helsingforser Platz,52.508435000000,13.448901000000,0,,0,,5555 Helsingforser Platz (Berlin),4
+de:11000:900100004::5,,S+U Jannowitzbrücke (Berlin),Bushalt Holzmarktstraße ht. Brückenstraße,52.515135000000,13.418761000000,0,,0,,5555 S+U Jannowitzbrücke (Berlin),4
+de:11000:900120024::1,,Stralauer Platz (Berlin),Bushalt Am Ostbahnhof vor Andreasstraße,52.511047000000,13.430939000000,0,,0,,5555 Stralauer Platz (Berlin),4
+de:11000:900120024::2,,Stralauer Platz (Berlin),Bushalt Am Ostbahnhof ht. Andreasstraße,52.510885000000,13.431004000000,0,,0,,5555 Stralauer Platz (Berlin),4
+de:11000:900110005::3,,U Senefelderplatz (Berlin),Bushalt Schönhauser Allee vor Schwedter Straße,52.533497000000,13.412659000000,0,,0,,5555 U Senefelderplatz (Berlin),4
+de:11000:900100017::3,,U Schillingstr. (Berlin),Bushalt Karl-Marx-Allee ht. Schilingstraße,52.519779000000,13.423140000000,0,,0,,5555 U Schillingstr. (Berlin),4
+de:11000:900120008::5,,U Frankfurter Tor (Berlin),Bushalt Frankfurter Allee ht. Warschauer Straße,52.515551000000,13.455483000000,0,,0,,5555 U Frankfurter Tor (Berlin),4
+de:11000:900100031::1,3,S+U Alexanderplatz Bhf/Memhardstr. (Berlin),Bushalt Karl-Liebknecht-Str. ht. Memhardstr Pos. 3,52.523082000000,13.410385000000,0,,0,,5555 S+U Alexanderplatz Bhf/Memhardstr. (Berlin),4
+de:11000:900120008::6,,U Frankfurter Tor (Berlin),Bushalt Karl-Marx-Allee ht. Petersburger Straße,52.516087000000,13.452336000000,0,,0,,5555 U Frankfurter Tor (Berlin),4
+de:11000:900120025::5,,U Weberwiese (Berlin),Bushalt K.-Marx-All vor Straße der Pariser Kommune,52.517065000000,13.442477000000,0,,0,,5555 U Weberwiese (Berlin),4
+de:11000:900120006::5,,U Strausberger Platz (Berlin),Bushalt Karl-Marx-Allee vor Strausberger Platz,52.518374000000,13.429868000000,0,,0,,5555 U Strausberger Platz (Berlin),4
+de:11000:900100017::4,,U Schillingstr. (Berlin),Bushalt Karl-Marx-Allee ht. Berolinastraße,52.520576000000,13.421796000000,0,,0,,5555 U Schillingstr. (Berlin),4
+de:11000:900110005::4,,U Senefelderplatz (Berlin),Bushalt Schönhauser Allee hinter Metzer Straße,52.532980000000,13.412965000000,0,,0,,5555 U Senefelderplatz (Berlin),4
+de:11000:900120006::6,,U Strausberger Platz (Berlin),Bushalt Karl-Marx-Allee ht. Strausberger Platz,52.518074000000,13.430676000000,0,,0,,5555 U Strausberger Platz (Berlin),4
+de:11000:900120025::6,,U Weberwiese (Berlin),Bushalt K.-Marx-All ht. Straße der Pariser Kommune,52.516837000000,13.442651000000,0,,0,,5555 U Weberwiese (Berlin),4
+de:11000:900110022::2,3,Mollstr./Prenzlauer Allee (Berlin),Bushalt Mollstraße vor Prenzlauer Allee Pos. 3,52.526608000000,13.417164000000,0,,0,,5555 Mollstr./Prenzlauer Allee (Berlin),4
+de:11000:900120025::3,,U Weberwiese (Berlin),Bushalt Hilde.-Jadamowitz-Str. vor Marchlewskistr.,52.516018000000,13.442463000000,0,,0,,5555 U Weberwiese (Berlin),4
+de:11000:900100010::4,,U Anton-W.-Amo-Str. (Mohrenstr.) (Berlin),Bushalt Wilhelmstraße ht. Voßstraße,52.511828000000,13.383325000000,0,,0,,5555 U Anton-W.-Amo-Str. (Mohrenstr.) (Berlin),4
+de:11000:900100515::3,,Spandauer Str./Marienkirche (Berlin),Bushalt Spandauer Str. ht. Karl-Liebknecht-Str.,52.520496000000,13.404430000000,0,,0,,5555 Spandauer Str./Marienkirche (Berlin),4
+de:11000:900100020::3,5,S+U Potsdamer Platz Bhf (Berlin),Bushalt Leipziger Platz vor Potsdamer Platz Pos. 5,52.509702000000,13.378122000000,0,,0,,5555 S+U Potsdamer Platz Bhf (Berlin),9
+de:11000:900100546::2,,Adalbertstr. (Berlin),Bushalt Engeldamm hinter Adalbertstraße,52.505556000000,13.421851000000,0,,0,,5555 Adalbertstr. (Berlin),4
+de:11000:900100020::5,7,S+U Potsdamer Platz Bhf (Berlin),Bushalt Potsdamer Pl. ht. Erna-Berger-Str. Pos. 7,52.508551000000,13.377317000000,0,,0,,5555 S+U Potsdamer Platz Bhf (Berlin),9
+de:11000:900100020::4,6,S+U Potsdamer Platz Bhf (Berlin),Bushalt Leipziger Platz ht. Potsdamer Platz Pos. 6,52.509562000000,13.378551000000,0,,0,,5555 S+U Potsdamer Platz Bhf (Berlin),9
+de:11000:900120020::3,,Helsingforser Platz (Berlin),Bushalt Marchlewskistraße vor Revaler Straße,52.507781000000,13.449570000000,0,,0,,5555 Helsingforser Platz (Berlin),4
+de:11000:900120535::2,,Pillauer Str. (Berlin),Bushalt Marchlewskistraße vor Torellstraße,52.510835000000,13.447037000000,0,,0,,5555 Pillauer Str. (Berlin),4
+de:11000:900120534::4,,Wedekindstr. (Berlin),Bushaltestelle Marchlewskistraße hinter Wedekindstraße,52.513104000000,13.445188000000,0,,0,,5555 Wedekindstr. (Berlin),4
+de:11000:900120025::4,,U Weberwiese (Berlin),Bushalt Marchlewskistr. vor Hilde.-Jadamowitz-Str.,52.515944000000,13.442850000000,0,,0,,5555 U Weberwiese (Berlin),4
+de:11000:900100032::2,,Heinrich-Heine-Str./Annenstr. (Berlin),Bushalt Annenstraße vor Heinrich-Heine-Straße,52.508120000000,13.413821000000,0,,0,,5555 Heinrich-Heine-Str./Annenstr. (Berlin),4
+de:11000:900100051::5,4,U Weinmeisterstr. (Berlin),Bushalt Neue Schönhauser Straße vor Münzstraße,52.524801000000,13.405999000000,0,,0,,5555 U Weinmeisterstr. (Berlin),4
+de:11000:900110026::03,,Kniprodestr./Storkower Str. (Berlin),Bushalt Storkower Straße hinter Kniprodestraße,52.536629000000,13.450065000000,0,,0,,5656 Kniprodestr./Storkower Str. (Berlin),4
+de:11000:900100025::2,,S+U Brandenburger Tor (Berlin),Bushalt Unter den Linden vor Wilhelmstraße,52.516714000000,13.381271000000,0,,0,,5555 S+U Brandenburger Tor (Berlin),9
+de:11000:900100023::9,7,U Rosenthaler Platz (Berlin),Bushalt Rosenthaler Straße ht. Torstraße Pos. 7,52.529094000000,13.401693000000,0,,0,,5555 U Rosenthaler Platz (Berlin),4
+de:11000:900100023::10,8,U Rosenthaler Platz (Berlin),Bushalt Brunnenstraße ht. Rosenthaler Platz Pos. 8,52.530517000000,13.400725000000,0,,0,,5555 U Rosenthaler Platz (Berlin),4
+de:11000:900100080::1,1,U Weinmeisterstr./Gipsstr. (Berlin),Tram- u. Bushalt Rosenthaler Str vor Weinmeisters.,52.525309000000,13.403544000000,0,,0,,5555 U Weinmeisterstr./Gipsstr. (Berlin),4
+de:11000:900100726::2,,Fischerinsel (Berlin),Bushalt Fischerinsel vor Mühlendamm,52.513662000000,13.406400000000,0,,0,,5555 Fischerinsel (Berlin),4
+de:11000:900100016::8,6,U Rosa-Luxemburg-Platz (Berlin),Bushalt Rosa-Luxemburg-Straße ht. Linienstraße Pos. 6,52.527959000000,13.410241000000,0,,0,,5555 U Rosa-Luxemburg-Platz (Berlin),4
+de:11000:900100005::3,,U Alexanderplatz (Berlin) [Tram],Bushalt Alexanderstr. ht. Berhard-Weiß-Str. Pos. 9,52.523021000000,13.414918000000,0,,0,,5555 U Alexanderplatz (Berlin) [Tram],4
+de:11000:900100513::3,4,U Unter den Linden (Berlin),Bushalt Unter den Linden ht. Friedrichstraße,52.516845000000,13.389916000000,0,,0,,5555 U Unter den Linden (Berlin),9
+de:11000:900100514::1,,Staatsoper (Berlin),Bushalt Unter den Linden vor Universitätstraße,52.517458000000,13.394303000000,0,,0,,5555 Staatsoper (Berlin),4
+de:11000:900100513::4,1,U Unter den Linden (Berlin),Bushalt Unter den Linden ht. Friedrichstraße,52.517147000000,13.387888000000,0,,0,,5555 U Unter den Linden (Berlin),9
+de:11000:900100514::2,,Staatsoper (Berlin),Bushalt Unter den Linden vor Bebelplatz,52.517214000000,13.393823000000,0,,0,,5555 Staatsoper (Berlin),4
+de:11000:900100515::4,,Spandauer Str./Marienkirche (Berlin),Bushalt Karl-Liebknecht-Str. ht. Spandauer Str.,52.520337000000,13.405769000000,0,,0,,5555 Spandauer Str./Marienkirche (Berlin),4
+de:11000:900110022::3,6,Mollstr./Prenzlauer Allee (Berlin),Bushalt Mollstraße ht. Karl-Liebknecht-Str. Pos. 6,52.526216000000,13.416649000000,0,,0,,5555 Mollstr./Prenzlauer Allee (Berlin),4
+de:11000:900100030::1,,Memhardstr. (Berlin),Bushalt Memhardstraße ht. Karl-Liebknecht-Straße,52.524070000000,13.410607000000,0,,0,,5555 Memhardstr. (Berlin),4
+de:11000:900100501::3,,U Schwartzkopffstr. (Berlin),Bushalt Chausseestraße ht. ggü. Wöhlertstraße,52.535206000000,13.377126000000,0,,0,,5555 U Schwartzkopffstr. (Berlin),4
+de:11000:900100710::1,4,U Naturkundemuseum (Berlin),Tram- u. Bushalt Chaussee- ht. Invalidenstr Pos. 4,52.530125000000,13.383478000000,0,,0,,5555 U Naturkundemuseum (Berlin),4
+de:11000:900100535::2,,Leipziger Str./Wilhelmstr. (Berlin),Bushaltestelle Leipziger Straße vor Wilhelmstraße,52.509884000000,13.382877000000,0,,0,,5555 Leipziger Str./Wilhelmstr. (Berlin),4
+de:11000:900100019::9,,U Oranienburger Tor (Berlin),Tram- und Bussteig Friedr. v. Reinhardtstr. Pos. 3,52.524409000000,13.387608000000,0,de:11000:900100019,0,,5555 U Oranienburger Tor (Berlin),4
+de:11000:900100001::5,,S+U Friedrichstr. Bhf (Berlin),Bushalt Friedrichstraße vor Georgenstraße,52.520578000000,13.388116000000,0,,0,,5555 S+U Friedrichstr. Bhf (Berlin),4
+de:11000:900100528::5,2,U Stadtmitte (Berlin),Bushalt Leipziger Straße ht. Friedrichstr. Pos. 2,52.510309000000,13.390395000000,0,,0,,5555 U Stadtmitte (Berlin),4
+de:11000:900100010::5,,U Anton-W.-Amo-Str. (Mohrenstr.) (Berlin),Bushalt Wilhelmstraße ht. Voßstraße,52.511208000000,13.383489000000,0,,0,,5555 U Anton-W.-Amo-Str. (Mohrenstr.) (Berlin),4
+de:11000:900100019::3,,U Oranienburger Tor (Berlin),Tram- und Bussteig Friedr. v. Oranienb. S. Pos. 2,52.525682000000,13.387391000000,0,de:11000:900100019,0,,5555 U Oranienburger Tor (Berlin),4
+de:11000:900100710::2,5,U Naturkundemuseum (Berlin),Tram- u. Bushalt Chaussee- vor Invalidenstr Pos. 5,52.530277000000,13.383543000000,0,,0,,5555 U Naturkundemuseum (Berlin),4
+de:11000:900110006::7,3,U Eberswalder Str. (Berlin),Bushalt Schönhauser Allee ht. Pappelallee Pos. 3,52.541736000000,13.412401000000,0,,0,,5555 U Eberswalder Str. (Berlin),4
+de:11000:900110503::1,,Milastr. (Berlin),Tram- u. Bushalt Schönh. All. ht. Buchholzer Str.,52.545649000000,13.413102000000,0,,0,,5555 Milastr. (Berlin),4
+de:11000:900110503::2,,Milastr. (Berlin),Tram- u. Bushalt Schönhauser Allee ht. Milastraße,52.544921000000,13.412435000000,0,,0,,5555 Milastr. (Berlin),4
+de:11000:900110006::8,2,U Eberswalder Str. (Berlin),Bushalt Schönhauser Allee vor Pappelallee Pos. 2,52.541290000000,13.411887000000,0,,0,,5555 U Eberswalder Str. (Berlin),4
+de:11000:900100515::5,,Spandauer Str./Marienkirche (Berlin),Bushalt Karl-Liebknecht-Str. vor Spandauer Str.,52.520894000000,13.406187000000,0,,0,,5555 Spandauer Str./Marienkirche (Berlin),4
+de:11000:900100045::5,,U Rotes Rathaus (Berlin),Bushalt Spandauer Straße ht. Rathausstraße,52.518922000000,13.406635000000,0,,0,,5555 U Rotes Rathaus (Berlin),9
+de:11000:900100515::6,,Spandauer Str./Marienkirche (Berlin),Bushalt Spandauer Str. vor Karl-Liebknecht-Str.,52.520249000000,13.404302000000,0,,0,,5555 Spandauer Str./Marienkirche (Berlin),4
+de:11000:900100539::1,,Nikolaiviertel (Berlin),Bushalt Mühlendamm hinter Spandauer Str.,52.515945000000,13.407709000000,0,,0,,5555 Nikolaiviertel (Berlin),4
+de:11000:900120010::2,,S Ostbahnhof/Erich-Steinfurth-Str. (Berlin),Bushaltestelle Straße der Pariser Kommune vor Erich-Steinfurth-Straße,52.510715000000,13.437190000000,0,,0,,5555 S Ostbahnhof/Erich-Steinfurth-Str. (Berlin),4
+de:11000:900100045::4,,U Rotes Rathaus (Berlin),Bushalt Spandauer Straße vor Rathausstraße,52.518879000000,13.406302000000,0,,0,,5555 U Rotes Rathaus (Berlin),9
+de:11000:900100010::3,,U Anton-W.-Amo-Str. (Mohrenstr.) (Berlin),Bushalt Voßstraße vor Wilhelmstraße,52.511252000000,13.382625000000,0,,0,,5555 U Anton-W.-Amo-Str. (Mohrenstr.) (Berlin),4
+de:11000:900120544::1,,"Berlin, East Side Gallery",Bushalt Mühlenstraße vor Edith-Kiss-Straße,52.506069000000,13.437852000000,0,,0,,"5555 Berlin, East Side Gallery",4
+de:11000:900120544::2,,"Berlin, East Side Gallery",Bushalt Mühlenstraße vor Edith-Kiss-Straße,52.505510000000,13.439218000000,0,,0,,"5555 Berlin, East Side Gallery",4
+de:11000:900120545::1,,Tamara-Danz-Str. (Berlin),Bushalt Tamara-Danz-Straße hinter Mühlenstraße,52.504180000000,13.444727000000,0,,0,,5555 Tamara-Danz-Str. (Berlin),4
+de:11000:900120545::2,,Tamara-Danz-Str. (Berlin),Bushalt Tamara-Danz-Straße vor Mühlenstraße,52.504107000000,13.444547000000,0,,0,,5555 Tamara-Danz-Str. (Berlin),4
+de:11000:900100560::1,,Littenstr. (Berlin),Bushalt Grunerstraße vor Dircksenstraße,52.519659000000,13.413653000000,0,,0,,5555 Littenstr. (Berlin),4
+de:11000:900110501::1,,Stargarder Str. (Berlin),Tramhaltestelle Pappelallee vor Stargarder Straße,52.546658000000,13.418334000000,0,,0,,5555 Stargarder Str. (Berlin),4
+de:11000:900110501::2,,Stargarder Str. (Berlin),Tramhaltestelle Pappelallee vor Stargarder Straße,52.546323000000,13.418106000000,0,,0,,5555 Stargarder Str. (Berlin),4
+de:11000:900110502::1,,Raumerstr. (Berlin),Tramhalt Pappelallee vor Gneiststraße,52.544357000000,13.415815000000,0,,0,,5555 Raumerstr. (Berlin),4
+de:11000:900110502::2,,Raumerstr. (Berlin),Tramhalt Pappelallee vor Raumerstraße,52.543619000000,13.415212000000,0,,0,,5555 Raumerstr. (Berlin),4
+de:11000:900100042::1,,Zionskirchplatz (Berlin),Tramhalt Kastanienallee vor Zionskirchstraße,52.534568000000,13.405554000000,0,,0,,5555 Zionskirchplatz (Berlin),4
+de:11000:900100041::5,,"Berlin, Brunnenstr./Invalidenstr.",Tramsteig Veteranenstraße vor Brunnenstraße,52.532734000000,13.399359000000,0,,0,,"5555 Berlin, Brunnenstr./Invalidenstr.",4
+de:11000:900100512::1,,Monbijouplatz (Berlin),Ersatzhaltestelle Oranienburger Straße gegenüber Monbijouplatz,52.523717000000,13.398551000000,0,,0,,5555 Monbijouplatz (Berlin),4
+de:11000:900100007::1,,S Oranienburger Str. (Berlin),Tramhalt Oranienburger Str ht. Tucholskystr,52.525172000000,13.392406000000,0,,0,,5555 S Oranienburger Str. (Berlin),4
+de:11000:900100007::2,,S Oranienburger Str. (Berlin),Tramhalt Oranienburger Str vor Tucholskystr,52.525046000000,13.392295000000,0,,0,,5555 S Oranienburger Str. (Berlin),4
+de:11000:900100019::6,,U Oranienburger Tor (Berlin),Ersatzhalt Oranienburger Str. vor Friedrichstraße,52.526297000000,13.387817000000,0,,0,,5555 U Oranienburger Tor (Berlin),4
+de:11000:900100019::7,,U Oranienburger Tor (Berlin),Ersatzhalt Oranienburger Str. ht. Friedrichstraße,52.526077000000,13.387953000000,0,,0,,5555 U Oranienburger Tor (Berlin),4
+de:11000:900100019::10,,U Oranienburger Tor (Berlin),Ersatzhalt Friedrichstraße vor Reinhardtstraße,52.524226000000,13.387446000000,0,,0,,5555 U Oranienburger Tor (Berlin),4
+de:11000:900100512::2,,Monbijouplatz (Berlin),Ersatzhaltestelle Oranienburger Straße vor Monbijouplatz,52.523824000000,13.397089000000,0,,0,,5555 Monbijouplatz (Berlin),4
+de:11000:900110006::3,6,U Eberswalder Str. (Berlin),Tramhalt Danziger Str. v. Schönhauser Allee Pos. 6,52.540970000000,13.413000000000,0,,0,,5555 U Eberswalder Str. (Berlin),4
+de:11000:900110018::2,,Friedrich-Ludwig-Jahn-Sportpark (Berlin),Tramhalt Eberswalder Str. ht. Schwedter S. Pos. 2,52.540943000000,13.405766000000,0,,0,,5555 Friedrich-Ludwig-Jahn-Sportpark (Berlin),4
+de:11000:900120526::1,,Kopernikusstr./Warschauer Str. (Berlin),Tramhalt Kopernikusstraße vor Warschauer Straße,52.510609000000,13.452634000000,0,,0,,5555 Kopernikusstr./Warschauer Str. (Berlin),4
+de:11000:900100001::8,,S+U Friedrichstr. Bhf (Berlin),Ersatzhalt Am Weidendamm ht. Planckstraße,52.521982000000,13.388648000000,0,,0,,5555 S+U Friedrichstr. Bhf (Berlin),4
+de:11000:900110022::9,8,Mollstr./Prenzlauer Allee (Berlin),Ersatzhalt Torstraße ht. Prenzlauer Allee,52.527547000000,13.414966000000,0,,0,,5555 Mollstr./Prenzlauer Allee (Berlin),4
+de:11000:900100540::1,,Universitätsstr. (Berlin),Tram und Ersatzhalt Dorotheens. vor Universitätss.,52.519069000000,13.391509000000,0,,0,,5555 Universitätsstr. (Berlin),4
+de:11000:900007105::3,,"Berlin, Wolliner Str.",Tramsteig Bernauer Straße vor Wolliner Straße,52.540066000000,13.402119000000,0,,0,,"5555 Berlin, Wolliner Str.",4
+de:11000:900007105::4,,"Berlin, Wolliner Str.",Tramsteig Bernauer Straße vor Wolliner Straße,52.539637000000,13.401198000000,0,,0,,"5555 Berlin, Wolliner Str.",4
+de:11000:900007110::3,,U Bernauer Str. (Berlin),Tramhalt Bernauer Straße vor Brunnenstraße,52.538531000000,13.396637000000,0,,0,,5555 U Bernauer Str. (Berlin),4
+de:11000:900007110::4,,U Bernauer Str. (Berlin),Tramhalt Bernauer Straße vor Brunnenstraße,52.537997000000,13.395400000000,0,,0,,5555 U Bernauer Str. (Berlin),4
+de:11000:900007150::2,,Gedenkstätte Berliner Mauer (Berlin),Tramhalt und Bushalt Bernauer Straße ht. Ackerstraße,52.535846000000,13.390800000000,0,,0,,5555 Gedenkstätte Berliner Mauer (Berlin),4
+de:11000:900110018::3,,Friedrich-Ludwig-Jahn-Sportpark (Berlin),Tramhalt Eberswalder Str. ht. Schwedter S. Pos. 1,52.540963000000,13.406566000000,0,,0,,5555 Friedrich-Ludwig-Jahn-Sportpark (Berlin),4
+de:11000:900100038::2,,Am Kupfergraben (Berlin),Ersatzhalt Universitätsstraße vor Georgenstraße,52.519975000000,13.392070000000,0,,0,,5555 Am Kupfergraben (Berlin),4
+de:11000:900100042::4,,Zionskirchplatz (Berlin),Tramhalt Kastanienallee ht. Zionskirchstraße,52.534421000000,13.405616000000,0,,0,,5555 Zionskirchplatz (Berlin),4
+de:11000:900100002::17,,S Hackescher Markt (Berlin),Ersatzhalt An der Spandauer Br. vor Dircksenstr.,52.522896000000,13.403894000000,0,,0,,5555 S Hackescher Markt (Berlin),4
+de:11000:900100002::18,,S Hackescher Markt (Berlin),Ersatzhalt Burgstraße ht. ggü. Neue Promenade,52.522067000000,13.400396000000,0,,0,,5555 S Hackescher Markt (Berlin),4
+de:11000:900100080::5,,U Weinmeisterstr./Gipsstr. (Berlin),Bushalt Weinmeisterstraße vor Rosenthaler Straße,52.525904000000,13.404153000000,0,,0,,5555 U Weinmeisterstr./Gipsstr. (Berlin),4
+de:11000:900014101::1,,U Görlitzer Bahnhof (Berlin),U Bahnsteig Gleis 1,52.499292000000,13.428277000000,0,de:11000:900014101,0,1,5555 U Görlitzer Bahnhof (Berlin),1
+de:11000:900014101::2,,U Görlitzer Bahnhof (Berlin),U Bahnsteig Gleis 2,52.499270000000,13.428283000000,0,de:11000:900014101,0,2,5555 U Görlitzer Bahnhof (Berlin),1
+de:11000:900013102::1,,U Kottbusser Tor (Berlin),U Bahnsteig U1 U3 Gleis 1,52.499051000000,13.418395000000,0,de:11000:900013102,0,1 (U3),5555 U Kottbusser Tor (Berlin),71
+de:11000:900013102::2,,U Kottbusser Tor (Berlin),U Bahnsteig U1 U3 Gleis 2,52.498933000000,13.418417000000,0,de:11000:900013102,0,2 (U3),5555 U Kottbusser Tor (Berlin),71
+de:11000:900013103::1,,U Prinzenstr. (Berlin),U Bahnsteig Gleis 1,52.498406000000,13.405401000000,0,de:11000:900013103,0,1,5555 U Prinzenstr. (Berlin),1
+de:11000:900013103::2,,U Prinzenstr. (Berlin),U Bahnsteig Gleis 2,52.498379000000,13.405403000000,0,de:11000:900013103,0,2,5555 U Prinzenstr. (Berlin),1
+de:11000:900110006::1,,U Eberswalder Str. (Berlin),U Bahnsteig Gleis 1,52.541988000000,13.412139000000,0,de:11000:900110006,0,1,5555 U Eberswalder Str. (Berlin),1
+de:11000:900110006::2,,U Eberswalder Str. (Berlin),U Bahnsteig Gleis 2,52.541982000000,13.412280000000,0,de:11000:900110006,0,2 ,5555 U Eberswalder Str. (Berlin),1
+de:11000:900110005::1,,U Senefelderplatz (Berlin),U Bahnsteig Gleis 1,52.532443000000,13.412596000000,0,de:11000:900110005,0,1,5555 U Senefelderplatz (Berlin),2
+de:11000:900100016::1,,U Rosa-Luxemburg-Platz (Berlin),U Bahnsteig Gleis 1,52.527701000000,13.410374000000,0,de:11000:900100016,0,1,5555 U Rosa-Luxemburg-Platz (Berlin),2
+de:11000:900100016::2,,U Rosa-Luxemburg-Platz (Berlin),U Bahnsteig Gleis 2,52.527725000000,13.410522000000,0,de:11000:900100016,0,2,5555 U Rosa-Luxemburg-Platz (Berlin),2
+de:11000:900100003::1,,S+U Alexanderplatz Bhf (Berlin),U-Bahn Gleis 1 (U2),52.521633000000,13.414011000000,0,de:11000:900100003,0,1 (U2),5555 S+U Alexanderplatz Bhf (Berlin),12
+de:11000:900100003::2,,S+U Alexanderplatz Bhf (Berlin),U-Bahn Gleis 2 (U2),52.521754000000,13.414250000000,0,de:11000:900100003,0,2 (U2),5555 S+U Alexanderplatz Bhf (Berlin),12
+de:11000:900100015::1,,U Klosterstr. (Berlin),U Bahnsteig Gleis 1,52.517186000000,13.412317000000,0,de:11000:900100015,0,1,5555 U Klosterstr. (Berlin),3
+de:11000:900100015::2,,U Klosterstr. (Berlin),U Bahnsteig Gleis 2,52.517208000000,13.412525000000,0,de:11000:900100015,0,2,5555 U Klosterstr. (Berlin),3
+de:11000:900100014::1,,U Märkisches Museum (Berlin),U Bahnsteig Gleis 1,52.512387000000,13.410151000000,0,de:11000:900100014,0,1,5555 U Märkisches Museum (Berlin),3
+de:11000:900100014::2,,U Märkisches Museum (Berlin),U Bahnsteig Gleis 2,52.512309000000,13.410213000000,0,de:11000:900100014,0,2,5555 U Märkisches Museum (Berlin),3
+de:11000:900100013::1,,U Spittelmarkt (Berlin),Bahnsteig U2 Gleis 1,52.511348000000,13.403697000000,0,de:11000:900100013,0,1,5555 U Spittelmarkt (Berlin),2
+de:11000:900100013::2,,U Spittelmarkt (Berlin),Bahnsteig U2 Gleis 2,52.511264000000,13.403695000000,0,de:11000:900100013,0,2,5555 U Spittelmarkt (Berlin),2
+de:11000:900100012::1,,U Hausvogteiplatz (Berlin),Bahnsteig U2 Gleis 1,52.513393000000,13.395562000000,0,de:11000:900100012,0,U2,5555 U Hausvogteiplatz (Berlin),2
+de:11000:900100012::2,,U Hausvogteiplatz (Berlin),Bahnsteig U2 Gleis 2,52.513311000000,13.395536000000,0,de:11000:900100012,0,U2,5555 U Hausvogteiplatz (Berlin),2
+de:11000:900100701::1,,U Stadtmitte (Berlin),U Bahnsteig Gleis 1,52.512199000000,13.390543000000,0,de:11000:900100011,0,,5555 U Stadtmitte (Berlin),2
+de:11000:900100701::2,,U Stadtmitte (Berlin),U Bahnsteig Gleis 2,52.512114000000,13.390557000000,0,de:11000:900100011,0,,5555 U Stadtmitte (Berlin),2
+de:11000:900100010::1,,U Anton-W.-Amo-Str. (Mohrenstr.) (Berlin),U Bahnsteig Gleis 1,52.511816000000,13.385110000000,0,de:11000:900100010,0,1,5555 U Anton-W.-Amo-Str. (Mohrenstr.) (Berlin),2
+de:11000:900100010::2,,U Anton-W.-Amo-Str. (Mohrenstr.) (Berlin),U Bahnsteig Gleis 2,52.511723000000,13.385135000000,0,de:11000:900100010,0,2,5555 U Anton-W.-Amo-Str. (Mohrenstr.) (Berlin),2
+de:11000:900100020::7,,S+U Potsdamer Platz Bhf (Berlin),U-Bahnsteig Gleis 1,52.509072000000,13.377905000000,0,de:11000:900100020,0,1 (U2),5555 S+U Potsdamer Platz Bhf (Berlin),18
+de:11000:900100020::8,,S+U Potsdamer Platz Bhf (Berlin),U-Bahnsteig Gleis 2,52.508998000000,13.378047000000,0,de:11000:900100020,0,2 (U2),5555 S+U Potsdamer Platz Bhf (Berlin),18
+de:11000:900120008::1,,U Frankfurter Tor (Berlin),U Bahnsteig Gleis 1,52.515872000000,13.453903000000,0,de:11000:900120008,0,1,5555 U Frankfurter Tor (Berlin),22
+de:11000:900120008::2,,U Frankfurter Tor (Berlin),U Bahnsteig Gleis 2,52.515755000000,13.453871000000,0,de:11000:900120008,0,2,5555 U Frankfurter Tor (Berlin),22
+de:11000:900120025::1,,U Weberwiese (Berlin),U Bahnsteig Gleis 1,52.516804000000,13.444683000000,0,de:11000:900120025,0,1,5555 U Weberwiese (Berlin),3
+de:11000:900120025::2,,U Weberwiese (Berlin),U Bahnsteig Gleis 2,52.516688000000,13.444657000000,0,de:11000:900120025,0,2,5555 U Weberwiese (Berlin),3
+de:11000:900120006::1,,U Strausberger Platz (Berlin),U Bahnsteig Gleis 1,52.518144000000,13.431554000000,0,de:11000:900120006,0,1,5555 U Strausberger Platz (Berlin),22
+de:11000:900120006::2,,U Strausberger Platz (Berlin),U Bahnsteig Gleis 2,52.518055000000,13.431530000000,0,de:11000:900120006,0,2,5555 U Strausberger Platz (Berlin),22
+de:11000:900100017::1,,U Schillingstr. (Berlin),U Bahnsteig Gleis 1,52.520931000000,13.420841000000,0,de:11000:900100017,0,1,5555 U Schillingstr. (Berlin),22
+de:11000:900100017::2,,U Schillingstr. (Berlin),U Bahnsteig Gleis 2,52.520847000000,13.420768000000,0,de:11000:900100017,0,2,5555 U Schillingstr. (Berlin),22
+de:11000:900100003::3,,S+U Alexanderplatz Bhf (Berlin),U-Bahn Gleis 1 (U5),52.521488000000,13.413583000000,0,de:11000:900100003,0,1 (U5),5555 S+U Alexanderplatz Bhf (Berlin),14
+de:11000:900100003::4,,S+U Alexanderplatz Bhf (Berlin),U-Bahn Gleis 2 (U5),52.521448000000,13.413646000000,0,de:11000:900100003,0,2 (U5),5555 S+U Alexanderplatz Bhf (Berlin),14
+de:11000:900100025::1,,S+U Brandenburger Tor (Berlin),U Bahnsteig Gleis 1,52.516644000000,13.380981000000,0,de:11000:900100025,0,1 (U5),5555 S+U Brandenburger Tor (Berlin),135
+de:11000:900003254::1,,U Bundestag (Berlin),U Bahnsteig Gleis 1,52.520156000000,13.373086000000,0,de:11000:900003254,0,1,5555 U Bundestag (Berlin),127
+de:11000:900003201::1,,S+U Berlin Hauptbahnhof,U-Bahnsteig Gleis 1,52.525290000000,13.370260000000,0,de:11000:900003201,0,1 (U5),5555 S+U Berlin Hauptbahnhof,3
+de:11000:900100501::1,,U Schwartzkopffstr. (Berlin),U Bahnsteig Gleis 1,52.535449000000,13.376863000000,0,de:11000:900100501,0,1,5555 U Schwartzkopffstr. (Berlin),2
+de:11000:900100501::2,,U Schwartzkopffstr. (Berlin),U Bahnsteig Gleis 2,52.535500000000,13.376986000000,0,de:11000:900100501,0,2,5555 U Schwartzkopffstr. (Berlin),2
+de:11000:900100009::1,,U Naturkundemuseum (Berlin),U Bahnsteig Gleis 1,52.531269000000,13.382101000000,0,de:11000:900100009,0,1,5555 U Naturkundemuseum (Berlin),2
+de:11000:900100009::2,,U Naturkundemuseum (Berlin),U Bahnsteig Gleis 2,52.531322000000,13.382214000000,0,de:11000:900100009,0,2,5555 U Naturkundemuseum (Berlin),2
+de:11000:900100019::1,,U Oranienburger Tor (Berlin),Bahnsteig U6 Gleis 1,52.525545000000,13.387314000000,0,de:11000:900100019,0,1,5555 U Oranienburger Tor (Berlin),2
+de:11000:900100019::2,,U Oranienburger Tor (Berlin),U Bahnsteig Gleis 2,52.525551000000,13.387428000000,0,de:11000:900100019,0,2,5555 U Oranienburger Tor (Berlin),2
+de:11000:900100001::1,,S+U Friedrichstr. Bhf (Berlin),U-Bahnsteig Gleis 1,52.520265000000,13.388196000000,0,de:11000:900100001,0,1 (U6),5555 S+U Friedrichstr. Bhf (Berlin),22
+de:11000:900100001::2,,S+U Friedrichstr. Bhf (Berlin),U-Bahnsteig Gleis 2,52.520269000000,13.388335000000,0,de:11000:900100001,0,2 (U6),5555 S+U Friedrichstr. Bhf (Berlin),22
+de:11000:900100011::1,,U Stadtmitte (Berlin),U Bahnsteig Gleis 1,52.510236000000,13.389841000000,0,de:11000:900100011,0,,5555 U Stadtmitte (Berlin),3
+de:11000:900100011::2,,U Stadtmitte (Berlin),U Bahnsteig Gleis 2,52.510246000000,13.389981000000,0,de:11000:900100011,0,,5555 U Stadtmitte (Berlin),3
+de:11000:900012102::1,,U Kochstr./Checkpoint Charlie (Berlin),U Bahnsteig Gleis 1,52.506032000000,13.390528000000,0,de:11000:900012102,0,1,5555 U Kochstr./Checkpoint Charlie (Berlin),2
+de:11000:900012102::2,,U Kochstr./Checkpoint Charlie (Berlin),U Bahnsteig Gleis 2,52.506044000000,13.390689000000,0,de:11000:900012102,0,2,5555 U Kochstr./Checkpoint Charlie (Berlin),2
+de:11000:900012103::3,,U Hallesches Tor (Berlin),Bahnsteig U6 Gleis 1,52.498999000000,13.391628000000,0,de:11000:900012103,0,1 (U6),5555 U Hallesches Tor (Berlin),22
+de:11000:900012103::4,,U Hallesches Tor (Berlin),Bahnsteig U6 Gleis 2,52.499006000000,13.391805000000,0,de:11000:900012103,0,2 (U6),5555 U Hallesches Tor (Berlin),22
+de:11000:900007103::1,,U Voltastr. (Berlin),U Bahnsteig Gleis 1,52.542101000000,13.392932000000,0,de:11000:900007103,0,1,5555 U Voltastr. (Berlin),2
+de:11000:900007103::2,,U Voltastr. (Berlin),U Bahnsteig Gleis 2,52.542150000000,13.393114000000,0,de:11000:900007103,0,2,5555 U Voltastr. (Berlin),2
+de:11000:900007110::1,,U Bernauer Str. (Berlin),U Bahnsteig Gleis 1,52.537276000000,13.396665000000,0,de:11000:900007110,0,1,5555 U Bernauer Str. (Berlin),2
+de:11000:900007110::2,,U Bernauer Str. (Berlin),U Bahnsteig Gleis 2,52.537319000000,13.396828000000,0,de:11000:900007110,0,2,5555 U Bernauer Str. (Berlin),2
+de:11000:900100023::1,,U Rosenthaler Platz (Berlin),U Bahnsteig Gleis 1,52.530380000000,13.400626000000,0,de:11000:900100023,0,1,5555 U Rosenthaler Platz (Berlin),22
+de:11000:900100023::2,,U Rosenthaler Platz (Berlin),U Bahnsteig Gleis 2,52.530428000000,13.400769000000,0,de:11000:900100023,0,2,5555 U Rosenthaler Platz (Berlin),22
+de:11000:900100051::1,,U Weinmeisterstr. (Berlin),U Bahnsteig Gleis 1,52.525435000000,13.404988000000,0,de:11000:900100051,0,1,5555 U Weinmeisterstr. (Berlin),3
+de:11000:900100051::2,,U Weinmeisterstr. (Berlin),U Bahnsteig Gleis 2,52.525501000000,13.405070000000,0,de:11000:900100051,0,2,5555 U Weinmeisterstr. (Berlin),3
+de:11000:900100003::5,,S+U Alexanderplatz Bhf (Berlin),U-Bahn Gleis 1 (U8),52.520950000000,13.412565000000,0,de:11000:900100003,0,1 (U8),5555 S+U Alexanderplatz Bhf (Berlin),13
+de:11000:900100003::6,,S+U Alexanderplatz Bhf (Berlin),U-Bahn Gleis 2 (U8),52.521048000000,13.412764000000,0,de:11000:900100003,0,2 (U8),5555 S+U Alexanderplatz Bhf (Berlin),13
+de:11000:900100004::1,,S+U Jannowitzbrücke (Berlin),U Bahnsteig Gleis 1,52.515585000000,13.418139000000,0,de:11000:900100004,0,1,5555 S+U Jannowitzbrücke (Berlin),82
+de:11000:900100004::2,,S+U Jannowitzbrücke (Berlin),U Bahnsteig Gleis 2,52.515577000000,13.418239000000,0,de:11000:900100004,0,2,5555 S+U Jannowitzbrücke (Berlin),82
+de:11000:900100008::1,,U Heinrich-Heine-Str. (Berlin),U Bahnsteig Gleis 1,52.510120000000,13.415704000000,0,de:11000:900100008,0,1,5555 U Heinrich-Heine-Str. (Berlin),22
+de:11000:900100008::2,,U Heinrich-Heine-Str. (Berlin),U Bahnsteig Gleis 2,52.510077000000,13.415832000000,0,de:11000:900100008,0,2,5555 U Heinrich-Heine-Str. (Berlin),22
+de:11000:900013101::1,,U Moritzplatz (Berlin),U Bahnsteig Gleis 1,52.503676000000,13.410615000000,0,de:11000:900013101,0,1,5555 U Moritzplatz (Berlin),49
+de:11000:900013101::2,,U Moritzplatz (Berlin),U Bahnsteig Gleis 2,52.503618000000,13.410788000000,0,de:11000:900013101,0,2,5555 U Moritzplatz (Berlin),49
+de:11000:900013102::3,,U Kottbusser Tor (Berlin),U Bahnsteig U8 Gleis 1,52.498849000000,13.417900000000,0,de:11000:900013102,0,1 (U8),5555 U Kottbusser Tor (Berlin),72
+de:11000:900013102::4,,U Kottbusser Tor (Berlin),U Bahnsteig U8 Gleis 2,52.498959000000,13.418101000000,0,de:11000:900013102,0,2 (U8),5555 U Kottbusser Tor (Berlin),72
+de:11000:900100040::6,6,Mollstr./Otto-Braun-Str. (Berlin),Tramsteig Mollstraße ht. Otto-Braun-Straße Pos. 6,52.524846000000,13.420685000000,0,de:11000:900100040,0,,5555 Mollstr./Otto-Braun-Str. (Berlin),4
+de:11000:900100005::1,,U Alexanderplatz (Berlin) [Tram],Tramsteig Alexanderplatz ht. Alexanderstr. Pos. 11,52.522141000000,13.414628000000,0,,0,,5555 U Alexanderplatz (Berlin) [Tram],4
+de:11000:900100026::1,15,S+U Alexanderplatz Bhf/Gontardstr. (Berlin),Tramsteig Gontardstraße ht. Rathausstraße Pos. 15,52.521046000000,13.411326000000,0,,0,,5555 S+U Alexanderplatz Bhf/Gontardstr. (Berlin),4
+de:11000:900100515::1,,Spandauer Str./Marienkirche (Berlin),Tramsteig Karl-Liebknecht-Straße vor Spandauer Straße,52.520429000000,13.405559000000,0,de:11000:900100515,0,,5555 Spandauer Str./Marienkirche (Berlin),4
+de:11000:900100002::1,3,S Hackescher Markt (Berlin),Tramsteig Henriette-Herz-Platz Pos. 3,52.522545000000,13.403145000000,0,,0,,5555 S Hackescher Markt (Berlin),4
+de:11000:900100002::2,2,S Hackescher Markt (Berlin),Tramsteig Garnisonkirchplatz Pos. 2,52.521784000000,13.402562000000,0,,0,,5555 S Hackescher Markt (Berlin),4
+de:11000:900100515::2,,Spandauer Str./Marienkirche (Berlin),Tramsteig Spandauer Straße vor Karl-Liebknecht-Straße,52.520517000000,13.404127000000,0,de:11000:900100515,0,,5555 Spandauer Str./Marienkirche (Berlin),4
+de:11000:900100026::2,16,S+U Alexanderplatz Bhf/Gontardstr. (Berlin),Tramsteig Gontardstraße vor Rathausstraße Pos. 16,52.521025000000,13.411285000000,0,,0,,5555 S+U Alexanderplatz Bhf/Gontardstr. (Berlin),4
+de:11000:900100005::2,,U Alexanderplatz (Berlin) [Tram],Tramsteig Alexanderplatz vor Alexanderstr. Pos. 12,52.522121000000,13.414676000000,0,,0,,5555 U Alexanderplatz (Berlin) [Tram],4
+de:11000:900100040::7,8,Mollstr./Otto-Braun-Str. (Berlin),Tramsteig Otto-Braun-Straße ht. Mollstraße Pos.8,52.524705000000,13.419348000000,0,de:11000:900100040,0,,5555 Mollstr./Otto-Braun-Str. (Berlin),4
+de:11000:900100040::8,7,Mollstr./Otto-Braun-Str. (Berlin),Tramsteig Otto-Braun-Straße vor Mollstraße Pos.7,52.524679000000,13.419414000000,0,de:11000:900100040,0,,5555 Mollstr./Otto-Braun-Str. (Berlin),4
+de:11000:900100040::9,1,Mollstr./Otto-Braun-Str. (Berlin),Tramsteig Mollstraße vor Otto-Braun-Straße Pos. 1,52.525509000000,13.419095000000,0,de:11000:900100040,0,,5555 Mollstr./Otto-Braun-Str. (Berlin),4
+de:11000:900100512::3,,Monbijouplatz (Berlin),Tramhaltestelle Oranienburger Straße vor Monbijouplatz,52.523867000000,13.396918000000,0,,0,,5555 Monbijouplatz (Berlin),4
+de:11000:900100030::5,4,S+U Alexanderplatz Bhf/Memhardstr. (Berlin),Tramsteig Karl-Liebknecht-S. ht. Memhardstr Pos. 4,52.523507000000,13.411335000000,0,de:11000:900100031,0,,5555 S+U Alexanderplatz Bhf/Memhardstr. (Berlin),4
+de:11000:900100024::1,13,S+U Alexanderplatz Bhf/Dircksenstr. (Berlin),Tramsteig Dircksenstraße vor Rathausstraße Pos. 13,52.521455000000,13.411991000000,0,,0,,5555 S+U Alexanderplatz Bhf/Dircksenstr. (Berlin),4
+de:11000:900100024::2,14,S+U Alexanderplatz Bhf/Dircksenstr. (Berlin),Tramsteig Dircksenstraße vor Rathausstraße Pos. 14,52.521436000000,13.411959000000,0,,0,,5555 S+U Alexanderplatz Bhf/Dircksenstr. (Berlin),4
+de:11000:900100030::6,5,S+U Alexanderplatz Bhf/Memhardstr. (Berlin),Tramsteig Karl-Liebknecht-S vor Alexanderstr Pos 5,52.523489000000,13.411363000000,0,de:11000:900100031,0,,5555 S+U Alexanderplatz Bhf/Memhardstr. (Berlin),4
+de:11000:900120011::1,2,S Warschauer Str. (Berlin),Tramsteig Warschauer Straße vor Revaler Straße,52.508113000000,13.450643000000,0,de:11000:900120011,0,,5555 S Warschauer Str. (Berlin),4
+de:11000:900110009::1,5,U Eberswalder Str./Pappelallee (Berlin),Tramsteig Pappelallee ht. Danziger Straße Pos. 5,52.541464000000,13.412783000000,0,,0,,5555 U Eberswalder Str./Pappelallee (Berlin),4
+de:11000:900120008::3,,U Frankfurter Tor (Berlin),Tramsteig Warschauer Straße ht. Karl-Marx-Allee,52.515436000000,13.453796000000,0,de:11000:900120008,0,,5555 U Frankfurter Tor (Berlin),4
+de:11000:900120008::4,,U Frankfurter Tor (Berlin),Tramsteig Warschauer Straße vor Frankfurter Allee,52.515409000000,13.453999000000,0,de:11000:900120008,0,,5555 U Frankfurter Tor (Berlin),4
+de:11000:900007150::3,,Gedenkstätte Berliner Mauer (Berlin),Tramhalt Bernauer Straße vor Ackerstraße,52.535776000000,13.390542000000,0,,0,,5555 Gedenkstätte Berliner Mauer (Berlin),4
+de:11000:900007104::3,4,S Nordbahnhof (Berlin),Tramsteig S Nordbahnhof vor Invalidenstraße,52.532280000000,13.387629000000,0,,0,,5555 S Nordbahnhof (Berlin),4
+de:11000:900100009::11,2,U Naturkundemuseum (Berlin),Tramsteig Invalidenstr. ht. Chausseestr. Pos. 2,52.530386000000,13.382397000000,0,de:11000:900100009,0,,5555 U Naturkundemuseum (Berlin),4
+de:11000:900100503::7,,"Berlin, Invalidenpark",Tramsteig Invalidenstraße vor Scharnhorststraße,52.528722000000,13.376723000000,0,de:11000:900100503,0,,"5555 Berlin, Invalidenpark",4
+de:11000:900003201::2,4,S+U Berlin Hauptbahnhof,Tramsteig Invalidenstr. ht. Friedrich-L.-U. Pos. 4,52.526583000000,13.369713000000,0,de:11000:900003201,0,,5555 S+U Berlin Hauptbahnhof,4
+de:11000:900003201::3,5,S+U Berlin Hauptbahnhof,Tramsteig Invalidenstr. vor Friedrich-L.-U. Pos. 5,52.526556000000,13.369735000000,0,de:11000:900003201,0,,5555 S+U Berlin Hauptbahnhof,4
+de:11000:900007104::4,3,S Nordbahnhof (Berlin),Tramsteig S Nordbahnhof ht. Invalidenstraße,52.532292000000,13.387672000000,0,,0,,5555 S Nordbahnhof (Berlin),4
+de:11000:900120021::6,,"Berlin, Revaler Str.",Tramsteig Warschauer Straße ht. Revaler Straße,52.509329000000,13.451299000000,0,de:11000:900120021,0,,"5555 Berlin, Revaler Str.",4
+de:11000:900120011::2,1,S Warschauer Str. (Berlin),Tramsteig Warschauer Straße hinter Revaler Straße,52.508120000000,13.450600000000,0,de:11000:900120011,0,,5555 S Warschauer Str. (Berlin),4
+de:11000:900110006::4,1,U Eberswalder Str. (Berlin),Tramsteig Eberswalder Str. v. Schönhauser A Pos. 1,52.541062000000,13.411405000000,0,de:11000:900110006,0,,5555 U Eberswalder Str. (Berlin),4
+de:11000:900110511::3,,Husemannstr. (Berlin),Tramsteig Danziger Straße ht. Husemannstraße,52.539938000000,13.419319000000,0,de:11000:900110511,0,,5555 Husemannstr. (Berlin),4
+de:11000:900110017::9,1,Prenzlauer Allee/Danziger Str. (Berlin),Tramsteig Danziger Straße vor Prenzlauer Allee,52.539344000000,13.423185000000,0,de:11000:900110017,0,,5555 Prenzlauer Allee/Danziger Str. (Berlin),4
+de:11000:900110512::3,,Winsstr. (Berlin),Tramsteig Danziger Straße vor Winsstraße,52.537979000000,13.427779000000,0,de:11000:900110512,0,,5555 Winsstr. (Berlin),4
+de:11000:900110020::11,1,"Berlin, Greifswalder Str./Danziger Str.",Tramsteig Danziger Straße vor Greifswalder Straße,52.536427000000,13.432265000000,0,de:11000:900110020,0,,"5555 Berlin, Greifswalder Str./Danziger Str.",4
+de:11000:900110025::3,,"Berlin, Arnswalder Platz",Tramsteig Danziger Str. vor Bötzowstr.,52.534292000000,13.436989000000,0,de:11000:900110025,0,,"5555 Berlin, Arnswalder Platz",4
+de:11000:900110021::5,,Kniprodestr./Danziger Str. (Berlin),Tramsteig Danziger Straße ht. Kniprodestraße,52.531645000000,13.441999000000,0,de:11000:900110021,0,,5555 Kniprodestr./Danziger Str. (Berlin),4
+de:11000:900110523::3,,Paul-Heyse-Str. (Berlin),Tramsteig Danziger Str. ht. Margarete-Sommer-Str.,52.529074000000,13.444755000000,0,de:11000:900110523,0,,5555 Paul-Heyse-Str. (Berlin),4
+de:11000:900120716::2,3,Landsberger Allee/Petersburger Str. (Berlin),Tramsteig Danziger Str. vor Landsberger A. Pos. 3,52.526891000000,13.447126000000,0,de:11000:900120016,0,,5555 Landsberger Allee/Petersburger Str. (Berlin),4
+de:11000:900120515::4,,Straßmannstr. (Berlin),Tramsteig Petersburger Str. vor Straßmannstr.,52.522728000000,13.450132000000,0,de:11000:900120515,0,,5555 Straßmannstr. (Berlin),4
+de:11000:900120516::5,,Bersarinplatz (Berlin),Tramsteig Petersburger Straße vor Bersarinplatz,52.519426000000,13.452384000000,0,de:11000:900120516,0,,5555 Bersarinplatz (Berlin),4
+de:11000:900120014::5,,Grünberger Str./Warschauer Str. (Berlin),Tramsteig Warschauer Straße ht. Grünbgerger Straße,52.512135000000,13.452315000000,0,de:11000:900120014,0,,5555 Grünberger Str./Warschauer Str. (Berlin),4
+de:11000:900120014::6,,Grünberger Str./Warschauer Str. (Berlin),Tramsteig Warschauer Straße vor Grünberger Straße,52.512113000000,13.452551000000,0,de:11000:900120014,0,,5555 Grünberger Str./Warschauer Str. (Berlin),4
+de:11000:900120516::6,,Bersarinplatz (Berlin),Tramsteig Petersburger Straße ht. Bersarinplatz,52.519436000000,13.452432000000,0,de:11000:900120516,0,,5555 Bersarinplatz (Berlin),4
+de:11000:900120515::5,,Straßmannstr. (Berlin),Tramsteig Petersburger Str. ht. Straßmannstr.,52.522736000000,13.450175000000,0,de:11000:900120515,0,,5555 Straßmannstr. (Berlin),4
+de:11000:900120716::1,4,Landsberger Allee/Petersburger Str. (Berlin),Tramsteig Danziger Str. ht. Landsberger A. Pos. 4,52.526904000000,13.447166000000,0,de:11000:900120016,0,,5555 Landsberger Allee/Petersburger Str. (Berlin),4
+de:11000:900110523::4,,Paul-Heyse-Str. (Berlin),Tramsteig Danziger Straße vor Paul-Heyse-Straße,52.529089000000,13.444806000000,0,de:11000:900110523,0,,5555 Paul-Heyse-Str. (Berlin),4
+de:11000:900110021::6,,Kniprodestr./Danziger Str. (Berlin),Tramsteig Danziger Straße ht. Kniprodestraße,52.532435000000,13.440909000000,0,de:11000:900110021,0,,5555 Kniprodestr./Danziger Str. (Berlin),4
+de:11000:900110025::4,,"Berlin, Arnswalder Platz",Tramsteig Danziger Str. vor Bötzowstr.,52.533807000000,13.438061000000,0,de:11000:900110025,0,,"5555 Berlin, Arnswalder Platz",4
+de:11000:900110020::10,3,"Berlin, Greifswalder Str./Danziger Str.",Tramsteig Danziger Straße vor Greifswalder Straße,52.535875000000,13.433757000000,0,de:11000:900110020,0,,"5555 Berlin, Greifswalder Str./Danziger Str.",4
+de:11000:900110512::4,,Winsstr. (Berlin),Tramsteig Danziger Straße vor Ella-Kay-Straße,52.537448000000,13.429402000000,0,de:11000:900110512,0,,5555 Winsstr. (Berlin),4
+de:11000:900110017::10,3,Prenzlauer Allee/Danziger Str. (Berlin),Tramsteig Danziger Straße vor Prenzlauer Allee,52.538943000000,13.425055000000,0,de:11000:900110017,0,,5555 Prenzlauer Allee/Danziger Str. (Berlin),4
+de:11000:900110511::4,,Husemannstr. (Berlin),Tramsteig Danziger Straße ht. Dunkerstraße,52.540131000000,13.418266000000,0,de:11000:900110511,0,,5555 Husemannstr. (Berlin),4
+de:11000:900120016::3,2,Landsberger Allee/Petersburger Str. (Berlin),Tramsteig Landsberger A. ht. Danziger Str. Pos. 2,52.525976000000,13.446294000000,0,de:11000:900120016,0,,5555 Landsberger Allee/Petersburger Str. (Berlin),4
+de:11000:900120513::3,,Klinikum im Friedrichshain (Berlin),Tramsteig Landsberger Allee vor Matthiasstraße,52.524163000000,13.440164000000,0,de:11000:900120513,0,,5555 Klinikum im Friedrichshain (Berlin),4
+de:11000:900120019::5,,Platz der Vereinten Nationen (Berlin),Tramsteig Pl. d. Vereinten Nationen ht. Landsb. A.,52.523268000000,13.433052000000,0,de:11000:900120019,0,,5555 Platz der Vereinten Nationen (Berlin),4
+de:11000:900120511::3,,Büschingstr. (Berlin),Tramsteig Pl der Vereinten Nation vor Büschingstr.,52.523144000000,13.427210000000,0,de:11000:900120511,0,,5555 Büschingstr. (Berlin),4
+de:11000:900100040::10,5,Mollstr./Otto-Braun-Str. (Berlin),Tramsteig Mollstraße vor Otto-Braun-Straße Pos. 5,52.524891000000,13.420722000000,0,de:11000:900100040,0,,5555 Mollstr./Otto-Braun-Str. (Berlin),4
+de:11000:900110022::10,4,Mollstr./Prenzlauer Allee (Berlin),Tramsteig Mollstraße vor Prenzlauer Allee Pos. 4,52.526648000000,13.416557000000,0,de:11000:900110022,0,,5555 Mollstr./Prenzlauer Allee (Berlin),4
+de:11000:900100016::3,2,U Rosa-Luxemburg-Platz (Berlin),Tramsteig Torstraße vor Schönhauser Allee Pos. 2,52.528518000000,13.410992000000,0,de:11000:900100016,0,,5555 U Rosa-Luxemburg-Platz (Berlin),4
+de:11000:900100023::3,3,U Rosenthaler Platz (Berlin),Tramsteig Torstraße vor Rosenthaler Platz Pos. 3,52.529763000000,13.402298000000,0,de:11000:900100023,0,,5555 U Rosenthaler Platz (Berlin),4
+de:11000:900100023::4,4,U Rosenthaler Platz (Berlin),Tramsteig Torstraße ht. Rosenthaler Platz Pos. 4,52.529734000000,13.402306000000,0,de:11000:900100023,0,,5555 U Rosenthaler Platz (Berlin),4
+de:11000:900100016::4,3,U Rosa-Luxemburg-Platz (Berlin),Tramsteig Torstraße ht. Rosa-Luxemburg-Straße Pos. 3,52.528495000000,13.410984000000,0,de:11000:900100016,0,,5555 U Rosa-Luxemburg-Platz (Berlin),4
+de:11000:900110022::11,5,Mollstr./Prenzlauer Allee (Berlin),Tramsteig Mollstr. ht. Karl-Liebknecht-Str. Pos. 5,52.526630000000,13.416542000000,0,de:11000:900110022,0,,5555 Mollstr./Prenzlauer Allee (Berlin),4
+de:11000:900120511::4,,Büschingstr. (Berlin),Tramsteig Pl d Vereinten Nation v Lichtenb. Str,52.523111000000,13.427219000000,0,de:11000:900120511,0,,5555 Büschingstr. (Berlin),4
+de:11000:900120019::6,,Platz der Vereinten Nationen (Berlin),Tramsteig Pl. d. Vereinten Nationen vor Landsb. A.,52.523242000000,13.433055000000,0,de:11000:900120019,0,,5555 Platz der Vereinten Nationen (Berlin),4
+de:11000:900120513::4,,Klinikum im Friedrichshain (Berlin),Tramsteig Landsberger Allee hinter Matthiasstraße,52.524143000000,13.440180000000,0,de:11000:900120513,0,,5555 Klinikum im Friedrichshain (Berlin),4
+de:11000:900120016::4,1,Landsberger Allee/Petersburger Str. (Berlin),Tramsteig Landsberger A v. Petersburger Str Pos. 1,52.525958000000,13.446310000000,0,de:11000:900120016,0,,5555 Landsberger Allee/Petersburger Str. (Berlin),4
+de:11000:900110006::5,8,U Eberswalder Str. (Berlin),Tramhalt Kastanienall. ht. Schönhauser All. Pos. 8,52.540136000000,13.411336000000,0,,0,,5555 U Eberswalder Str. (Berlin),4
+de:11000:900110505::3,,Schwedter Str. (Berlin),Tramhalt Kastanienal. zw. Oderb. Str. u Schw. Str.,52.536603000000,13.407587000000,0,,0,,5555 Schwedter Str. (Berlin),4
+de:11000:900100506::1,,Hannoversche Str. (Berlin),Tramsteig Chausseestraße vor Hannoversche Straße,52.527565000000,13.386752000000,0,de:11000:900100506,0,,5555 Hannoversche Str. (Berlin),4
+de:11000:900110505::4,,Schwedter Str. (Berlin),Tramhalt Kastanienal. zw. Oderb. Str. u Schw. Str.,52.537139000000,13.408271000000,0,,0,,5555 Schwedter Str. (Berlin),4
+de:11000:900110006::6,7,U Eberswalder Str. (Berlin),Tramsteig Kastanienallee v. Schönhauser All. Pos. 7,52.540421000000,13.411691000000,0,,0,,5555 U Eberswalder Str. (Berlin),4
+de:11000:900110019::9,,"Berlin, Am Friedrichshain",Tramsteig Greifswalder Str. ht. Am Friedrichshain,52.528669000000,13.424401000000,0,de:11000:900110019,0,,"5555 Berlin, Am Friedrichshain",4
+de:11000:900110521::3,,Hufelandstr. (Berlin),Tramsteig Greifswalder Straße vor Hufelandstraße,52.532591000000,13.428907000000,0,de:11000:900110521,0,,5555 Hufelandstr. (Berlin),4
+de:11000:900110020::12,4,"Berlin, Greifswalder Str./Danziger Str.",Tramsteig Greifswalder Straße vor Danziger Straße,52.535751000000,13.432575000000,0,de:11000:900110020,0,,"5555 Berlin, Greifswalder Str./Danziger Str.",4
+de:11000:900110003::1,,S Greifswalder Str. (Berlin),Tramsteig Greifswalder Straße vor Storkower Straße,52.540795000000,13.438448000000,0,de:11000:900110003,0,,5555 S Greifswalder Str. (Berlin),9
+de:11000:900110003::2,,S Greifswalder Str. (Berlin),Tramsteig Greifswalder Straße ht. Grellstraße,52.540815000000,13.438392000000,0,de:11000:900110003,0,,5555 S Greifswalder Str. (Berlin),9
+de:11000:900110521::4,,Hufelandstr. (Berlin),Tramsteig Greifswalder Straße hinter Marienburger Straße,52.532606000000,13.428858000000,0,de:11000:900110521,0,,5555 Hufelandstr. (Berlin),4
+de:11000:900110019::10,,"Berlin, Am Friedrichshain",Tramsteig Greifswalder Str. vor Prenzlauer Berg,52.528699000000,13.424336000000,0,de:11000:900110019,0,,"5555 Berlin, Am Friedrichshain",4
+de:11000:900100040::11,3,Mollstr./Otto-Braun-Str. (Berlin),Tramsteig Otto-Braun-Straße vor Mollstraße Pos. 3,52.525706000000,13.420478000000,0,de:11000:900100040,0,,5555 Mollstr./Otto-Braun-Str. (Berlin),4
+de:11000:900100512::4,,Monbijouplatz (Berlin),Tramhaltestelle Oranienburger Straße gegenüber Monbijouplatz,52.523701000000,13.398831000000,0,,0,,5555 Monbijouplatz (Berlin),4
+de:11000:900100819::1,,U Oranienburger Tor (Berlin),Tramsteig Oranienburger Str. vor Friedr. Pos. 1,52.526157000000,13.388072000000,0,de:11000:900100019,0,,5555 U Oranienburger Tor (Berlin),4
+de:11000:900100023::5,1,U Rosenthaler Platz (Berlin),Tramsteig Weinbergsweg vor Brunnenstraße Pos. 1,52.530207000000,13.401630000000,0,,0,,5555 U Rosenthaler Platz (Berlin),4
+de:11000:900100023::6,2,U Rosenthaler Platz (Berlin),Tramsteig Weinbergsweg ht. Torstraße Pos. 2,52.530196000000,13.401668000000,0,,0,,5555 U Rosenthaler Platz (Berlin),4
+de:11000:900110022::12,2,Mollstr./Prenzlauer Allee (Berlin),Tramsteig Prenzlauer Allee ht. Mollstraße Pos. 2,52.527650000000,13.416338000000,0,de:11000:900110022,0,,5555 Mollstr./Prenzlauer Allee (Berlin),4
+de:11000:900110506::3,,Prenzlauer Allee/Metzer Str. (Berlin),Tramsteig Prenzlauer Allee ht. ggü. Metzer Straße,52.531012000000,13.419394000000,0,de:11000:900110506,0,,5555 Prenzlauer Allee/Metzer Str. (Berlin),4
+de:11000:900110507::3,,Knaackstr. (Berlin),Tramsteig Prenzlauer Allee vor Immanuelkirchstr.,52.533190000000,13.420703000000,0,de:11000:900110507,0,,5555 Knaackstr. (Berlin),4
+de:11000:900110508::3,,Marienburger Str. (Berlin),Tramsteig Prenzlauer Allee ht. Marienburger Straße,52.536036000000,13.422388000000,0,de:11000:900110508,0,,5555 Marienburger Str. (Berlin),4
+de:11000:900110507::4,,Knaackstr. (Berlin),Tramsteig Prenzlauer Allee ht. Knaackstraße,52.533201000000,13.420664000000,0,de:11000:900110507,0,,5555 Knaackstr. (Berlin),4
+de:11000:900110017::11,4,Prenzlauer Allee/Danziger Str. (Berlin),Tramsteig Prenzlauer Allee vor Danziger Straße,52.538530000000,13.423860000000,0,de:11000:900110017,0,,5555 Prenzlauer Allee/Danziger Str. (Berlin),4
+de:11000:900110510::3,,Fröbelstr. (Berlin),Tramsteig Prenzlauer Allee hinter Fröbelstr.,52.541750000000,13.425751000000,0,de:11000:900110510,0,,5555 Fröbelstr. (Berlin),4
+de:11000:900110002::1,,S Prenzlauer Allee (Berlin),Tramsteig Prenzlauer Allee vor Grellstraße,52.545117000000,13.427566000000,0,de:11000:900110002,0,,5555 S Prenzlauer Allee (Berlin),128
+de:11000:900110002::2,,S Prenzlauer Allee (Berlin),Tramsteig Prenzlauer Allee ht. Wichertstraße,52.545113000000,13.427525000000,0,de:11000:900110002,0,,5555 S Prenzlauer Allee (Berlin),128
+de:11000:900110510::4,,Fröbelstr. (Berlin),Tramsteig Prenzlauer Allee hinter Hiddenseer Straße,52.542315000000,13.426050000000,0,de:11000:900110510,0,,5555 Fröbelstr. (Berlin),4
+de:11000:900110017::12,2,Prenzlauer Allee/Danziger Str. (Berlin),Tramsteig Prenzlauer Allee vor Danziger Straße,52.539817000000,13.424579000000,0,de:11000:900110017,0,,5555 Prenzlauer Allee/Danziger Str. (Berlin),4
+de:11000:900110508::4,,Marienburger Str. (Berlin),Tramsteig Prenzlauer Allee ht. Wörther Straße,52.535157000000,13.421824000000,0,de:11000:900110508,0,,5555 Marienburger Str. (Berlin),4
+de:11000:900110506::4,,Prenzlauer Allee/Metzer Str. (Berlin),Tramsteig Prenzlauer Allee vor Metzer Straße,52.531024000000,13.419354000000,0,de:11000:900110506,0,,5555 Prenzlauer Allee/Metzer Str. (Berlin),4
+de:11000:900110022::13,1,Mollstr./Prenzlauer Allee (Berlin),Tramsteig Prenzlauer Allee vor Torstraße Pos. 1,52.527660000000,13.416302000000,0,de:11000:900110022,0,,5555 Mollstr./Prenzlauer Allee (Berlin),4
+de:11000:900120816::1,,Bersarinplatz (Berlin) [Weidenweg],Tramsteig Weidenweg vor Bersarinplatz,52.518993000000,13.454362000000,0,,0,,5555 Bersarinplatz (Berlin) [Weidenweg],4
+de:11000:900120816::2,,Bersarinplatz (Berlin) [Weidenweg],Tramsteig Weidenweg ht. Bersarinplatz,52.518958000000,13.454346000000,0,,0,,5555 Bersarinplatz (Berlin) [Weidenweg],4
+de:11000:900120017::2,,Virchowstr. (Berlin),Tramhalt Langenbeckstraße ht. Virchowstraße,52.525750000000,13.442033000000,0,de:11000:900120017,0,,5555 Virchowstr. (Berlin),4
+de:11000:900120017::3,,Virchowstr. (Berlin),Tramhalt Langenbeckstraße ht. Virchowstraße,52.525815000000,13.441968000000,0,de:11000:900120017,0,,5555 Virchowstr. (Berlin),4
+de:11000:900110020::13,2,"Berlin, Greifswalder Str./Danziger Str.",Tramsteig Greifswalder Straße vor Danziger Straße,52.536695000000,13.433631000000,0,de:11000:900110020,0,,"5555 Berlin, Greifswalder Str./Danziger Str.",4
+de:11000:900110009::2,4,U Eberswalder Str./Pappelallee (Berlin),Tramsteig Pappelallee vor Danziger Straße Pos. 4,52.541599000000,13.412877000000,0,,0,,5555 U Eberswalder Str./Pappelallee (Berlin),4
+de:11000:900100002::3,1,S Hackescher Markt (Berlin),Tramsteig Rosenthaler Straße Pos. 1,52.523823000000,13.402593000000,0,de:11000:900100002,0,,5555 S Hackescher Markt (Berlin),4
+de:11000:900110718::1,,Friedrich-Ludwig-Jahn-Sportpark (Berlin),Tramsteig Friedrich-Ludwig-Jahn-Sportpark Pos. 3,52.541449000000,13.406747000000,0,de:11000:900110018,0,,5555 Friedrich-Ludwig-Jahn-Sportpark (Berlin),4
+de:11000:900003254::3,,U Bundestag (Berlin),Ersatzhalt Otto-v.-Bismarck-All. vor A.Renger-Str.,52.520729000000,13.371600000000,0,,0,,5555 U Bundestag (Berlin),9
+de:11000:900003254::4,,U Bundestag (Berlin),Ersatzhalt Otto-v.-Bismarck-All. ht. A.Renger-Str.,52.520953000000,13.371456000000,0,,0,,5555 U Bundestag (Berlin),9
+de:11000:900100006::1,,S+U Alexanderplatz Bhf/Grunerstr. (Berlin),Bushalt Grunerstraße vor Dircksenstraße Endhalt,52.520282000000,13.414046000000,0,,0,,5555 S+U Alexanderplatz Bhf/Grunerstr. (Berlin),4
+de:11000:900100003::14,20,S+U Alexanderplatz Bhf/Memhardstr. (Berlin),Bushalt K.-Liebknecht-Str. ht. R.-Luxb.-S. Pos. 20,52.521757000000,13.407906000000,0,,0,,5555 S+U Alexanderplatz Bhf/Memhardstr. (Berlin),4
+de:11000:900100030::7,,Memhardstr. (Berlin),Bushalt Memhardstraße vor Karl-Liebknecht-Straße,52.523824000000,13.411002000000,0,,0,,5555 Memhardstr. (Berlin),4
+de:11000:900110718::2,,Friedrich-Ludwig-Jahn-Sportpark (Berlin),Tramsteig Friedrich-Ludwig-Jahn-Sportpark Pos. 4,52.541491000000,13.406726000000,0,de:11000:900110018,0,,5555 Friedrich-Ludwig-Jahn-Sportpark (Berlin),4
+de:11000:900100080::3,2,U Weinmeisterstr./Gipsstr. (Berlin),Bushalt Rosenthaler Straße vor Gipsstraße,52.526323000000,13.403542000000,0,,0,,5555 U Weinmeisterstr./Gipsstr. (Berlin),4
+de:11000:900100003::12,25,S+U Alexanderplatz Bhf/Memhardstr. (Berlin),Bushalt K.-Liebknecht-Str. vor Gontardstr. Pos. 25,52.521887000000,13.408802000000,0,,0,,5555 S+U Alexanderplatz Bhf/Memhardstr. (Berlin),4
+de:11000:900120546::2,,"Berlin, Rummelsburger Platz",,52.506691000000,13.437009000000,0,,1,,"5555 Berlin, Rummelsburger Platz",
+de:11000:900120546::1,,"Berlin, Rummelsburger Platz",,52.506803000000,13.437251000000,0,,1,,"5555 Berlin, Rummelsburger Platz",
+de:11000:900100045::6,,U Rotes Rathaus (Berlin),U Bahnsteig Gleis 1,52.518802000000,13.407888000000,0,de:11000:900100045,0,1,5555 U Rotes Rathaus (Berlin),99
+de:11000:900100045::7,,U Rotes Rathaus (Berlin),U Bahnsteig Gleis 2,52.518762000000,13.407935000000,0,de:11000:900100045,0,2,5555 U Rotes Rathaus (Berlin),99
+de:11000:900100537::3,,U Museumsinsel (Berlin),U Bahnsteig Gleis 1,52.517402000000,13.398250000000,0,de:11000:900100537,0,1,5555 U Museumsinsel (Berlin),55
+de:11000:900100537::4,,U Museumsinsel (Berlin),U Bahnsteig Gleis 2,52.517267000000,13.398218000000,0,de:11000:900100537,0,2,5555 U Museumsinsel (Berlin),55
+de:11000:900100513::5,,U Unter den Linden (Berlin),U Bahnsteig U5 Gleis 1,52.517040000000,13.389059000000,0,de:11000:900100513,0,1 (U5),5555 U Unter den Linden (Berlin),55
+de:11000:900100513::6,,U Unter den Linden (Berlin),U Bahnsteig U5 Gleis 2,52.516920000000,13.389081000000,0,de:11000:900100513,0,2 (U5),5555 U Unter den Linden (Berlin),55
+de:11000:900100025::5,,S+U Brandenburger Tor (Berlin),U Bahnsteig Gleis 2,52.516529000000,13.381004000000,0,de:11000:900100025,0,2 (U5),5555 S+U Brandenburger Tor (Berlin),135
+de:11000:900003254::5,,U Bundestag (Berlin),U Bahnsteig Gleis 2,52.520109000000,13.372842000000,0,de:11000:900003254,0,2,5555 U Bundestag (Berlin),127
+de:11000:900003201::10,,S+U Berlin Hauptbahnhof,U-Bahnsteig Gleis 2,52.525225000000,13.370030000000,0,de:11000:900003201,0,2 (U5),5555 S+U Berlin Hauptbahnhof,3
+de:11000:900100513::7,,U Unter den Linden (Berlin),U Bahnsteig U6 Gleis 1,52.516662000000,13.388825000000,0,de:11000:900100513,0,1 (U6),5555 U Unter den Linden (Berlin),200
+de:11000:900100513::8,,U Unter den Linden (Berlin),U Bahnsteig U6 Gleis 2,52.516665000000,13.388887000000,0,de:11000:900100513,0,2 (U6),5555 U Unter den Linden (Berlin),200
+de:11000:900100001::14,,S+U Friedrichstr. Bhf (Berlin),Ersatzhalt Reichstagufer vor Friedrichstraße,52.520949000000,13.386733000000,0,,0,,5555 S+U Friedrichstr. Bhf (Berlin),4
+de:11000:900100052::2,,Berliner Schloss (Berlin),Bushalt Schloßplatz vor Breite Straße,52.516221000000,13.402099000000,0,,0,,5555 Berliner Schloss (Berlin),4
+de:11000:900100052::1,,Berliner Schloss (Berlin),Bushalt Schloßplatz ht. ggü. Breite Straße,52.516139000000,13.401557000000,0,,0,,5555 Berliner Schloss (Berlin),4
+de:11000:900100031::7,24,S+U Alexanderplatz Bhf/Memhardstr. (Berlin),Bushalt K.-Liebknecht-Str. vor Gontardstr. Pos. 24,52.522031000000,13.409087000000,0,,0,,5555 S+U Alexanderplatz Bhf/Memhardstr. (Berlin),4
+de:11000:900100006::7,,S+U Alexanderplatz Bhf/Grunerstr. (Berlin),Ersatzhalt Alexanderstraße unter der Brücke,52.520010000000,13.413503000000,0,,0,,5555 S+U Alexanderplatz Bhf/Grunerstr. (Berlin),4
+de:11000:900110003::6,,S Greifswalder Str. (Berlin),Bushalt Storkower Straße ht. Greifswalder Straße,52.540920000000,13.439473000000,0,,0,,5555 S Greifswalder Str. (Berlin),9
+de:11000:900110003::7,,S Greifswalder Str. (Berlin),Bushalt Storkower Straße vor Greifswalder Straße,52.541030000000,13.439798000000,0,,0,,5555 S Greifswalder Str. (Berlin),9
+de:11000:900110529::1,,Einsteinpark (Berlin),Bushalt Storkower Straße höhe Hausnummer 50,52.539056000000,13.444515000000,0,,0,,5656 Einsteinpark (Berlin),4
+de:11000:900110529::2,,Einsteinpark (Berlin),Bushalt Storkower Straße ggü. höhe Hausnummer 50,52.539127000000,13.444852000000,0,,0,,5656 Einsteinpark (Berlin),4
+de:11000:900110026::4,,Kniprodestr./Storkower Str. (Berlin),Bushalt Storkower Straße hinter Kniprodestraße,52.537706000000,13.448712000000,0,,0,,5656 Kniprodestr./Storkower Str. (Berlin),4
+de:11000:900120017::4,,Virchowstr. (Berlin),Tramhalt Langenbeckstraße ht.  Virchowstraße,52.525716000000,13.442062000000,0,de:11000:900120017,0,,5555 Virchowstr. (Berlin),4
+de:11000:900007157::3,,Rügener Str. (Berlin),Bushalt Rügener Str. hinter Brunnenstr.,52.544951000000,13.391833000000,0,,0,,5555 Rügener Str. (Berlin),4
+de:11000:900100561::1,,"Berlin, Dorotheenstr./Friedrichstr.",Bushalt Dorotheenstraße vor Friedrichstraße,52.518589000000,13.387344000000,0,,0,,"5555 Berlin, Dorotheenstr./Friedrichstr.",4
+de:11000:900100513::10,,U Unter den Linden (Berlin),Bushalt Unter den Linden vor Friedrichstraße,52.516741000000,13.388313000000,0,,0,,5555 U Unter den Linden (Berlin),9
+de:11000:900100539::4,,Nikolaiviertel (Berlin),Bushalt Stralauer Str. hinter Mühlendamm,52.516170000000,13.409626000000,0,,0,,5555 Nikolaiviertel (Berlin),4
+de:11000:900100539::5,,Nikolaiviertel (Berlin),Bushalt Stralauer Str. vor Mühlendamm,52.516272000000,13.409476000000,0,,0,,5555 Nikolaiviertel (Berlin),4

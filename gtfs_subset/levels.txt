@@ -1,0 +1,203 @@
+level_id,level_index,level_name
+1,2,
+10,-2,"Zwischengeschoss U-Bahn, Treppenabsatz U2"
+100,2,S Bahnsteig
+101,-4,U-Bahnsteig
+102,1,Bahnsteige DB & S-Bahn
+103,-3,"U-Bahnverteiler, UG Bahnhofshalle"
+104,-2,"S-Bahnverteiler, Unterführung zur U-Bahn"
+105,-1,Treppenpodeste
+106,-1,Bahnsteigebene
+107,2,Bahnsteigebene
+108,-1,Unterführung
+109,1,Fußgängerunterführung
+11,1,Mittelgeschoss und Treppenabsatz
+110,0,Straßen- und Bahnsteigebene
+111,-3,Zwischengeschoss Unterführung
+112,-4,Unterführung
+113,-1,Zwischengeschoss Tram
+114,-1,Oberes Zwischengeschoss
+115,0,Bahnsteigebene
+116,-1,Podest
+117,1,Tunnel
+118,2,Fußgängerbrücke
+119,-1,Unterführungsebene
+12,-1,"Verteiler, Bahnsteig U2, Untergeschoss Empfangshalle, Zwischengeschoss Unterführung"
+120,-1,Regionalbahn
+121,2,Bahnsteige
+122,0,Straßenebene/ Unterführung
+123,1,Zwischengeschoss der Treppe in der Unterführung
+124,-1,Zwischenebene
+125,-5,Unterführung
+126,-4,"Velodrom, Schwimm- und Sprunghalle"
+127,-2,Bahnsteig
+128,0,Straßenebene und Bahnhofsgebäude
+129,-1,Treppenpodest im Eingangsgebäude
+13,-3,"Bahnsteig U8, Zwischengeschoss U5 U2 und Zwischengeschoss U5 Verteiler"
+130,3,S-Bahnsteig S4
+131,1,S-Bahnsteig S1
+132,2,Zwischengeschoss
+133,-1,Bahnsteig
+134,1,Dresselsteg
+135,-3,Bahnsteigebene
+136,1,Zwischengeschoss beim Zugang Priesterweg
+137,0,untere Bahnsteigebene
+138,1,obere Bahnsteigebene
+139,0,Straßenebene und Bahnsteigebene
+14,-5,Bahnsteige der U5
+140,0,Durchgang
+141,1,Bahnhofsgebäude
+142,-1,Fußgängerunterführung
+143,-2,Busunterführung
+144,-1,Unterführungen
+145,1,Zwischengeschoss Bahnhofshalle Nord
+146,2,Bahnsteigebene / Park&Ride
+147,0,Bahnhofsplatz
+148,1,Treppenpodeste
+149,1,Ringbahnsteigebene
+15,1,Regional und S-Bahnsteig
+150,-1,Gebäuderückseite
+151,1,Bahnsteig + ZOB
+152,-1,Bahnsteigebene und Tramsteige
+153,1,Zugangsbereich Autobahnbrücke
+154,3,Bahnsteigebene
+155,2,Eingangshalle
+156,1,Zugangsbereich Wiltbergstraße
+157,0,Vorplatz und Bahnsteige
+158,2,Fußgängerüberführung
+159,0,Straßenbereich
+16,-4,Zwischengeschoss U5 U8
+160,-1,Fähranleger
+161,0,Straßen- und Bahnseigebene
+162,1,Bahnhofspassage
+163,0,Bahnsteig- und Straßenebene
+164,-2,Tunnel
+165,1,Bahnsteig Gleis 1 und 3
+166,0,Straßenebene/Bahnhofsvorplatz
+167,2,Bahnsteig Gleis 2
+168,5,Empfangsgebäude
+169,0,"Straßenebene, Bahnhofshalle und Bahnsteige"
+17,-2,Ladenstraße und Zwischengeschoss U8
+170,-1,Fußgängertunnel/ Unterführung
+171,1,Bahnsteig Gleis 5
+172,-2,Unterführung
+173,1,Bahnsteig Gleis 1
+174,2,Obere Bahnsteige
+175,1,Überführung
+176,1,Bahnsteig Gleis 3
+177,1,Straßenbrücke
+178,-3,Unterführung Bahnsteig
+179,-2,UNterführung Zugang Bergstraße
+18,-1,U-Bahnsteigebene
+180,0,Straßen- & Bahnsteigebene
+181,1,Bahnsteige
+182,0,Straßenniveau
+183,1,Bahnsteig Gleis 1a
+184,2,Bahnsteig Gleis 1b
+185,0,Straßenebene / Bahnsteig Gleis 2
+186,1,Empfangshalle / Bahnsteig 1
+187,1,Gleis 2
+188,0,Straßenebene/Gleis 1
+189,0,Straßenebene/Bahnsteig
+19,-3,Große Halle + S-Bahnsteige
+190,2,Überführung obere Ebene
+191,1,Bahnsteig Gleis 2
+192,2,Bahnsteig Gleis 6 und 7
+193,2,Bahnsteig Gleis 1
+194,0,Straßenebene / Bahnsteig
+195,2,Überführung untere Ebene
+196,3,Überführung obere Ebene
+197,1,Podest
+198,1,Tramsteig
+199,-1,Tramsteig
+2,-1,
+20,-2,Zwischengeschoss
+200,-1,Bahnsteig U6 und Zwischengeschoss
+201,0,Straßeneben
+202,0,Staßenebene
+21,-4,Bahnsteigebene Regionalbahn
+22,-3,
+23,4,
+24,3,
+25,2,Bahnsteig
+26,1,Treppenabsatz
+27,-4,Bahnsteig U7
+28,-2,Bahnsteig U9
+29,-1,Zwischengeschoss
+3,-2,
+30,-3,Treppenabsatz
+31,-4,
+32,-2,U-Bahnsteigebene
+33,1,Bahnsteigebene
+34,-3,Bahnsteig U7
+35,-1,Bahnsteig U8 und Zwischengeschoss/Übergang
+36,-2,Treppenabsatz
+37,-3,U-Bahnsteigebene
+38,2,S-Bahnsteigebene
+39,1,Bahnhofshalle
+4,0,
+40,-1,Treppenabsatz
+41,-5,Bahnsteig U8
+42,-3,Bahnsteig U9
+43,-4,Treppenabsatz U8 U9
+44,-2,Bahnhofshalle
+45,-1,Treppenabsatz Tram
+46,2,Bahnsteig U1/U3
+47,1,Zwischengeschoss U1/U3
+48,-2,Zwischengeschoss U7
+49,-3,Bahnsteig
+5,1,
+50,1,Bahnsteig
+51,2,Überführung
+52,-2,Zwischengeschoss -2
+53,1,Fußgängerbrücke
+54,-1,Zwischengeschoss -1
+55,-3,Bahnsteig U5
+56,-1,Rampe -1
+57,-2,Rampe -2
+58,4,Bahnsteig
+59,1,Zwischenebene
+6,-3,"Bahnsteig U9, Unterführung U2"
+60,2,Zwischenebene 2
+61,3,Zwischenebene 3
+62,2,Bahnsteig U5
+63,-1,Fußgängertunnel
+64,0,Straße
+65,1,Zwischengeschoss
+66,3,Bahnsteig
+67,2,Treppenabsatz
+68,-2,Bahnsteigebene
+69,1,mittlerer Treppenabsatz
+7,-1,Bahnsteig U2
+70,3,Zwischenstufe
+71,2,Bahnsteig U1 U3
+72,-3,Bahnsteig U8
+73,-1,Zwischengeschosse
+74,1,Treppenabsatz U1 U3
+75,-2,Treppenabsatz U8
+76,-2,Bahnsteig U8
+77,-3,Bahnsteig U6
+78,-1,U-Bahnsteig
+79,1,S-Bahnsteigebene
+8,2,DB Bahnsteige
+80,-3,U-Bahnsteig
+81,-1,S-Bahnsteig
+82,-4,Bahnsteig U8
+83,-2,S-Bahnsteig
+84,-2,U-Bahnsteig oben
+85,-3,U-Bahnsteig unten
+86,-1,Bahnhofshalle
+87,1,S-Bahnsteig
+88,-3,U-Bahnhof U9
+89,-1,S-Bahnsteige Ringbahn
+9,0,Straßenebene
+90,0,Straßenniveau/ Putlitzbrücke
+91,-2,Zwischengeschosse
+92,-2,Zwischenebene
+93,3,Bahnsteig S5/7/75/3
+94,-3,Übergang und Treppenabsatz Holzmarktstraße
+95,-2,Zwischengeschoss Alexanderstraße und Treppenabsatz
+96,-1,Zwischengeschoss Brückenstraße
+97,2,Bahnhofshalle
+98,1,Zwischengeschoss Holzmarktstraße
+99,-2,Bahnsteig U5
