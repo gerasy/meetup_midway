@@ -29,6 +29,13 @@ const MAX_TRIP_TIME_S = 2 * 60 * 60;
 const DLAT = 0.004;
 const DLON = 0.007;
 
+let mapInstance = null;
+let mapRouteLayer = null;
+let mapMarkerLayer = null;
+const PERSON_COLORS = [
+    '#e6194b', '#3cb44b', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c'
+];
+
 // Auto-load GTFS files from gtfs_subset folder
 async function loadGTFSFiles() {
     setStatus('Loading GTFS files...', 'loading');
@@ -73,8 +80,11 @@ async function loadGTFSFiles() {
     }
 }
 
-// Load files on page load
-window.addEventListener('DOMContentLoaded', loadGTFSFiles);
+// Load files and map on page load
+window.addEventListener('DOMContentLoaded', () => {
+    initializeMap();
+    loadGTFSFiles();
+});
 
 function parseCSV(text) {
     const lines = text.trim().split('\n');
@@ -141,6 +151,37 @@ function haversineM(lat1, lon1, lat2, lon2) {
 
 function cellFor(lat, lon) {
     return `${Math.floor(lat / DLAT)},${Math.floor(lon / DLON)}`;
+}
+
+function initializeMap() {
+    if (mapInstance || typeof L === 'undefined') return;
+    const mapElement = document.getElementById('map');
+    if (!mapElement) return;
+
+    mapInstance = L.map('map', { preferCanvas: true });
+    mapInstance.setView([52.52, 13.405], 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(mapInstance);
+
+    mapRouteLayer = L.layerGroup().addTo(mapInstance);
+    mapMarkerLayer = L.layerGroup().addTo(mapInstance);
+}
+
+function clearMapLayers() {
+    if (!mapInstance) return;
+    if (mapRouteLayer) mapRouteLayer.clearLayers();
+    if (mapMarkerLayer) mapMarkerLayer.clearLayers();
+}
+
+function getStopLatLng(stopId) {
+    const stop = parsedData.stopById.get(stopId);
+    if (!stop) return null;
+    const lat = parseFloat(stop.stop_lat);
+    const lon = parseFloat(stop.stop_lon);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+    return [lat, lon];
 }
 
 function processGTFSData() {
@@ -657,12 +698,14 @@ function displayResults(meeting, persons, startTimeStr) {
 
     if (!meeting) {
         resultsDiv.innerHTML = '<div class="status-error">No meeting found before search exhausted.</div>';
+        clearMapLayers();
         setStatus('Search complete - no meeting found', 'error');
         return;
     }
 
     if (meeting.type === 'CAP') {
         resultsDiv.innerHTML = `<div class="status-error">Search stopped: Person ${meeting.person.label} exceeded 2-hour travel time cap.</div>`;
+        clearMapLayers();
         setStatus('Search capped', 'error');
         return;
     }
@@ -688,13 +731,27 @@ function displayResults(meeting, persons, startTimeStr) {
         </div>
     `;
 
-    for (const S of persons) {
+    initializeMap();
+    clearMapLayers();
+
+    const boundsPoints = [];
+    const meetingLatLng = getStopLatLng(stopId);
+    if (meetingLatLng && mapMarkerLayer) {
+        const meetingMarker = L.marker(meetingLatLng, { title: 'Meeting Point' })
+            .bindPopup(`<strong>Meeting Point</strong><br>${fmtStopLabel(stopId)}`);
+        meetingMarker.addTo(mapMarkerLayer);
+        meetingMarker.openPopup();
+        boundsPoints.push(meetingLatLng);
+    }
+
+    persons.forEach((S, idx) => {
         const { arrTime, elapsed } = S.reachedStopFirst.get(stopId);
         const path = reconstructPath(S, stopId);
+        const color = PERSON_COLORS[idx % PERSON_COLORS.length];
 
         html += `
             <div class="person-result">
-                <h4>Person ${S.label}</h4>
+                <h4><span class="color-dot" style="background:${color}"></span>Person ${S.label}</h4>
                 <p><strong>Start:</strong> ${sec2hm(S.t0)} at ${fmtStopLabel(S.startStopId)}</p>
                 <p><strong>Arrival:</strong> ${sec2hm(arrTime)} (${Math.floor(elapsed / 60)} minutes travel time)</p>
                 <div><strong>Route:</strong></div>
@@ -705,6 +762,48 @@ function displayResults(meeting, persons, startTimeStr) {
         }
 
         html += `</div>`;
+
+        const startLatLng = getStopLatLng(S.startStopId);
+        if (startLatLng && mapMarkerLayer) {
+            const startMarker = L.circleMarker(startLatLng, {
+                radius: 6,
+                color,
+                fillColor: color,
+                fillOpacity: 1,
+                weight: 2
+            }).bindPopup(`<strong>Start ${S.label}</strong><br>${fmtStopLabel(S.startStopId)}`);
+            startMarker.addTo(mapMarkerLayer);
+            boundsPoints.push(startLatLng);
+        }
+
+        let previousLatLng = startLatLng;
+        for (const step of path) {
+            const fromLatLng = getStopLatLng(step.from_stop);
+            const toLatLng = getStopLatLng(step.to_stop);
+            const segmentStart = fromLatLng || previousLatLng;
+            if (!segmentStart || !toLatLng || !mapRouteLayer) {
+                if (toLatLng) {
+                    previousLatLng = toLatLng;
+                    boundsPoints.push(toLatLng);
+                }
+                continue;
+            }
+
+            mapRouteLayer.addLayer(L.polyline([segmentStart, toLatLng], {
+                color,
+                weight: step.mode === 'WALK' ? 4 : 5,
+                opacity: 0.85,
+                dashArray: step.mode === 'WALK' ? '6,6' : null
+            }));
+
+            boundsPoints.push(segmentStart, toLatLng);
+            previousLatLng = toLatLng;
+        }
+    });
+
+    if (mapInstance && boundsPoints.length > 0) {
+        const bounds = L.latLngBounds(boundsPoints);
+        mapInstance.fitBounds(bounds, { padding: [40, 40] });
     }
 
     resultsDiv.innerHTML = html;
