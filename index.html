@@ -138,12 +138,14 @@
 
         <div class="input-group">
             <label for="person1">Person A Starting Station:</label>
-            <input type="text" id="person1" value="Alexanderplatz" placeholder="e.g., Alexanderplatz">
+            <input type="text" id="person1" list="person1-stations" data-station-input value="Alexanderplatz" placeholder="e.g., Alexanderplatz">
+            <datalist id="person1-stations"></datalist>
         </div>
 
         <div class="input-group">
             <label for="person2">Person B Starting Station:</label>
-            <input type="text" id="person2" value="U Spittelmarkt" placeholder="e.g., U Spittelmarkt">
+            <input type="text" id="person2" list="person2-stations" data-station-input value="U Spittelmarkt" placeholder="e.g., U Spittelmarkt">
+            <datalist id="person2-stations"></datalist>
         </div>
 
         <button id="findMeeting" onclick="findMeetingPoint()">Find Meeting Point</button>
