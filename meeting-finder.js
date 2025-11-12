@@ -32,6 +32,8 @@ const DLON = 0.007;
 let mapInstance = null;
 let mapRouteLayer = null;
 let mapMarkerLayer = null;
+let mapLegendControl = null;
+let mapLegendElement = null;
 const PERSON_COLORS = [
     '#e6194b', '#3cb44b', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c'
 ];
@@ -167,12 +169,45 @@ function initializeMap() {
 
     mapRouteLayer = L.layerGroup().addTo(mapInstance);
     mapMarkerLayer = L.layerGroup().addTo(mapInstance);
+
+    mapLegendControl = L.control({ position: 'topright' });
+    mapLegendControl.onAdd = () => {
+        mapLegendElement = L.DomUtil.create('div', 'map-legend');
+        mapLegendElement.innerHTML = '<div class="legend-title">Routes</div><div class="legend-empty">No routes plotted yet.</div>';
+        return mapLegendElement;
+    };
+    mapLegendControl.addTo(mapInstance);
+    updateMapLegend([]);
 }
 
 function clearMapLayers() {
     if (!mapInstance) return;
     if (mapRouteLayer) mapRouteLayer.clearLayers();
     if (mapMarkerLayer) mapMarkerLayer.clearLayers();
+    updateMapLegend([]);
+}
+
+function updateMapLegend(entries, meetingInfo = null) {
+    if (!mapLegendElement) return;
+
+    const meetingHtml = meetingInfo
+        ? `<div class="legend-meeting"><strong>Meeting:</strong><br>${meetingInfo}</div>`
+        : '';
+
+    if (!entries || entries.length === 0) {
+        mapLegendElement.innerHTML = `<div class="legend-title">Routes</div>${meetingHtml}<div class="legend-empty">No routes plotted yet.</div>`;
+        return;
+    }
+
+    const rows = entries.map(entry => `
+        <div class="legend-row">
+            <span class="legend-color" style="background:${entry.color}"></span>
+            <span class="legend-label">${entry.label}</span>
+            <span class="legend-meta">${entry.meta}</span>
+        </div>
+    `).join('');
+
+    mapLegendElement.innerHTML = `<div class="legend-title">Routes</div>${meetingHtml}${rows}`;
 }
 
 function getStopLatLng(stopId) {
@@ -744,6 +779,8 @@ function displayResults(meeting, persons, startTimeStr) {
         boundsPoints.push(meetingLatLng);
     }
 
+    const legendEntries = [];
+
     persons.forEach((S, idx) => {
         const { arrTime, elapsed } = S.reachedStopFirst.get(stopId);
         const path = reconstructPath(S, stopId);
@@ -762,6 +799,12 @@ function displayResults(meeting, persons, startTimeStr) {
         }
 
         html += `</div>`;
+
+        legendEntries.push({
+            label: `Person ${S.label}`,
+            color,
+            meta: `${Math.floor(elapsed / 60)} min • ${sec2hm(arrTime)}`
+        });
 
         const startLatLng = getStopLatLng(S.startStopId);
         if (startLatLng && mapMarkerLayer) {
@@ -804,8 +847,10 @@ function displayResults(meeting, persons, startTimeStr) {
     if (mapInstance && boundsPoints.length > 0) {
         const bounds = L.latLngBounds(boundsPoints);
         mapInstance.fitBounds(bounds, { padding: [40, 40] });
+        setTimeout(() => mapInstance.invalidateSize(true), 0);
     }
 
+    updateMapLegend(legendEntries, `${fmtStopLabel(stopId)}<br>${sec2hm(meetTime)}`);
     resultsDiv.innerHTML = html;
     setStatus('Meeting point found successfully!', 'success');
 }

@@ -80,8 +80,18 @@
             background: #f8d7da;
             color: #721c24;
         }
-        #results {
+        .results-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+            gap: 20px;
+            align-items: start;
             margin-top: 20px;
+        }
+        .map-wrapper {
+            min-height: 450px;
+        }
+        #results {
+            margin-top: 0;
         }
         .color-dot {
             display: inline-block;
@@ -93,10 +103,57 @@
         }
         .map-container {
             height: 450px;
-            margin-top: 20px;
+            margin-top: 0;
             border-radius: 10px;
             overflow: hidden;
             border: 1px solid #bdc3c7;
+            background: #eef4f7;
+        }
+        .map-legend {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            padding: 12px 14px;
+            min-width: 180px;
+            font-size: 12px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        .map-legend .legend-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .map-legend .legend-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 4px 0;
+        }
+        .map-legend .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+        }
+        .map-legend .legend-label {
+            font-weight: 600;
+            flex-grow: 1;
+        }
+        .map-legend .legend-meta {
+            color: #576574;
+        }
+        .map-legend .legend-meeting {
+            margin-bottom: 6px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            padding-bottom: 6px;
+        }
+        .map-legend .legend-empty {
+            color: #8395a7;
+            font-style: italic;
         }
         .result-header {
             background: #2ecc71;
@@ -135,6 +192,15 @@
             overflow-x: auto;
             font-size: 12px;
         }
+        @media (max-width: 900px) {
+            .results-layout {
+                grid-template-columns: 1fr;
+            }
+            .map-container {
+                margin-top: 0;
+                min-height: 320px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -165,8 +231,12 @@
         <button id="findMeeting" onclick="findMeetingPoint()">Find Meeting Point</button>
 
         <div id="status"></div>
-        <div id="map" class="map-container"></div>
-        <div id="results"></div>
+        <div class="results-layout">
+            <div class="map-wrapper">
+                <div id="map" class="map-container"></div>
+            </div>
+            <div id="results"></div>
+        </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha512-vMNKGaS+3RyCBjI827F7kRXKuX3sI5OGucs5cjox96D65V+1enpRVK5zsxFrqxbPjzLFYG3PaP8HgkdUF2pWLg==" crossorigin=""></script>
