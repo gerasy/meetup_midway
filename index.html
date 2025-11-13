@@ -135,9 +135,6 @@
         .status-meta p {
             margin: 4px 0;
         }
-        #selfCheckStatus {
-            margin: 15px 0;
-        }
         #results {
             margin-top: 20px;
         }
@@ -166,10 +163,12 @@
         }
         #map {
             height: 420px;
+            min-height: 420px;
             border-radius: 14px;
             margin: 25px 0;
             overflow: hidden;
             border: 1px solid var(--border);
+            background: var(--panel-muted);
         }
         .person-controls {
             display: flex;
@@ -245,12 +244,12 @@
         <div id="peopleInputs">
             <div class="input-group person-group" data-person-group="A">
                 <label for="person-A">Person A Starting Station:</label>
-                <input type="text" id="person-A" list="person-A-stations" data-person-input data-person-label="A" data-station-input value="Alexanderplatz" placeholder="e.g., Alexanderplatz">
+                <input type="text" id="person-A" list="person-A-stations" data-person-input data-person-label="A" data-station-input value="⭐ U Uhlandstraße (U1)" placeholder="e.g., ⭐ U Uhlandstraße (U1)">
                 <datalist id="person-A-stations"></datalist>
             </div>
             <div class="input-group person-group" data-person-group="B">
                 <label for="person-B">Person B Starting Station:</label>
-                <input type="text" id="person-B" list="person-B-stations" data-person-input data-person-label="B" data-station-input value="U Spittelmarkt" placeholder="e.g., U Spittelmarkt">
+                <input type="text" id="person-B" list="person-B-stations" data-person-input data-person-label="B" data-station-input value="⭐ U Vinetastraße (U2)" placeholder="e.g., ⭐ U Vinetastraße (U2)">
                 <datalist id="person-B-stations"></datalist>
             </div>
         </div>
@@ -261,9 +260,8 @@
         </div>
 
         <div id="status"></div>
-        <div id="selfCheckStatus"></div>
-        <div id="map"></div>
         <div id="results"></div>
+        <div id="map"></div>
     </div>
 
     <script type="module" src="src/main.js"></script>

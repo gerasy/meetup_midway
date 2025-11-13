@@ -35,7 +35,12 @@ function ensureMap() {
 }
 
 export function initializeMap() {
-    ensureMap();
+    const map = ensureMap();
+    if (map) {
+        window.requestAnimationFrame(() => {
+            map.invalidateSize();
+        });
+    }
 }
 
 function removeOverlayLayers() {
@@ -126,6 +131,7 @@ export function showRoutesOnMap(meetingStopId, pathData) {
         return;
     }
 
+    map.invalidateSize();
     removeOverlayLayers();
 
     const bounds = window.L.latLngBounds([]);
