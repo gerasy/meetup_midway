@@ -476,13 +476,24 @@ export function findMeetingPoint() {
 
         setStatus('Searching for meeting point...', 'loading');
 
-        const { meeting, persons, stats } = runMeetingSearch({
-            participants: validation.people,
-            startTimeSec: t0
-        });
+        // Force a repaint by requesting animation frame twice
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                try {
+                    const { meeting, persons, stats } = runMeetingSearch({
+                        participants: validation.people,
+                        startTimeSec: t0
+                    });
 
-        hideProgress();
-        displayResults(meeting, persons, startTimeStr, stats);
+                    hideProgress();
+                    displayResults(meeting, persons, startTimeStr, stats);
+                } catch (error) {
+                    hideProgress();
+                    setStatus('Error: ' + error.message, 'error');
+                    console.error(error);
+                }
+            });
+        });
     } catch (error) {
         hideProgress();
         setStatus('Error: ' + error.message, 'error');
