@@ -271,6 +271,20 @@
         </div>
 
         <div id="status"></div>
+        <div id="progressContainer" style="display: none;">
+            <div style="margin: 20px 0;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <span id="progressLabel" style="font-weight: bold; color: var(--text);">Searching...</span>
+                    <span id="progressTime" style="font-weight: bold; color: var(--accent);">0 min</span>
+                </div>
+                <div style="width: 100%; height: 30px; background: var(--panel-muted); border-radius: 10px; overflow: hidden; position: relative; border: 1px solid var(--border);">
+                    <div id="progressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent-strong), var(--success)); transition: width 0.3s ease;"></div>
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; color: var(--text); font-weight: bold; font-size: 12px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">
+                        <span id="progressPercent">0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="results"></div>
         <div id="map">
             <canvas id="mapCanvas"></canvas>

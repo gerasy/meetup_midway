@@ -3,7 +3,7 @@ import { gtfsData, parsedData } from './state.js';
 import { processGTFSData, resolveStation, pickStartPlatform, nearbyStopsWithinRadius } from './gtfsProcessing.js';
 import { MinHeap } from './queue.js';
 import { toSeconds } from './parsing.js';
-import { displayResults, setStatus, beginIterationAnimation, updateIterationAnimation, endIterationAnimation } from './ui.js';
+import { displayResults, setStatus, beginIterationAnimation, updateIterationAnimation, endIterationAnimation, showProgress, hideProgress, updateProgress } from './ui.js';
 
 const MIN_TRAVEL_TIME_S = 10;
 
@@ -216,6 +216,7 @@ export function runMeetingSearch({ participants, startTimeSec }) {
     let longestPathRecord = null;
     let capExceededDuringSearch = false;
     let lastCapExceededPerson = null;
+    let lastProgressUpdate = -1;
 
     beginIterationAnimation();
     updateIterationAnimation(iterations);
@@ -254,6 +255,27 @@ export function runMeetingSearch({ participants, startTimeSec }) {
                 capExceededDuringSearch = true;
                 lastCapExceededPerson = minPerson;
                 continue;
+            }
+
+            // Update progress bar based on current average trip time across all persons
+            if (iterations % 100 === 0) {
+                let totalElapsed = 0;
+                let count = 0;
+                for (const S of persons) {
+                    if (S.pq.length > 0) {
+                        const minElapsed = S.pq.heap[0].priority[0];
+                        totalElapsed += minElapsed;
+                        count++;
+                    }
+                }
+                if (count > 0) {
+                    const avgElapsedMinutes = (totalElapsed / count) / 60;
+                    const currentMinute = Math.floor(avgElapsedMinutes);
+                    if (currentMinute !== lastProgressUpdate) {
+                        updateProgress(avgElapsedMinutes);
+                        lastProgressUpdate = currentMinute;
+                    }
+                }
             }
 
             const popped = minPerson.pq.pop();
@@ -365,9 +387,17 @@ export function findMeetingPoint() {
             return;
         }
 
+        // Clear previous results and show progress bar
+        const resultsDiv = document.getElementById('results');
+        if (resultsDiv) {
+            resultsDiv.innerHTML = '';
+        }
+        showProgress();
+
         const startTimeInput = document.getElementById('startTime');
         if (!startTimeInput) {
             setStatus('Start time input not found.', 'error');
+            hideProgress();
             return;
         }
 
@@ -377,6 +407,7 @@ export function findMeetingPoint() {
         const validation = validatePeopleInputs(collectPersonInputs());
         if (!validation.ok) {
             setStatus(validation.error, 'error');
+            hideProgress();
             return;
         }
 
@@ -387,8 +418,10 @@ export function findMeetingPoint() {
             startTimeSec: t0
         });
 
+        hideProgress();
         displayResults(meeting, persons, startTimeStr, stats);
     } catch (error) {
+        hideProgress();
         setStatus('Error: ' + error.message, 'error');
         console.error(error);
     }

@@ -233,3 +233,49 @@ export function setStatus(message, type) {
     statusDiv.textContent = message;
     statusDiv.className = `status-${type}`;
 }
+
+export function updateProgress(tripTimeMinutes) {
+    if (typeof document === 'undefined') {
+        return;
+    }
+
+    const maxTime = 60; // Maximum 60 minutes
+    const percentage = Math.min(100, (tripTimeMinutes / maxTime) * 100);
+
+    const progressBar = document.getElementById('progressBar');
+    const progressPercent = document.getElementById('progressPercent');
+    const progressTime = document.getElementById('progressTime');
+
+    if (progressBar) {
+        progressBar.style.width = percentage + '%';
+    }
+    if (progressPercent) {
+        progressPercent.textContent = Math.round(percentage) + '%';
+    }
+    if (progressTime) {
+        progressTime.textContent = Math.round(tripTimeMinutes) + ' min';
+    }
+}
+
+export function showProgress() {
+    if (typeof document === 'undefined') {
+        return;
+    }
+
+    const progressContainer = document.getElementById('progressContainer');
+    if (progressContainer) {
+        progressContainer.style.display = 'block';
+        updateProgress(0);
+    }
+}
+
+export function hideProgress() {
+    if (typeof document === 'undefined') {
+        return;
+    }
+
+    const progressContainer = document.getElementById('progressContainer');
+    if (progressContainer) {
+        progressContainer.style.display = 'none';
+    }
+}
