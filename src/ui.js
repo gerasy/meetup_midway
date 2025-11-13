@@ -1,6 +1,7 @@
 import { formatMinutes, sec2hm } from './parsing.js';
 import { fmtStopLabel, describeAction } from './formatters.js';
 import { showRoutesOnMap, resetMap } from './map.js';
+import { MAX_TRIP_TIME_S } from './constants.js';
 
 function scheduleMapUpdate(callback) {
     if (typeof callback !== 'function') {
@@ -246,7 +247,7 @@ export function updateProgress(tripTimeMinutes) {
         return;
     }
 
-    const maxTime = 60; // Maximum 60 minutes
+    const maxTime = MAX_TRIP_TIME_S / 60; // Convert to minutes for UI scaling
     const percentage = Math.min(100, (tripTimeMinutes / maxTime) * 100);
 
     const progressBar = document.getElementById('progressBar');
