@@ -40,7 +40,18 @@ function getRankedStationMatches(query) {
         return a.item.name.localeCompare(b.item.name);
     });
 
-    return matches;
+    const seenNames = new Set();
+    const uniqueMatches = [];
+    for (const match of matches) {
+        const key = match.item.lowerName;
+        if (seenNames.has(key)) {
+            continue;
+        }
+        seenNames.add(key);
+        uniqueMatches.push(match);
+    }
+
+    return uniqueMatches;
 }
 
 export function processGTFSData() {
@@ -192,7 +203,7 @@ export function processGTFSData() {
         }
     });
 
-    appState.stationLookupList = Array.from(parsedData.stationToName.entries()).map(([stationId, name]) => {
+    const rawStationLookup = Array.from(parsedData.stationToName.entries()).map(([stationId, name]) => {
         const popularity = parsedData.stationPopularity.get(stationId) || 0;
         return {
             stationId,
@@ -201,6 +212,16 @@ export function processGTFSData() {
             popularity
         };
     });
+
+    const bestByName = new Map();
+    for (const entry of rawStationLookup) {
+        const existing = bestByName.get(entry.lowerName);
+        if (!existing || entry.popularity > existing.popularity) {
+            bestByName.set(entry.lowerName, entry);
+        }
+    }
+
+    appState.stationLookupList = Array.from(bestByName.values());
 
     appState.stationLookupList.sort((a, b) => {
         if (b.popularity !== a.popularity) {
