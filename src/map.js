@@ -2,9 +2,11 @@ import { parsedData } from './state.js';
 
 const ROUTE_COLORS = ['#f97316', '#22d3ee', '#a855f7', '#4ade80', '#facc15'];
 
+const DEFAULT_CENTER = [52.52, 13.405];
+const DEFAULT_ZOOM = 12;
+
 let mapInstance = null;
 let overlayLayers = [];
-let tileLayerAttached = false;
 
 function ensureMap() {
     if (typeof window === 'undefined' || !window.L) {
@@ -21,15 +23,15 @@ function ensureMap() {
     }
 
     mapInstance = window.L.map(container, {
+        center: DEFAULT_CENTER,
+        zoom: DEFAULT_ZOOM,
         preferCanvas: true
-    }).setView([52.52, 13.405], 12);
+    });
 
-    if (!tileLayerAttached) {
-        window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(mapInstance);
-        tileLayerAttached = true;
-    }
+    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(mapInstance);
 
     return mapInstance;
 }
@@ -39,6 +41,7 @@ export function initializeMap() {
     if (map) {
         window.requestAnimationFrame(() => {
             map.invalidateSize();
+            map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
         });
     }
 }
