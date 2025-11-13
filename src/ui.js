@@ -262,11 +262,11 @@ export function showProgress() {
         return;
     }
 
-    const progressContainer = document.getElementById('progressContainer');
-    if (progressContainer) {
-        progressContainer.style.display = 'block';
-        updateProgress(0);
+    const progressLabel = document.getElementById('progressLabel');
+    if (progressLabel) {
+        progressLabel.textContent = 'Searching...';
     }
+    updateProgress(0);
 }
 
 export function hideProgress() {
@@ -274,8 +274,9 @@ export function hideProgress() {
         return;
     }
 
-    const progressContainer = document.getElementById('progressContainer');
-    if (progressContainer) {
-        progressContainer.style.display = 'none';
+    const progressLabel = document.getElementById('progressLabel');
+    if (progressLabel) {
+        progressLabel.textContent = 'Ready to search';
     }
+    updateProgress(0);
 }
