@@ -5,6 +5,8 @@ import { MinHeap } from './queue.js';
 import { toSeconds } from './parsing.js';
 import { displayResults, setStatus, beginIterationAnimation, updateIterationAnimation, endIterationAnimation } from './ui.js';
 
+const MIN_TRAVEL_TIME_S = 10;
+
 export function collectPersonInputs() {
     const inputs = Array.from(document.querySelectorAll('[data-person-input]'));
     return inputs.map((input, idx) => ({
@@ -38,13 +40,14 @@ export function validatePeopleInputs(people) {
 function enqueuePathwayTransferWalks(pq, curStop, curTime, accum, owner) {
     const edges = parsedData.walkEdges.get(curStop) || [];
     for (const edge of edges) {
+        const travelTime = Math.max(MIN_TRAVEL_TIME_S, edge.time);
         pq.push(
-            [accum + edge.time, curTime + edge.time, edge.to],
+            [accum + travelTime, curTime + travelTime, edge.to],
             {
                 owner, mode: 'WALK', source: edge.source,
                 from_stop: curStop, to_stop: edge.to,
-                walk_sec: edge.time,
-                depart_sec: curTime, arrive_sec: curTime + edge.time
+                walk_sec: travelTime,
+                depart_sec: curTime, arrive_sec: curTime + travelTime
             }
         );
     }
@@ -55,7 +58,7 @@ function enqueueGeoWalks(pq, curStop, curTime, accum, owner) {
     for (const { stopId: cand, distance: distM } of nearby) {
         if (parsedData.providedPairs.has(`${curStop}-${cand}`)) continue;
         let ttime = Math.ceil(distM / WALK_SPEED_MPS);
-        ttime = Math.max(30, ttime);
+        ttime = Math.max(MIN_TRAVEL_TIME_S, ttime);
         if (ttime <= MAX_WALK_TIME_S) {
             pq.push(
                 [accum + ttime, curTime + ttime, cand],
@@ -105,6 +108,48 @@ function enqueueRides(pq, curStop, curTime, accum, owner) {
             );
         }
     }
+}
+
+function reconstructPathFromInfo(person, info) {
+    const segments = [];
+    let currentInfo = info;
+    while (currentInfo) {
+        segments.push({
+            mode: currentInfo.mode,
+            owner: currentInfo.owner,
+            from_stop: currentInfo.from_stop,
+            to_stop: currentInfo.to_stop,
+            depart_sec: currentInfo.depart_sec,
+            arrive_sec: currentInfo.arrive_sec,
+            walk_sec: currentInfo.walk_sec,
+            wait_sec: currentInfo.wait_sec,
+            ride_sec: currentInfo.ride_sec,
+            trip_id: currentInfo.trip_id,
+            route_id: currentInfo.route_id,
+            headsign: currentInfo.headsign,
+            source: currentInfo.source,
+        });
+
+        if (currentInfo.mode === 'START') {
+            break;
+        }
+
+        const parentEntry = person.parent.get(currentInfo.from_stop);
+        if (!parentEntry) {
+            currentInfo = {
+                owner: person.label,
+                mode: 'START',
+                from_stop: null,
+                to_stop: person.startStopId,
+                depart_sec: person.t0,
+                arrive_sec: person.t0,
+            };
+        } else {
+            currentInfo = parentEntry.info;
+        }
+    }
+
+    return segments.reverse();
 }
 
 function createPerson({ label, stationId, stationName, startStopId, t0 }) {
@@ -168,6 +213,9 @@ export function runMeetingSearch({ participants, startTimeSec }) {
     let globalMaxAccum = 0;
     let terminationReason = null;
     let terminationCode = null;
+    let longestPathRecord = null;
+    let capExceededDuringSearch = false;
+    let lastCapExceededPerson = null;
 
     beginIterationAnimation();
     updateIterationAnimation(iterations);
@@ -203,16 +251,24 @@ export function runMeetingSearch({ participants, startTimeSec }) {
                 globalMaxAccum = accum;
             }
             if (accum > MAX_TRIP_TIME_S) {
-                meeting = { type: 'CAP', person: minPerson };
-                terminationReason = `Person ${minPerson.label} exceeded the 2-hour travel cap.`;
-                terminationCode = 'TRIP_CAP';
-                updateIterationAnimation(iterations);
-                break;
+                capExceededDuringSearch = true;
+                lastCapExceededPerson = minPerson;
+                continue;
             }
 
             const popped = minPerson.pq.pop();
             const info = popped.data;
             const destStop = info.to_stop;
+
+            if (!longestPathRecord || accum > longestPathRecord.accumulatedSec) {
+                const pathSegments = reconstructPathFromInfo(minPerson, info);
+                longestPathRecord = {
+                    person: minPerson.label,
+                    stopId: destStop,
+                    accumulatedSec: accum,
+                    pathSegments,
+                };
+            }
 
             const prevBest = minPerson.bestTimes.get(destStop);
             if (prevBest !== undefined && prevBest <= accum) {
@@ -254,6 +310,28 @@ export function runMeetingSearch({ participants, startTimeSec }) {
         terminationCode = terminationCode || 'ITERATION_LIMIT';
     }
 
+    if (!meeting && capExceededDuringSearch && !terminationCode) {
+        terminationReason = terminationReason || 'At least one participant exceeded the travel time cap without a meeting being found.';
+        terminationCode = 'TRIP_CAP';
+        if (lastCapExceededPerson) {
+            meeting = { type: 'CAP', person: lastCapExceededPerson };
+        }
+    }
+
+    if (longestPathRecord) {
+        const segmentSummary = longestPathRecord.pathSegments.map(segment => {
+            const from = segment.from_stop ?? 'START';
+            const to = segment.to_stop ?? 'UNKNOWN';
+            return `${segment.mode}:${from}->${to}`;
+        });
+        console.info('[Longest Path Summary]', {
+            person: longestPathRecord.person,
+            stopId: longestPathRecord.stopId,
+            accumulatedSec: longestPathRecord.accumulatedSec,
+            segments: segmentSummary,
+        });
+    }
+
     const stats = {
         totalVisitedNodes,
         maxAccumulatedTime: globalMaxAccum,
@@ -261,6 +339,8 @@ export function runMeetingSearch({ participants, startTimeSec }) {
         terminationCode,
         queueSizes,
         iterations,
+        longestPath: longestPathRecord,
+        capExceededDuringSearch,
     };
 
     if (!meeting && terminationCode === 'ITERATION_LIMIT') {

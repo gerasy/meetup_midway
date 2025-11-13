@@ -230,6 +230,35 @@ test('adding the solution station as a new participant maintains the meeting acr
     }
 });
 
+test('randomly selected triple participants on the GTFS subset always meet', () => {
+    loadRealGTFSSubset();
+    const rng = mulberry32(0xBADA55);
+    const startTimeSec = 10 * 3600;
+    const stationNames = Array.from(new Set(gtfsData.stops.map(s => s.stop_name)));
+    assert.ok(stationNames.length >= 3, 'expected at least three unique stations in GTFS subset');
+
+    for (let iteration = 0; iteration < 1; iteration++) {
+        const chosen = new Set();
+        const participants = [];
+        while (participants.length < 3) {
+            const idx = Math.floor(rng() * stationNames.length);
+            const name = stationNames[idx];
+            if (chosen.has(name)) continue;
+            chosen.add(name);
+            participants.push({ label: String.fromCharCode(65 + participants.length), query: name });
+        }
+
+        const result = runMeetingSearch({ participants, startTimeSec });
+        assert.ok(result.meeting, `expected meeting for iteration ${iteration}`);
+        assert.equal(result.meeting.type, 'OK');
+        const meetingStop = result.meeting.stopId;
+        for (const person of result.persons) {
+            const reach = person.reachedStopFirst.get(meetingStop);
+            assert.ok(reach, `participant ${person.label} should reach meeting stop on iteration ${iteration}`);
+        }
+    }
+});
+
 test('deterministic U2 self-check succeeds on the GTFS subset', () => {
     loadRealGTFSSubset();
     const outcome = runDeterministicRouteSelfCheck();
