@@ -2,6 +2,31 @@ import { formatMinutes, sec2hm } from './parsing.js';
 import { fmtStopLabel, describeAction } from './formatters.js';
 import { showRoutesOnMap, resetMap } from './map.js';
 
+function scheduleMapUpdate(callback) {
+    if (typeof callback !== 'function') {
+        return;
+    }
+
+    if (typeof window === 'undefined') {
+        callback();
+        return;
+    }
+
+    const run = () => {
+        try {
+            callback();
+        } catch (error) {
+            console.error('Failed to update map rendering.', error);
+        }
+    };
+
+    if (typeof window.requestAnimationFrame === 'function') {
+        window.requestAnimationFrame(() => window.requestAnimationFrame(run));
+    } else {
+        setTimeout(run, 0);
+    }
+}
+
 const iterationAnimationState = {
     active: false,
     baseMessage: ''
@@ -114,7 +139,7 @@ export function displayResults(meeting, persons, startTimeStr, stats = {}) {
             : 'Search complete - no meeting found';
         const statusDetail = terminationReason ? `: ${terminationReason}` : '';
         setStatus(`${statusPrefix}${statusDetail}`, 'error');
-        resetMap();
+        scheduleMapUpdate(() => resetMap());
         return;
     }
 
@@ -138,7 +163,7 @@ export function displayResults(meeting, persons, startTimeStr, stats = {}) {
             </div>
         `;
         setStatus(`Search capped: ${terminationReason}`, 'error');
-        resetMap();
+        scheduleMapUpdate(() => resetMap());
         return;
     }
 
@@ -192,7 +217,7 @@ export function displayResults(meeting, persons, startTimeStr, stats = {}) {
 
     resultsDiv.innerHTML = html;
     setStatus('Meeting point found successfully!', 'success');
-    showRoutesOnMap(stopId, mapPaths);
+    scheduleMapUpdate(() => showRoutesOnMap(stopId, mapPaths));
 }
 
 export function setStatus(message, type) {
