@@ -1,7 +1,8 @@
 import { formatMinutes, sec2hm } from './parsing.js';
 import { fmtStopLabel, describeAction } from './formatters.js';
+import { showRoutesOnMap, resetMap } from './map.js';
 
-function reconstructPath(person, stopId) {
+export function reconstructPath(person, stopId) {
     const path = [];
     let cur = stopId;
     while (person.parent.has(cur)) {
@@ -18,12 +19,14 @@ export function displayResults(meeting, persons, startTimeStr) {
     if (!meeting) {
         resultsDiv.innerHTML = '<div class="status-error">No meeting found before search exhausted.</div>';
         setStatus('Search complete - no meeting found', 'error');
+        resetMap();
         return;
     }
 
     if (meeting.type === 'CAP') {
         resultsDiv.innerHTML = `<div class="status-error">Search stopped: Person ${meeting.person.label} exceeded 2-hour travel time cap.</div>`;
         setStatus('Search capped', 'error');
+        resetMap();
         return;
     }
 
@@ -48,9 +51,17 @@ export function displayResults(meeting, persons, startTimeStr) {
         </div>
     `;
 
+    const mapPaths = [];
+
     for (const S of persons) {
         const { arrTime, elapsed } = S.reachedStopFirst.get(stopId);
         const path = reconstructPath(S, stopId);
+
+        mapPaths.push({
+            label: S.label,
+            startStopId: S.startStopId,
+            steps: path
+        });
 
         html += `
             <div class="person-result">
@@ -69,6 +80,7 @@ export function displayResults(meeting, persons, startTimeStr) {
 
     resultsDiv.innerHTML = html;
     setStatus('Meeting point found successfully!', 'success');
+    showRoutesOnMap(stopId, mapPaths);
 }
 
 export function setStatus(message, type) {

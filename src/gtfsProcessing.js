@@ -215,10 +215,6 @@ export function processGTFSData() {
 }
 
 export function initializeStationSearchInputs() {
-    if (appState.stationSearchInitialized) {
-        return;
-    }
-
     const inputs = document.querySelectorAll('input[data-station-input]');
     if (inputs.length === 0) {
         return;
@@ -245,6 +241,9 @@ export function initializeStationSearchInputs() {
     };
 
     inputs.forEach(input => {
+        if (input.dataset.stationReady === 'true') {
+            return;
+        }
         const listId = input.getAttribute('list');
         if (!listId) {
             return;
@@ -258,6 +257,7 @@ export function initializeStationSearchInputs() {
         input.addEventListener('input', handler);
         input.addEventListener('focus', handler);
         handler();
+        input.dataset.stationReady = 'true';
     });
 
     appState.stationSearchInitialized = true;

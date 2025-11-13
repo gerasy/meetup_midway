@@ -1,9 +1,39 @@
-import { MAX_TRIP_TIME_S, MAX_WALK_RADIUS_M, WALK_SPEED_MPS, MAX_WALK_TIME_S } from './constants.js';
+import { MAX_TRIP_TIME_S, MAX_WALK_RADIUS_M, WALK_SPEED_MPS, MAX_WALK_TIME_S, MAX_PARTICIPANTS } from './constants.js';
 import { gtfsData, parsedData } from './state.js';
 import { processGTFSData, resolveStation, pickStartPlatform, nearbyStopsWithinRadius } from './gtfsProcessing.js';
 import { MinHeap } from './queue.js';
 import { toSeconds } from './parsing.js';
 import { displayResults, setStatus } from './ui.js';
+
+export function collectPersonInputs() {
+    const inputs = Array.from(document.querySelectorAll('[data-person-input]'));
+    return inputs.map((input, idx) => ({
+        label: input.dataset.personLabel || String.fromCharCode(65 + idx),
+        query: (input.value || '').trim(),
+    }));
+}
+
+export function validatePeopleInputs(people) {
+    if (people.length === 0) {
+        return { ok: false, error: 'Please add at least two participants.' };
+    }
+
+    if (people.length > MAX_PARTICIPANTS) {
+        return { ok: false, error: `A maximum of ${MAX_PARTICIPANTS} participants is supported.` };
+    }
+
+    if (people.length < 2) {
+        return { ok: false, error: 'Please enter at least two participants.' };
+    }
+
+    for (const person of people) {
+        if (!person.query) {
+            return { ok: false, error: `Please enter a station for Person ${person.label}.` };
+        }
+    }
+
+    return { ok: true, people };
+}
 
 function enqueuePathwayTransferWalks(pq, curStop, curTime, accum, owner) {
     const edges = parsedData.walkEdges.get(curStop) || [];
@@ -89,13 +119,13 @@ export function findMeetingPoint() {
         const startTimeStr = document.getElementById('startTime').value + ':00';
         const t0 = toSeconds(startTimeStr);
 
-        const person1Query = document.getElementById('person1').value;
-        const person2Query = document.getElementById('person2').value;
+        const validation = validatePeopleInputs(collectPersonInputs());
+        if (!validation.ok) {
+            setStatus(validation.error, 'error');
+            return;
+        }
 
-        const peopleInputs = [
-            { label: 'A', query: person1Query },
-            { label: 'B', query: person2Query }
-        ];
+        const peopleInputs = validation.people;
 
         setStatus('Initializing search...', 'loading');
 
