@@ -279,7 +279,6 @@ export function runMeetingSearch({ participants, startTimeSec }) {
     let longestPathRecord = null;
     let capExceededDuringSearch = false;
     let lastCapExceededPerson = null;
-    let lastProgressUpdate = -1;
 
     beginIterationAnimation();
     updateIterationAnimation(iterations);
@@ -321,7 +320,8 @@ export function runMeetingSearch({ participants, startTimeSec }) {
             }
 
             // Update progress bar based on current average trip time across all persons
-            if (iterations % 100 === 0) {
+            // Update more frequently (every 50 iterations) for smoother progress
+            if (iterations % 50 === 0) {
                 let totalElapsed = 0;
                 let count = 0;
                 for (const S of persons) {
@@ -333,11 +333,7 @@ export function runMeetingSearch({ participants, startTimeSec }) {
                 }
                 if (count > 0) {
                     const avgElapsedMinutes = (totalElapsed / count) / 60;
-                    const currentMinute = Math.floor(avgElapsedMinutes);
-                    if (currentMinute !== lastProgressUpdate) {
-                        updateProgress(avgElapsedMinutes);
-                        lastProgressUpdate = currentMinute;
-                    }
+                    updateProgress(avgElapsedMinutes);
                 }
             }
 

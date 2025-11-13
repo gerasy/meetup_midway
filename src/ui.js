@@ -253,7 +253,8 @@ export function updateProgress(tripTimeMinutes) {
         progressPercent.textContent = Math.round(percentage) + '%';
     }
     if (progressTime) {
-        progressTime.textContent = Math.round(tripTimeMinutes) + ' min';
+        // Show time with one decimal place for smoother updates
+        progressTime.textContent = tripTimeMinutes.toFixed(1) + ' min';
     }
 }
 
