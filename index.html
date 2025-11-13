@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transit Meeting Point Finder</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44c=" crossorigin="" />
     <style>
         :root {
             color-scheme: dark;
@@ -162,6 +161,7 @@
             font-size: 13px;
         }
         #map {
+            position: relative;
             width: 100%;
             height: 420px;
             min-height: 420px;
@@ -170,6 +170,17 @@
             overflow: hidden;
             border: 1px solid var(--border);
             background: var(--panel-muted);
+        }
+        #map canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: grab;
+        }
+        #map canvas:active {
+            cursor: grabbing;
         }
         .person-controls {
             display: flex;
@@ -225,7 +236,6 @@
             border: 1px solid var(--border);
         }
     </style>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-o9N1j7kGStF8Dd7Bvu1j0v0C6tF/2zV2HfV9Z9zkA+M=" crossorigin=""></script>
 </head>
 <body>
     <div class="container">
@@ -245,12 +255,12 @@
         <div id="peopleInputs">
             <div class="input-group person-group" data-person-group="A">
                 <label for="person-A">Person A Starting Haltestelle:</label>
-                <input type="text" id="person-A" list="person-A-stations" data-person-input data-person-label="A" data-station-input value="⭐ U Uhlandstraße (U1)" placeholder="e.g., ⭐ S+U Alexanderplatz">
+                <input type="text" id="person-A" list="person-A-stations" data-person-input data-person-label="A" data-station-input value="⭐ U Uhlandstr. (Berlin)" placeholder="e.g., ⭐ S+U Alexanderplatz">
                 <datalist id="person-A-stations"></datalist>
             </div>
             <div class="input-group person-group" data-person-group="B">
                 <label for="person-B">Person B Starting Haltestelle:</label>
-                <input type="text" id="person-B" list="person-B-stations" data-person-input data-person-label="B" data-station-input value="⭐ U Vinetastraße (U2)" placeholder="e.g., ⭐ S+U Alexanderplatz">
+                <input type="text" id="person-B" list="person-B-stations" data-person-input data-person-label="B" data-station-input value="⭐ U Vinetastr. (Berlin)" placeholder="e.g., ⭐ S+U Alexanderplatz">
                 <datalist id="person-B-stations"></datalist>
             </div>
         </div>
@@ -262,7 +272,9 @@
 
         <div id="status"></div>
         <div id="results"></div>
-        <div id="map"></div>
+        <div id="map">
+            <canvas id="mapCanvas"></canvas>
+        </div>
     </div>
 
     <script type="module" src="src/main.js"></script>
