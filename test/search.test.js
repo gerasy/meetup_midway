@@ -269,3 +269,74 @@ test('deterministic U2 self-check succeeds on the GTFS subset', () => {
     assert.ok(outcome.stats.totalVisitedNodes > 0, 'self-check should visit nodes');
     assert.ok(outcome.stats.maxAccumulatedTime <= 120 * 60, 'self-check should stay within two hours');
 });
+
+test('finds meeting point for two participants starting from real Berlin addresses', () => {
+    loadRealGTFSSubset();
+
+    const startTimeSec = 10 * 3600; // 10:00 AM
+
+    // Use hardcoded coordinates for real Berlin addresses to avoid network calls
+    // Seydlitzstr. 19, 10557 Berlin - near Hauptbahnhof area
+    const address1 = {
+        displayName: 'Seydlitzstr. 19, 10557 Berlin',
+        lat: 52.5254,
+        lon: 13.3692
+    };
+    console.log(`Using address 1: ${address1.displayName} at (${address1.lat}, ${address1.lon})`);
+
+    // Martin-Luther-Str. 30, 10777 Berlin - near Schöneberg area
+    const address2 = {
+        displayName: 'Martin-Luther-Str. 30, 10777 Berlin',
+        lat: 52.4956,
+        lon: 13.3489
+    };
+    console.log(`Using address 2: ${address2.displayName} at (${address2.lat}, ${address2.lon})`);
+
+    // Run meeting search with both addresses
+    const participants = [
+        {
+            label: 'A',
+            query: address1.displayName,
+            isAddress: true,
+            lat: address1.lat,
+            lon: address1.lon
+        },
+        {
+            label: 'B',
+            query: address2.displayName,
+            isAddress: true,
+            lat: address2.lat,
+            lon: address2.lon
+        }
+    ];
+
+    const result = runMeetingSearch({ participants, startTimeSec });
+
+    // Verify meeting was found
+    assert.ok(result.meeting, 'Should find a meeting point for two address-based participants');
+    assert.equal(result.meeting.type, 'OK', 'Meeting should be of type OK');
+    assert.ok(result.meeting.stopId, 'Meeting should have a stop ID');
+
+    console.log(`Meeting point found: ${result.meeting.stopId}`);
+
+    // Verify both participants can reach the meeting point
+    assert.equal(result.persons.length, 2, 'Should have two participants');
+
+    for (const person of result.persons) {
+        const reach = person.reachedStopFirst.get(result.meeting.stopId);
+        assert.ok(reach, `Participant ${person.label} should reach the meeting point`);
+        assert.ok(reach.elapsed > 0, `Participant ${person.label} should have non-zero travel time from address`);
+
+        console.log(`Participant ${person.label}: ${Math.floor(reach.elapsed / 60)} minutes travel time`);
+
+        // Verify the person has address properties
+        assert.equal(person.isAddress, true, `Participant ${person.label} should be marked as address-based`);
+        assert.ok(person.addressLat, `Participant ${person.label} should have address latitude`);
+        assert.ok(person.addressLon, `Participant ${person.label} should have address longitude`);
+    }
+
+    // Verify stats
+    assert.ok(result.stats, 'Should have stats');
+    assert.ok(result.stats.totalVisitedNodes > 0, 'Should visit some nodes');
+    assert.ok(result.stats.maxAccumulatedTime <= 120 * 60, 'Should stay within two hours');
+});
