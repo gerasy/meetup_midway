@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transit Meeting Point Finder</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44c=" crossorigin="" />
     <style>
         :root {
             color-scheme: dark;
@@ -149,6 +150,22 @@
             border-radius: 8px;
             font-size: 13px;
         }
+        #map {
+            height: 420px;
+            border-radius: 14px;
+            margin: 25px 0;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .person-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .person-controls button {
+            margin: 0;
+        }
         .file-input {
             margin: 10px 0;
         }
@@ -167,6 +184,7 @@
             border: 1px solid var(--border);
         }
     </style>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-o9N1j7kGStF8Dd7Bvu1j0v0C6tF/2zV2HfV9Z9zkA+M=" crossorigin=""></script>
 </head>
 <body>
     <div class="container">
@@ -183,21 +201,26 @@
             <input type="time" id="startTime" value="10:00" min="10:00" max="12:00">
         </div>
 
-        <div class="input-group">
-            <label for="person1">Person A Starting Station:</label>
-            <input type="text" id="person1" list="person1-stations" data-station-input value="Alexanderplatz" placeholder="e.g., Alexanderplatz">
-            <datalist id="person1-stations"></datalist>
+        <div id="peopleInputs">
+            <div class="input-group person-group" data-person-group="A">
+                <label for="person-A">Person A Starting Station:</label>
+                <input type="text" id="person-A" list="person-A-stations" data-person-input data-person-label="A" data-station-input value="Alexanderplatz" placeholder="e.g., Alexanderplatz">
+                <datalist id="person-A-stations"></datalist>
+            </div>
+            <div class="input-group person-group" data-person-group="B">
+                <label for="person-B">Person B Starting Station:</label>
+                <input type="text" id="person-B" list="person-B-stations" data-person-input data-person-label="B" data-station-input value="U Spittelmarkt" placeholder="e.g., U Spittelmarkt">
+                <datalist id="person-B-stations"></datalist>
+            </div>
         </div>
 
-        <div class="input-group">
-            <label for="person2">Person B Starting Station:</label>
-            <input type="text" id="person2" list="person2-stations" data-station-input value="U Spittelmarkt" placeholder="e.g., U Spittelmarkt">
-            <datalist id="person2-stations"></datalist>
+        <div class="person-controls">
+            <button id="addPerson" type="button">Add Another Person</button>
+            <button id="findMeeting" onclick="findMeetingPoint()">Find Meeting Point</button>
         </div>
-
-        <button id="findMeeting" onclick="findMeetingPoint()">Find Meeting Point</button>
 
         <div id="status"></div>
+        <div id="map"></div>
         <div id="results"></div>
     </div>
 
