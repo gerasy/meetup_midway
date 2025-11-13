@@ -2,6 +2,72 @@ import { formatMinutes, sec2hm } from './parsing.js';
 import { fmtStopLabel, describeAction } from './formatters.js';
 import { showRoutesOnMap, resetMap } from './map.js';
 
+const iterationAnimationState = {
+    active: false,
+    baseMessage: ''
+};
+
+export function beginIterationAnimation() {
+    if (typeof document === 'undefined') {
+        iterationAnimationState.active = false;
+        iterationAnimationState.baseMessage = '';
+        return;
+    }
+
+    const statusDiv = document.getElementById('status');
+    if (!statusDiv) {
+        iterationAnimationState.active = false;
+        iterationAnimationState.baseMessage = '';
+        return;
+    }
+
+    iterationAnimationState.active = true;
+    const currentMessage = statusDiv.textContent || '';
+    const baseMessage = currentMessage || 'Searching for meeting point...';
+    iterationAnimationState.baseMessage = baseMessage;
+    statusDiv.dataset.iterationBase = baseMessage;
+    statusDiv.textContent = baseMessage;
+}
+
+export function updateIterationAnimation(iterations) {
+    if (!iterationAnimationState.active || typeof document === 'undefined') {
+        return;
+    }
+
+    const statusDiv = document.getElementById('status');
+    if (!statusDiv) {
+        return;
+    }
+
+    const base = statusDiv.dataset.iterationBase ?? iterationAnimationState.baseMessage ?? '';
+    const label = base || 'Searching';
+    statusDiv.textContent = `${label} (iterations: ${Number(iterations).toLocaleString()})`;
+}
+
+export function endIterationAnimation() {
+    if (!iterationAnimationState.active) {
+        return;
+    }
+
+    iterationAnimationState.active = false;
+
+    if (typeof document === 'undefined') {
+        iterationAnimationState.baseMessage = '';
+        return;
+    }
+
+    const statusDiv = document.getElementById('status');
+    if (!statusDiv) {
+        iterationAnimationState.baseMessage = '';
+        return;
+    }
+
+    const base = statusDiv.dataset.iterationBase ?? iterationAnimationState.baseMessage ?? '';
+    statusDiv.textContent = base;
+    delete statusDiv.dataset.iterationBase;
+    iterationAnimationState.baseMessage = '';
+}
+
 export function reconstructPath(person, stopId) {
     const path = [];
     let cur = stopId;
