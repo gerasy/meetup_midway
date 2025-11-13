@@ -4,8 +4,25 @@ import { processGTFSData, resolveStation, pickStartPlatform, nearbyStopsWithinRa
 import { MinHeap } from './queue.js';
 import { toSeconds } from './parsing.js';
 import { displayResults, setStatus, beginIterationAnimation, updateIterationAnimation, endIterationAnimation, showProgress, hideProgress, updateProgress } from './ui.js';
+import { calculateGeographicMidpoint, haversineM } from './geometry.js';
 
 const MIN_TRAVEL_TIME_S = 10;
+
+function getStopCoordinates(stopId) {
+    const stop = parsedData.stopById.get(stopId);
+    if (!stop) return null;
+    const lat = parseFloat(stop.stop_lat);
+    const lon = parseFloat(stop.stop_lon);
+    if (isNaN(lat) || isNaN(lon)) return null;
+    return { lat, lon };
+}
+
+function calculateDistanceToMidpoint(stopId, midpoint) {
+    if (!midpoint) return 0;
+    const coords = getStopCoordinates(stopId);
+    if (!coords) return 0;
+    return haversineM(coords.lat, coords.lon, midpoint.lat, midpoint.lon);
+}
 
 export function collectPersonInputs() {
     const inputs = Array.from(document.querySelectorAll('[data-person-input]'));
@@ -37,12 +54,13 @@ export function validatePeopleInputs(people) {
     return { ok: true, people };
 }
 
-function enqueuePathwayTransferWalks(pq, curStop, curTime, accum, owner) {
+function enqueuePathwayTransferWalks(pq, curStop, curTime, accum, owner, midpoint) {
     const edges = parsedData.walkEdges.get(curStop) || [];
     for (const edge of edges) {
         const travelTime = Math.max(MIN_TRAVEL_TIME_S, edge.time);
+        const distToMidpoint = calculateDistanceToMidpoint(edge.to, midpoint);
         pq.push(
-            [accum + travelTime, curTime + travelTime, edge.to],
+            [accum + travelTime, curTime + travelTime, distToMidpoint, edge.to],
             {
                 owner, mode: 'WALK', source: edge.source,
                 from_stop: curStop, to_stop: edge.to,
@@ -53,15 +71,16 @@ function enqueuePathwayTransferWalks(pq, curStop, curTime, accum, owner) {
     }
 }
 
-function enqueueGeoWalks(pq, curStop, curTime, accum, owner) {
+function enqueueGeoWalks(pq, curStop, curTime, accum, owner, midpoint) {
     const nearby = nearbyStopsWithinRadius(curStop, MAX_WALK_RADIUS_M);
     for (const { stopId: cand, distance: distM } of nearby) {
         if (parsedData.providedPairs.has(`${curStop}-${cand}`)) continue;
         let ttime = Math.ceil(distM / WALK_SPEED_MPS);
         ttime = Math.max(MIN_TRAVEL_TIME_S, ttime);
         if (ttime <= MAX_WALK_TIME_S) {
+            const distToMidpoint = calculateDistanceToMidpoint(cand, midpoint);
             pq.push(
-                [accum + ttime, curTime + ttime, cand],
+                [accum + ttime, curTime + ttime, distToMidpoint, cand],
                 {
                     owner, mode: 'WALK', source: 'GEO',
                     from_stop: curStop, to_stop: cand,
@@ -74,7 +93,7 @@ function enqueueGeoWalks(pq, curStop, curTime, accum, owner) {
     }
 }
 
-function enqueueRides(pq, curStop, curTime, accum, owner) {
+function enqueueRides(pq, curStop, curTime, accum, owner, midpoint) {
     const rows = parsedData.rowsAtStop.get(curStop) || [];
     const validRows = rows.filter(r => r.dep_sec >= curTime);
 
@@ -93,9 +112,10 @@ function enqueueRides(pq, curStop, curTime, accum, owner) {
             const total = wait + ride;
 
             const tripInf = parsedData.tripInfo.get(tripId);
+            const distToMidpoint = calculateDistanceToMidpoint(arrRow.stop_id, midpoint);
 
             pq.push(
-                [accum + total, arrTime, arrRow.stop_id],
+                [accum + total, arrTime, distToMidpoint, arrRow.stop_id],
                 {
                     owner, mode: 'RIDE',
                     from_stop: curStop, to_stop: arrRow.stop_id,
@@ -170,14 +190,15 @@ function createPerson({ label, stationId, stationName, startStopId, t0 }) {
     };
 }
 
-function primePerson(person) {
+function primePerson(person, midpoint) {
+    const distToMidpoint = calculateDistanceToMidpoint(person.startStopId, midpoint);
     person.pq.push(
-        [0, person.t0, person.startStopId],
+        [0, person.t0, distToMidpoint, person.startStopId],
         { owner: person.label, mode: 'START', from_stop: null, to_stop: person.startStopId, depart_sec: person.t0, arrive_sec: person.t0 }
     );
-    enqueuePathwayTransferWalks(person.pq, person.startStopId, person.t0, 0, person.label);
-    enqueueGeoWalks(person.pq, person.startStopId, person.t0, 0, person.label);
-    enqueueRides(person.pq, person.startStopId, person.t0, 0, person.label);
+    enqueuePathwayTransferWalks(person.pq, person.startStopId, person.t0, 0, person.label, midpoint);
+    enqueueGeoWalks(person.pq, person.startStopId, person.t0, 0, person.label, midpoint);
+    enqueueRides(person.pq, person.startStopId, person.t0, 0, person.label, midpoint);
 }
 
 export function runMeetingSearch({ participants, startTimeSec }) {
@@ -205,7 +226,11 @@ export function runMeetingSearch({ participants, startTimeSec }) {
         return createPerson({ label, stationId, stationName: name, startStopId: chosenStart, t0: startTimeSec });
     });
 
-    persons.forEach(primePerson);
+    // Calculate geographical midpoint of all participants' starting locations
+    const startCoordinates = persons.map(p => getStopCoordinates(p.startStopId)).filter(c => c !== null);
+    const midpoint = calculateGeographicMidpoint(startCoordinates);
+
+    persons.forEach(person => primePerson(person, midpoint));
 
     let meeting = null;
     let iterations = 0;
@@ -314,9 +339,9 @@ export function runMeetingSearch({ participants, startTimeSec }) {
             }
 
             const curTime = info.arrive_sec;
-            enqueuePathwayTransferWalks(minPerson.pq, destStop, curTime, accum, info.owner);
-            enqueueGeoWalks(minPerson.pq, destStop, curTime, accum, info.owner);
-            enqueueRides(minPerson.pq, destStop, curTime, accum, info.owner);
+            enqueuePathwayTransferWalks(minPerson.pq, destStop, curTime, accum, info.owner, midpoint);
+            enqueueGeoWalks(minPerson.pq, destStop, curTime, accum, info.owner, midpoint);
+            enqueueRides(minPerson.pq, destStop, curTime, accum, info.owner, midpoint);
         }
 
         updateIterationAnimation(Math.min(iterations, maxIterations));
