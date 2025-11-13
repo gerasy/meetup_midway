@@ -166,6 +166,33 @@
         .person-controls button {
             margin: 0;
         }
+        .person-group {
+            position: relative;
+        }
+        .person-group-actions {
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .person-group .remove-person {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--subtle-text);
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+            transition: color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .person-group .remove-person:hover:not(:disabled) {
+            color: var(--text);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+        }
+        .person-group .remove-person:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
         .file-input {
             margin: 10px 0;
         }

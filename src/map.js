@@ -34,6 +34,10 @@ function ensureMap() {
     return mapInstance;
 }
 
+export function initializeMap() {
+    ensureMap();
+}
+
 function removeOverlayLayers() {
     if (!mapInstance) {
         overlayLayers = [];

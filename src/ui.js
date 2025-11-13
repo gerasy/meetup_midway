@@ -14,7 +14,14 @@ export function reconstructPath(person, stopId) {
 }
 
 export function displayResults(meeting, persons, startTimeStr) {
+    if (typeof document === 'undefined') {
+        return;
+    }
+
     const resultsDiv = document.getElementById('results');
+    if (!resultsDiv) {
+        return;
+    }
 
     if (!meeting) {
         resultsDiv.innerHTML = '<div class="status-error">No meeting found before search exhausted.</div>';
@@ -84,7 +91,15 @@ export function displayResults(meeting, persons, startTimeStr) {
 }
 
 export function setStatus(message, type) {
+    if (typeof document === 'undefined') {
+        return;
+    }
+
     const statusDiv = document.getElementById('status');
+    if (!statusDiv) {
+        return;
+    }
+
     statusDiv.textContent = message;
     statusDiv.className = `status-${type}`;
 }
