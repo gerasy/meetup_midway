@@ -235,6 +235,13 @@
             font-size: 12px;
             border: 1px solid var(--border);
         }
+        .autocomplete-item:hover {
+            background: var(--accent) !important;
+            color: var(--bg) !important;
+        }
+        .autocomplete-item:last-child {
+            border-bottom: none !important;
+        }
     </style>
 </head>
 <body>
@@ -254,14 +261,12 @@
 
         <div id="peopleInputs">
             <div class="input-group person-group" data-person-group="A">
-                <label for="person-A">Person A Starting Haltestelle:</label>
-                <input type="text" id="person-A" list="person-A-stations" data-person-input data-person-label="A" data-station-input value="⭐ U Uhlandstr. (Berlin)" placeholder="e.g., ⭐ S+U Alexanderplatz">
-                <datalist id="person-A-stations"></datalist>
+                <label for="person-A">Person A Starting Location:</label>
+                <input type="text" id="person-A" data-person-input data-person-label="A" data-station-input value="⭐ U Uhlandstr. (Berlin)" placeholder="e.g., Alexanderplatz or Unter den Linden 1, Berlin">
             </div>
             <div class="input-group person-group" data-person-group="B">
-                <label for="person-B">Person B Starting Haltestelle:</label>
-                <input type="text" id="person-B" list="person-B-stations" data-person-input data-person-label="B" data-station-input value="⭐ U Vinetastr. (Berlin)" placeholder="e.g., ⭐ S+U Alexanderplatz">
-                <datalist id="person-B-stations"></datalist>
+                <label for="person-B">Person B Starting Location:</label>
+                <input type="text" id="person-B" data-person-input data-person-label="B" data-station-input value="⭐ U Vinetastr. (Berlin)" placeholder="e.g., Alexanderplatz or Unter den Linden 1, Berlin">
             </div>
         </div>
 

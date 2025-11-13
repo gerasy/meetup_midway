@@ -1,5 +1,6 @@
 import { MAX_PARTICIPANTS } from './constants.js';
 import { initializeStationSearchInputs } from './gtfsProcessing.js';
+import { setupAutocomplete } from './autocomplete.js';
 
 const LABELS = ['A', 'B', 'C', 'D', 'E'];
 const MIN_PARTICIPANTS = 2;
@@ -16,23 +17,21 @@ function createPersonGroup(label) {
     const labelEl = document.createElement('label');
     const inputId = `person-${label}`;
     labelEl.setAttribute('for', inputId);
-    labelEl.textContent = `Person ${label} Starting Haltestelle:`;
+    labelEl.textContent = `Person ${label} Starting Location:`;
 
     const input = document.createElement('input');
     input.type = 'text';
     input.id = inputId;
-    input.placeholder = 'e.g., ⭐ S+U Alexanderplatz';
+    input.placeholder = 'e.g., Alexanderplatz or Unter den Linden 1, Berlin';
     input.setAttribute('data-person-input', '');
     input.setAttribute('data-person-label', label);
     input.setAttribute('data-station-input', '');
 
-    const datalist = document.createElement('datalist');
-    datalist.id = `${inputId}-stations`;
-    input.setAttribute('list', datalist.id);
-
     wrapper.appendChild(labelEl);
     wrapper.appendChild(input);
-    wrapper.appendChild(datalist);
+
+    // Initialize autocomplete
+    setTimeout(() => setupAutocomplete(input), 0);
 
     const actions = document.createElement('div');
     actions.className = 'person-group-actions';
@@ -147,6 +146,12 @@ export function setupParticipantControls() {
     }
 
     updateGroupLabels(container);
+
+    // Initialize autocomplete for all existing inputs
+    container.querySelectorAll('[data-person-input]').forEach(input => {
+        setupAutocomplete(input);
+    });
+
     container.querySelectorAll('.person-group').forEach(group => {
         if (!group.querySelector('button[data-remove-person]')) {
             const actions = document.createElement('div');

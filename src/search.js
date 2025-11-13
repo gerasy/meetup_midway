@@ -5,6 +5,7 @@ import { MinHeap } from './queue.js';
 import { toSeconds } from './parsing.js';
 import { displayResults, setStatus, beginIterationAnimation, updateIterationAnimation, endIterationAnimation, showProgress, hideProgress, updateProgress } from './ui.js';
 import { calculateGeographicMidpoint, haversineM } from './geometry.js';
+import { findNearestStation } from './geocoding.js';
 
 const MIN_TRAVEL_TIME_S = 10;
 
@@ -26,10 +27,30 @@ function calculateDistanceToMidpoint(stopId, midpoint) {
 
 export function collectPersonInputs() {
     const inputs = Array.from(document.querySelectorAll('[data-person-input]'));
-    return inputs.map((input, idx) => ({
-        label: input.dataset.personLabel || String.fromCharCode(65 + idx),
-        query: (input.value || '').trim(),
-    }));
+    return inputs.map((input, idx) => {
+        const label = input.dataset.personLabel || String.fromCharCode(65 + idx);
+        const query = (input.value || '').trim();
+
+        // Check if this is an address (has coordinates stored)
+        const addressLat = input.dataset.addressLat;
+        const addressLon = input.dataset.addressLon;
+
+        if (addressLat && addressLon) {
+            return {
+                label,
+                query,
+                isAddress: true,
+                lat: parseFloat(addressLat),
+                lon: parseFloat(addressLon)
+            };
+        }
+
+        return {
+            label,
+            query,
+            isAddress: false
+        };
+    });
 }
 
 export function validatePeopleInputs(people) {
@@ -212,17 +233,34 @@ export function runMeetingSearch({ participants, startTimeSec }) {
 
     processGTFSData();
 
-    const persons = participants.map(({ label, query, startStopId }) => {
-        const { stationId, name } = resolveStation(query);
-        let chosenStart = startStopId;
-        if (chosenStart) {
-            const mappedStation = parsedData.stopIdToStationId.get(chosenStart);
-            if (mappedStation && mappedStation !== stationId) {
-                throw new Error(`Start platform ${chosenStart} does not belong to ${name}.`);
+    const persons = participants.map(({ label, query, startStopId, isAddress, lat, lon }) => {
+        let stationId, name, chosenStart;
+
+        // Handle address input
+        if (isAddress && lat && lon) {
+            const nearest = findNearestStation(lat, lon, 2000); // 2km max
+            if (!nearest) {
+                throw new Error(`No transit station found near address for ${label}. Try a different location or enter a station name.`);
             }
-        } else {
+            stationId = nearest.stationId;
+            name = `${nearest.name} (${Math.round(nearest.distance)}m from address)`;
             chosenStart = pickStartPlatform(stationId, startTimeSec);
+        } else {
+            // Handle station name input
+            const resolved = resolveStation(query);
+            stationId = resolved.stationId;
+            name = resolved.name;
+            chosenStart = startStopId;
+            if (chosenStart) {
+                const mappedStation = parsedData.stopIdToStationId.get(chosenStart);
+                if (mappedStation && mappedStation !== stationId) {
+                    throw new Error(`Start platform ${chosenStart} does not belong to ${name}.`);
+                }
+            } else {
+                chosenStart = pickStartPlatform(stationId, startTimeSec);
+            }
         }
+
         return createPerson({ label, stationId, stationName: name, startStopId: chosenStart, t0: startTimeSec });
     });
 
