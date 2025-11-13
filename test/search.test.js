@@ -1,8 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { validatePeopleInputs, runMeetingSearch } from '../src/search.js';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { validatePeopleInputs, runMeetingSearch, runDeterministicRouteSelfCheck } from '../src/search.js';
 import { MAX_PARTICIPANTS } from '../src/constants.js';
 import { gtfsData, appState, resetParsedDataCollections } from '../src/state.js';
+import { parseCSV } from '../src/parsing.js';
+import { processGTFSData } from '../src/gtfsProcessing.js';
 
 function resetTestState() {
     gtfsData.stops = [];
@@ -90,6 +94,19 @@ function loadLinearLineFixture() {
     gtfsData.stopTimes = stopTimes;
     gtfsData.pathways = [];
     gtfsData.transfers = [];
+}
+
+function loadRealGTFSSubset() {
+    resetTestState();
+    const base = path.resolve('gtfs_subset');
+    const read = name => readFileSync(path.join(base, name), 'utf8');
+    gtfsData.stops = parseCSV(read('stops.txt'));
+    gtfsData.stopTimes = parseCSV(read('stop_times.txt'));
+    gtfsData.trips = parseCSV(read('trips.txt'));
+    gtfsData.routes = parseCSV(read('routes.txt'));
+    gtfsData.pathways = parseCSV(read('pathways.txt'));
+    gtfsData.transfers = parseCSV(read('transfers.txt'));
+    processGTFSData();
 }
 
 function mulberry32(seed) {
@@ -211,4 +228,14 @@ test('adding the solution station as a new participant maintains the meeting acr
         const newParticipantArrival = extended.persons[2].reachedStopFirst.get(meetingStop).elapsed;
         assert.equal(newParticipantArrival, 0, 'added participant should already be at the meeting stop');
     }
+});
+
+test('deterministic U2 self-check succeeds on the GTFS subset', () => {
+    loadRealGTFSSubset();
+    const outcome = runDeterministicRouteSelfCheck();
+    assert.equal(outcome.success, true, outcome.message);
+    assert.equal(outcome.meetingStopId, 'de:11000:900100003::1');
+    assert.ok(outcome.stats);
+    assert.ok(outcome.stats.totalVisitedNodes > 0, 'self-check should visit nodes');
+    assert.ok(outcome.stats.maxAccumulatedTime <= 120 * 60, 'self-check should stay within two hours');
 });
