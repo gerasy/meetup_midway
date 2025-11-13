@@ -11,6 +11,12 @@ const MIN_ZOOM = 0.6;
 const MAX_ZOOM = 8;
 const WHEEL_ZOOM_FACTOR = 1.12;
 
+// BVG Berlin stops have IDs beginning with this prefix. When drawing the
+// background constellation of stations we restrict ourselves to these stops so
+// that the map reflects the Berlin area instead of the entire VBB region
+// present in the GTFS subset.
+const BERLIN_STOP_ID_PREFIX = 'de:11000:';
+
 let canvas = null;
 let ctx = null;
 let viewWidth = 0;
@@ -497,6 +503,10 @@ export function updateAllStationsOnMap() {
     const seen = new Set();
     const points = [];
     parsedData.stopById.forEach(stop => {
+        const stopId = typeof stop.stop_id === 'string' ? stop.stop_id : '';
+        if (!stopId.startsWith(BERLIN_STOP_ID_PREFIX)) {
+            return;
+        }
         const lat = parseFloat(stop.stop_lat);
         const lon = parseFloat(stop.stop_lon);
         if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
