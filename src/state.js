@@ -16,6 +16,7 @@ export const parsedData = {
     tripGroups: new Map(),
     tripInfo: new Map(),
     routeInfo: new Map(),
+    stationPopularity: new Map(),
     walkEdges: new Map(),
     providedPairs: new Set(),
     grid: new Map()
@@ -36,6 +37,7 @@ export function resetParsedDataCollections() {
     parsedData.tripGroups.clear();
     parsedData.tripInfo.clear();
     parsedData.routeInfo.clear();
+    parsedData.stationPopularity.clear();
     parsedData.walkEdges.clear();
     parsedData.providedPairs.clear();
     parsedData.grid.clear();
