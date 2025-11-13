@@ -16,12 +16,12 @@ function createPersonGroup(label) {
     const labelEl = document.createElement('label');
     const inputId = `person-${label}`;
     labelEl.setAttribute('for', inputId);
-    labelEl.textContent = `Person ${label} Starting Station:`;
+    labelEl.textContent = `Person ${label} Starting Haltestelle:`;
 
     const input = document.createElement('input');
     input.type = 'text';
     input.id = inputId;
-    input.placeholder = 'e.g., Alexanderplatz';
+    input.placeholder = 'e.g., ⭐ S+U Alexanderplatz';
     input.setAttribute('data-person-input', '');
     input.setAttribute('data-person-label', label);
     input.setAttribute('data-station-input', '');
@@ -71,7 +71,7 @@ function updateGroupLabels(container) {
 
         if (labelEl) {
             labelEl.setAttribute('for', inputId);
-            labelEl.textContent = `Person ${label} Starting Station:`;
+            labelEl.textContent = `Person ${label} Starting Haltestelle:`;
         }
 
         if (input) {

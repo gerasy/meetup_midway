@@ -7,6 +7,7 @@ const DEFAULT_ZOOM = 12;
 
 let mapInstance = null;
 let overlayLayers = [];
+let mockLayerGroup = null;
 
 function ensureMap() {
     if (typeof window === 'undefined' || !window.L) {
@@ -42,7 +43,72 @@ export function initializeMap() {
         window.requestAnimationFrame(() => {
             map.invalidateSize();
             map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+            showMockRoute(map);
         });
+    }
+}
+
+function ensureMockLayerGroup() {
+    if (!window.L || mockLayerGroup) {
+        return mockLayerGroup;
+    }
+
+    const sampleRoute = [
+        [52.516275, 13.377704],
+        [52.520508, 13.399389],
+        [52.521918, 13.413215]
+    ];
+
+    const routeLine = window.L.polyline(sampleRoute, {
+        color: '#38bdf8',
+        weight: 5,
+        opacity: 0.9,
+        dashArray: '6 8'
+    });
+
+    const startMarker = window.L.circleMarker(sampleRoute[0], {
+        radius: 8,
+        color: '#22c55e',
+        fillColor: '#22c55e',
+        fillOpacity: 0.9,
+        weight: 2
+    }).bindPopup('⭐ Beispiel-Start: Brandenburger Tor');
+
+    const endMarker = window.L.circleMarker(sampleRoute[sampleRoute.length - 1], {
+        radius: 8,
+        color: '#f97316',
+        fillColor: '#f97316',
+        fillOpacity: 0.9,
+        weight: 2
+    }).bindPopup('⭐ Beispiel-Ziel: Alexanderplatz');
+
+    mockLayerGroup = window.L.featureGroup([routeLine, startMarker, endMarker]);
+    return mockLayerGroup;
+}
+
+function showMockRoute(map) {
+    if (!map) {
+        return;
+    }
+
+    const group = ensureMockLayerGroup();
+    if (!group) {
+        return;
+    }
+
+    if (!map.hasLayer(group)) {
+        group.addTo(map);
+    }
+
+    const bounds = group.getBounds?.();
+    if (bounds && bounds.isValid()) {
+        map.fitBounds(bounds.pad(0.2));
+    }
+}
+
+function removeMockRoute() {
+    if (mapInstance && mockLayerGroup && mapInstance.hasLayer(mockLayerGroup)) {
+        mapInstance.removeLayer(mockLayerGroup);
     }
 }
 
@@ -135,6 +201,7 @@ export function showRoutesOnMap(meetingStopId, pathData) {
     }
 
     map.invalidateSize();
+    removeMockRoute();
     removeOverlayLayers();
 
     const bounds = window.L.latLngBounds([]);
@@ -192,4 +259,5 @@ export function resetMap() {
         return;
     }
     removeOverlayLayers();
+    showMockRoute(mapInstance);
 }

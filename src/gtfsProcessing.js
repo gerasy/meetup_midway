@@ -4,8 +4,18 @@ import { haversineM, cellFor } from './geometry.js';
 import { toSeconds } from './parsing.js';
 import { setStatus } from './ui.js';
 
+function normalizeStationQuery(input) {
+    if (!input) {
+        return '';
+    }
+
+    const withoutStars = input.replace(/\u2B50/g, '');
+    return withoutStars.trim();
+}
+
 function getRankedStationMatches(query) {
-    const q = query.trim().toLowerCase();
+    const normalized = normalizeStationQuery(query);
+    const q = normalized.toLowerCase();
     if (!q) {
         return [];
     }
@@ -248,10 +258,12 @@ export function initializeStationSearchInputs() {
     const updateSuggestions = (input, datalist, query) => {
         let matches = [];
 
-        if (!query) {
+        const normalizedQuery = normalizeStationQuery(query);
+
+        if (!normalizedQuery) {
             matches = appState.stationLookupList.slice(0, MAX_STATION_SUGGESTIONS);
-        } else if (query.length >= 2) {
-            matches = getRankedStationMatches(query)
+        } else if (normalizedQuery.length >= 2) {
+            matches = getRankedStationMatches(normalizedQuery)
                 .slice(0, MAX_STATION_SUGGESTIONS)
                 .map(match => match.item);
         }
@@ -265,7 +277,9 @@ export function initializeStationSearchInputs() {
             }
             seen.add(key);
             const option = document.createElement('option');
-            option.value = name;
+            const decoratedName = `\u2B50 ${name}`;
+            option.value = decoratedName;
+            option.textContent = decoratedName;
             datalist.appendChild(option);
         });
     };
@@ -301,12 +315,12 @@ export function initializeStationSearchInputs() {
 }
 
 export function resolveStation(query) {
-    const trimmed = query.trim();
-    if (!trimmed) {
+    const normalized = normalizeStationQuery(query);
+    if (!normalized) {
         throw new Error('Please enter a station name.');
     }
 
-    const matches = getRankedStationMatches(trimmed);
+    const matches = getRankedStationMatches(normalized);
     if (matches.length === 0) {
         throw new Error(`No station matches '${query}'`);
     }
