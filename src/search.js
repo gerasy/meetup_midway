@@ -119,7 +119,7 @@ function createPerson({ label, stationId, stationName, startStopId, t0 }) {
         startStopId,
         t0,
         pq: new MinHeap(),
-        visitedStops: new Set(),
+        bestTimes: new Map(),
         reachedStopFirst: new Map(),
         parent: new Map()
     };
@@ -184,14 +184,18 @@ export function runMeetingSearch({ participants, startTimeSec }) {
         const info = popped.data;
         const destStop = info.to_stop;
 
-        if (minPerson.visitedStops.has(destStop)) continue;
-        minPerson.visitedStops.add(destStop);
+        const prevBest = minPerson.bestTimes.get(destStop);
+        if (prevBest !== undefined && prevBest <= accum) {
+            continue;
+        }
+        minPerson.bestTimes.set(destStop, accum);
 
         if (info.mode !== 'START') {
             minPerson.parent.set(destStop, { prevStop: info.from_stop, info });
         }
 
-        if (!minPerson.reachedStopFirst.has(destStop)) {
+        const prevReach = minPerson.reachedStopFirst.get(destStop);
+        if (!prevReach || accum < prevReach.elapsed) {
             minPerson.reachedStopFirst.set(destStop, { arrTime: info.arrive_sec, elapsed: accum });
         }
 
