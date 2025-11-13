@@ -3,7 +3,7 @@ import { gtfsData, parsedData } from './state.js';
 import { processGTFSData, resolveStation, pickStartPlatform, nearbyStopsWithinRadius } from './gtfsProcessing.js';
 import { MinHeap } from './queue.js';
 import { toSeconds } from './parsing.js';
-import { displayResults, setStatus } from './ui.js';
+import { displayResults, setStatus, beginIterationAnimation, updateIterationAnimation, endIterationAnimation } from './ui.js';
 
 export function collectPersonInputs() {
     const inputs = Array.from(document.querySelectorAll('[data-person-input]'));
@@ -164,70 +164,87 @@ export function runMeetingSearch({ participants, startTimeSec }) {
 
     let meeting = null;
     let iterations = 0;
-    const maxIterations = 500000;
+    const maxIterations = 200000000;
     let globalMaxAccum = 0;
     let terminationReason = null;
     let terminationCode = null;
 
-    while (iterations++ < maxIterations) {
-        let minEntry = null;
-        let minPerson = null;
+    beginIterationAnimation();
+    updateIterationAnimation(iterations);
 
-        for (const S of persons) {
-            if (S.pq.length > 0) {
-                const entry = S.pq.heap[0];
-                if (minEntry === null || entry.priority[0] < minEntry.priority[0]) {
-                    minEntry = entry;
-                    minPerson = S;
+    try {
+        while (iterations++ < maxIterations) {
+            if (iterations % 1000 === 0) {
+                updateIterationAnimation(iterations);
+            }
+
+            let minEntry = null;
+            let minPerson = null;
+
+            for (const S of persons) {
+                if (S.pq.length > 0) {
+                    const entry = S.pq.heap[0];
+                    if (minEntry === null || entry.priority[0] < minEntry.priority[0]) {
+                        minEntry = entry;
+                        minPerson = S;
+                    }
                 }
             }
+
+            if (!minEntry) {
+                terminationReason = terminationReason || 'All participant queues are empty; no further nodes can be expanded.';
+                terminationCode = terminationCode || 'EMPTY_QUEUE';
+                updateIterationAnimation(iterations);
+                break;
+            }
+
+            const accum = minEntry.priority[0];
+            if (accum > globalMaxAccum) {
+                globalMaxAccum = accum;
+            }
+            if (accum > MAX_TRIP_TIME_S) {
+                meeting = { type: 'CAP', person: minPerson };
+                terminationReason = `Person ${minPerson.label} exceeded the 2-hour travel cap.`;
+                terminationCode = 'TRIP_CAP';
+                updateIterationAnimation(iterations);
+                break;
+            }
+
+            const popped = minPerson.pq.pop();
+            const info = popped.data;
+            const destStop = info.to_stop;
+
+            const prevBest = minPerson.bestTimes.get(destStop);
+            if (prevBest !== undefined && prevBest <= accum) {
+                continue;
+            }
+            minPerson.bestTimes.set(destStop, accum);
+
+            if (info.mode !== 'START') {
+                minPerson.parent.set(destStop, { prevStop: info.from_stop, info });
+            }
+
+            const prevReach = minPerson.reachedStopFirst.get(destStop);
+            if (!prevReach || accum < prevReach.elapsed) {
+                minPerson.reachedStopFirst.set(destStop, { arrTime: info.arrive_sec, elapsed: accum });
+            }
+
+            if (persons.every(P => P.reachedStopFirst.has(destStop))) {
+                meeting = { type: 'OK', stopId: destStop };
+                updateIterationAnimation(iterations);
+                break;
+            }
+
+            const curTime = info.arrive_sec;
+            enqueuePathwayTransferWalks(minPerson.pq, destStop, curTime, accum, info.owner);
+            enqueueGeoWalks(minPerson.pq, destStop, curTime, accum, info.owner);
+            enqueueRides(minPerson.pq, destStop, curTime, accum, info.owner);
         }
 
-        if (!minEntry) {
-            terminationReason = terminationReason || 'All participant queues are empty; no further nodes can be expanded.';
-            terminationCode = terminationCode || 'EMPTY_QUEUE';
-            break;
-        }
-
-        const accum = minEntry.priority[0];
-        if (accum > globalMaxAccum) {
-            globalMaxAccum = accum;
-        }
-        if (accum > MAX_TRIP_TIME_S) {
-            meeting = { type: 'CAP', person: minPerson };
-            terminationReason = `Person ${minPerson.label} exceeded the 2-hour travel cap.`;
-            terminationCode = 'TRIP_CAP';
-            break;
-        }
-
-        const popped = minPerson.pq.pop();
-        const info = popped.data;
-        const destStop = info.to_stop;
-
-        const prevBest = minPerson.bestTimes.get(destStop);
-        if (prevBest !== undefined && prevBest <= accum) {
-            continue;
-        }
-        minPerson.bestTimes.set(destStop, accum);
-
-        if (info.mode !== 'START') {
-            minPerson.parent.set(destStop, { prevStop: info.from_stop, info });
-        }
-
-        const prevReach = minPerson.reachedStopFirst.get(destStop);
-        if (!prevReach || accum < prevReach.elapsed) {
-            minPerson.reachedStopFirst.set(destStop, { arrTime: info.arrive_sec, elapsed: accum });
-        }
-
-        if (persons.every(P => P.reachedStopFirst.has(destStop))) {
-            meeting = { type: 'OK', stopId: destStop };
-            break;
-        }
-
-        const curTime = info.arrive_sec;
-        enqueuePathwayTransferWalks(minPerson.pq, destStop, curTime, accum, info.owner);
-        enqueueGeoWalks(minPerson.pq, destStop, curTime, accum, info.owner);
-        enqueueRides(minPerson.pq, destStop, curTime, accum, info.owner);
+        updateIterationAnimation(Math.min(iterations, maxIterations));
+    }
+    finally {
+        endIterationAnimation();
     }
 
     const totalVisitedNodes = persons.reduce((sum, person) => sum + person.bestTimes.size, 0);
