@@ -234,8 +234,9 @@ test('randomly selected triple participants on the GTFS subset always meet', () 
     loadRealGTFSSubset();
     const rng = mulberry32(0xBADA55);
     const startTimeSec = 10 * 3600;
-    const stationNames = Array.from(new Set(gtfsData.stops.map(s => s.stop_name)));
-    assert.ok(stationNames.length >= 3, 'expected at least three unique stations in GTFS subset');
+    // Only use stations in Berlin to avoid selecting incompatible distant stations
+    const stationNames = Array.from(new Set(gtfsData.stops.map(s => s.stop_name).filter(name => name.includes('Berlin'))));
+    assert.ok(stationNames.length >= 3, 'expected at least three unique Berlin stations in GTFS subset');
 
     for (let iteration = 0; iteration < 1; iteration++) {
         const chosen = new Set();
