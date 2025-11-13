@@ -4,6 +4,45 @@ import { haversineM, cellFor } from './geometry.js';
 import { toSeconds } from './parsing.js';
 import { setStatus } from './ui.js';
 
+function getRankedStationMatches(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) {
+        return [];
+    }
+
+    const matches = [];
+    for (const item of appState.stationLookupList) {
+        const idx = item.lowerName.indexOf(q);
+        if (idx === -1) {
+            continue;
+        }
+
+        let score = 1;
+        if (item.lowerName === q) {
+            score = 3;
+        } else if (idx === 0) {
+            score = 2;
+        }
+
+        matches.push({ item, score, idx });
+    }
+
+    matches.sort((a, b) => {
+        if (b.score !== a.score) {
+            return b.score - a.score;
+        }
+        if (b.item.popularity !== a.item.popularity) {
+            return b.item.popularity - a.item.popularity;
+        }
+        if (a.idx !== b.idx) {
+            return a.idx - b.idx;
+        }
+        return a.item.name.localeCompare(b.item.name);
+    });
+
+    return matches;
+}
+
 export function processGTFSData() {
     if (appState.isDataProcessed) {
         return;
@@ -26,20 +65,34 @@ export function processGTFSData() {
         parsedData.stationToPlatforms.get(stationId).push(stop.stop_id);
     });
 
-    const stationNames = new Map();
+    const stationNameInfo = new Map();
     gtfsData.stops.forEach(stop => {
         const stationId = parsedData.stopIdToStationId.get(stop.stop_id);
-        const name = stop.stop_desc || stop.stop_name || stop.stop_id;
-        if (!stationNames.has(stationId)) {
-            stationNames.set(stationId, new Map());
+        if (!stationNameInfo.has(stationId)) {
+            stationNameInfo.set(stationId, { officialName: null, nameCounts: new Map() });
         }
-        const nameCount = stationNames.get(stationId);
-        nameCount.set(name, (nameCount.get(name) || 0) + 1);
+
+        const info = stationNameInfo.get(stationId);
+        const stopName = (stop.stop_name || '').trim();
+        const locationType = stop.location_type;
+        const isStationRecord = locationType === '1' || locationType === 1;
+
+        if (stopName) {
+            info.nameCounts.set(stopName, (info.nameCounts.get(stopName) || 0) + 1);
+        }
+
+        if (isStationRecord && stopName) {
+            info.officialName = stopName;
+        } else if (!info.officialName && stop.stop_id === stationId && stopName) {
+            info.officialName = stopName;
+        }
     });
 
-    stationNames.forEach((names, stationId) => {
-        const sorted = Array.from(names.entries()).sort((a, b) => b[1] - a[1]);
-        parsedData.stationToName.set(stationId, sorted[0][0]);
+    stationNameInfo.forEach((info, stationId) => {
+        const sorted = Array.from(info.nameCounts.entries()).sort((a, b) => b[1] - a[1]);
+        const fallbackName = sorted.length > 0 ? sorted[0][0] : stationId;
+        const name = info.officialName || fallbackName;
+        parsedData.stationToName.set(stationId, name);
     });
 
     const stopTimesWithSec = gtfsData.stopTimes.map(st => ({
@@ -48,6 +101,16 @@ export function processGTFSData() {
         arr_sec: toSeconds(st.arrival_time),
         stop_sequence: parseInt(st.stop_sequence, 10) || 0
     })).filter(st => st.dep_sec !== null);
+
+    parsedData.stationPopularity.clear();
+    stopTimesWithSec.forEach(st => {
+        const stationId = parsedData.stopIdToStationId.get(st.stop_id);
+        if (!stationId) {
+            return;
+        }
+        const prev = parsedData.stationPopularity.get(stationId) || 0;
+        parsedData.stationPopularity.set(stationId, prev + 1);
+    });
 
     stopTimesWithSec.forEach(st => {
         if (!parsedData.rowsAtStop.has(st.stop_id)) {
@@ -129,11 +192,22 @@ export function processGTFSData() {
         }
     });
 
-    appState.stationLookupList = Array.from(parsedData.stationToName.entries()).map(([stationId, name]) => ({
-        stationId,
-        name,
-        lowerName: name.toLowerCase()
-    })).sort((a, b) => a.name.localeCompare(b.name));
+    appState.stationLookupList = Array.from(parsedData.stationToName.entries()).map(([stationId, name]) => {
+        const popularity = parsedData.stationPopularity.get(stationId) || 0;
+        return {
+            stationId,
+            name,
+            lowerName: name.toLowerCase(),
+            popularity
+        };
+    });
+
+    appState.stationLookupList.sort((a, b) => {
+        if (b.popularity !== a.popularity) {
+            return b.popularity - a.popularity;
+        }
+        return a.name.localeCompare(b.name);
+    });
 
     appState.isDataProcessed = true;
     initializeStationSearchInputs();
@@ -152,14 +226,14 @@ export function initializeStationSearchInputs() {
 
     const updateSuggestions = (input, datalist) => {
         const query = input.value.trim().toLowerCase();
-        let matches;
+        let matches = [];
 
         if (!query) {
             matches = appState.stationLookupList.slice(0, MAX_STATION_SUGGESTIONS);
-        } else {
-            matches = appState.stationLookupList
-                .filter(item => item.lowerName.includes(query))
-                .slice(0, MAX_STATION_SUGGESTIONS);
+        } else if (query.length >= 2) {
+            matches = getRankedStationMatches(query)
+                .slice(0, MAX_STATION_SUGGESTIONS)
+                .map(match => match.item);
         }
 
         datalist.innerHTML = '';
@@ -190,21 +264,18 @@ export function initializeStationSearchInputs() {
 }
 
 export function resolveStation(query) {
-    const q = query.toLowerCase().trim();
-    const matches = [];
+    const trimmed = query.trim();
+    if (!trimmed) {
+        throw new Error('Please enter a station name.');
+    }
 
-    parsedData.stationToName.forEach((name, stationId) => {
-        if (name.toLowerCase().includes(q)) {
-            matches.push({ stationId, name });
-        }
-    });
-
+    const matches = getRankedStationMatches(trimmed);
     if (matches.length === 0) {
         throw new Error(`No station matches '${query}'`);
     }
 
-    matches.sort((a, b) => a.name.localeCompare(b.name));
-    return matches[0];
+    const best = matches[0].item;
+    return { stationId: best.stationId, name: best.name };
 }
 
 export function pickStartPlatform(stationId, t0) {
