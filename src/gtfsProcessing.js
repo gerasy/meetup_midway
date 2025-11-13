@@ -236,13 +236,16 @@ export function processGTFSData() {
 }
 
 export function initializeStationSearchInputs() {
+    if (typeof document === 'undefined') {
+        return;
+    }
+
     const inputs = document.querySelectorAll('input[data-station-input]');
     if (inputs.length === 0) {
         return;
     }
 
-    const updateSuggestions = (input, datalist) => {
-        const query = input.value.trim().toLowerCase();
+    const updateSuggestions = (input, datalist, query) => {
         let matches = [];
 
         if (!query) {
@@ -254,7 +257,13 @@ export function initializeStationSearchInputs() {
         }
 
         datalist.innerHTML = '';
+        const seen = new Set();
         matches.forEach(({ name }) => {
+            const key = name.trim().toLowerCase();
+            if (seen.has(key)) {
+                return;
+            }
+            seen.add(key);
             const option = document.createElement('option');
             option.value = name;
             datalist.appendChild(option);
@@ -274,7 +283,14 @@ export function initializeStationSearchInputs() {
             return;
         }
 
-        const handler = () => updateSuggestions(input, datalist);
+        const handler = () => {
+            const query = input.value.trim().toLowerCase();
+            if (input.dataset.lastSuggestionQuery === query) {
+                return;
+            }
+            input.dataset.lastSuggestionQuery = query;
+            updateSuggestions(input, datalist, query);
+        };
         input.addEventListener('input', handler);
         input.addEventListener('focus', handler);
         handler();
