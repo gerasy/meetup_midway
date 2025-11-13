@@ -24,29 +24,51 @@ export function displayResults(meeting, persons, startTimeStr, stats = {}) {
     }
 
     if (!meeting) {
-        const { totalVisitedNodes = 0, maxAccumulatedTime = 0, terminationReason = 'No meeting could be found.' } = stats;
+        const {
+            totalVisitedNodes = 0,
+            maxAccumulatedTime = 0,
+            terminationReason = 'No meeting could be found.',
+            queueSizes = [],
+            terminationCode = null,
+        } = stats;
+        const queueSummary = queueSizes.length > 0
+            ? queueSizes.map(({ label, size }) => `${label}: ${size}`).join(', ')
+            : null;
         resultsDiv.innerHTML = `
             <div class="status-error">No meeting found before search exhausted.</div>
             <div class="status-meta">
                 <p><strong>Visited nodes:</strong> ${totalVisitedNodes}</p>
                 <p><strong>Max trip explored:</strong> ${formatMinutes(maxAccumulatedTime)}</p>
                 <p><strong>Reason:</strong> ${terminationReason}</p>
+                ${queueSummary ? `<p><strong>Queue sizes at stop:</strong> ${queueSummary}</p>` : ''}
             </div>
         `;
-        const statusDetail = terminationReason ? ` (${terminationReason})` : '';
-        setStatus(`Search complete - no meeting found${statusDetail}`, 'error');
+        const statusPrefix = terminationCode === 'ITERATION_LIMIT'
+            ? 'Search paused at safety cap'
+            : 'Search complete - no meeting found';
+        const statusDetail = terminationReason ? `: ${terminationReason}` : '';
+        setStatus(`${statusPrefix}${statusDetail}`, 'error');
         resetMap();
         return;
     }
 
     if (meeting.type === 'CAP') {
-        const { totalVisitedNodes = 0, maxAccumulatedTime = 0, terminationReason = `Person ${meeting.person.label} exceeded the 2-hour travel cap.` } = stats;
+        const {
+            totalVisitedNodes = 0,
+            maxAccumulatedTime = 0,
+            terminationReason = `Person ${meeting.person.label} exceeded the 2-hour travel cap.`,
+            queueSizes = [],
+        } = stats;
+        const queueSummary = queueSizes.length > 0
+            ? queueSizes.map(({ label, size }) => `${label}: ${size}`).join(', ')
+            : null;
         resultsDiv.innerHTML = `
             <div class="status-error">Search stopped: Person ${meeting.person.label} exceeded 2-hour travel time cap.</div>
             <div class="status-meta">
                 <p><strong>Visited nodes:</strong> ${totalVisitedNodes}</p>
                 <p><strong>Max trip explored:</strong> ${formatMinutes(maxAccumulatedTime)}</p>
                 <p><strong>Reason:</strong> ${terminationReason}</p>
+                ${queueSummary ? `<p><strong>Queue sizes at stop:</strong> ${queueSummary}</p>` : ''}
             </div>
         `;
         setStatus(`Search capped: ${terminationReason}`, 'error');

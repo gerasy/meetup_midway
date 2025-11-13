@@ -167,6 +167,7 @@ export function runMeetingSearch({ participants, startTimeSec }) {
     const maxIterations = 500000;
     let globalMaxAccum = 0;
     let terminationReason = null;
+    let terminationCode = null;
 
     while (iterations++ < maxIterations) {
         let minEntry = null;
@@ -183,7 +184,8 @@ export function runMeetingSearch({ participants, startTimeSec }) {
         }
 
         if (!minEntry) {
-            terminationReason = terminationReason || 'No more nodes could be expanded.';
+            terminationReason = terminationReason || 'All participant queues are empty; no further nodes can be expanded.';
+            terminationCode = terminationCode || 'EMPTY_QUEUE';
             break;
         }
 
@@ -194,6 +196,7 @@ export function runMeetingSearch({ participants, startTimeSec }) {
         if (accum > MAX_TRIP_TIME_S) {
             meeting = { type: 'CAP', person: minPerson };
             terminationReason = `Person ${minPerson.label} exceeded the 2-hour travel cap.`;
+            terminationCode = 'TRIP_CAP';
             break;
         }
 
@@ -228,16 +231,32 @@ export function runMeetingSearch({ participants, startTimeSec }) {
     }
 
     const totalVisitedNodes = persons.reduce((sum, person) => sum + person.bestTimes.size, 0);
+    const queueSizes = persons.map(person => ({ label: person.label, size: person.pq.length }));
     if (!meeting && iterations > maxIterations) {
-        terminationReason = terminationReason || 'Search iteration limit reached.';
+        terminationReason = terminationReason || `Search iteration safety cap of ${maxIterations.toLocaleString()} expansions was reached before a meeting point was found.`;
+        terminationCode = terminationCode || 'ITERATION_LIMIT';
     }
 
     const stats = {
         totalVisitedNodes,
         maxAccumulatedTime: globalMaxAccum,
         terminationReason,
+        terminationCode,
+        queueSizes,
         iterations,
     };
+
+    if (!meeting && terminationCode === 'ITERATION_LIMIT') {
+        console.warn('Search halted because iteration safety cap was reached.', {
+            maxIterations,
+            iterations,
+            queueSizes,
+        });
+    } else if (!meeting && terminationCode === 'EMPTY_QUEUE') {
+        console.warn('Search halted because all participant queues were exhausted.', {
+            iterations,
+        });
+    }
 
     return { meeting, persons, stats };
 }
