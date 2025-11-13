@@ -3,6 +3,7 @@ import { gtfsData, parsedData, appState, resetParsedDataCollections } from './st
 import { haversineM, cellFor } from './geometry.js';
 import { toSeconds } from './parsing.js';
 import { setStatus } from './ui.js';
+import { updateAllStationsOnMap } from './map.js';
 
 function normalizeStationQuery(input) {
     if (!input) {
@@ -239,6 +240,8 @@ export function processGTFSData() {
         }
         return a.name.localeCompare(b.name);
     });
+
+    updateAllStationsOnMap();
 
     appState.isDataProcessed = true;
     initializeStationSearchInputs();
