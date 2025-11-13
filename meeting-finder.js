@@ -82,11 +82,13 @@ async function loadGTFSFiles() {
     }
 }
 
-// Load files and map on page load
-window.addEventListener('DOMContentLoaded', () => {
-    initializeMap();
-    loadGTFSFiles();
-});
+// Load files and map on page load when running in the browser
+if (typeof window !== 'undefined' && !window.__MEETING_FINDER_SKIP_AUTORUN__) {
+    window.addEventListener('DOMContentLoaded', () => {
+        initializeMap();
+        loadGTFSFiles();
+    });
+}
 
 function parseCSV(text) {
     const lines = text.trim().split('\n');
@@ -859,4 +861,50 @@ function setStatus(message, type) {
     const statusDiv = document.getElementById('status');
     statusDiv.textContent = message;
     statusDiv.className = `status-${type}`;
+}
+
+function __setMapStateForTest(state = {}) {
+    if ('mapInstance' in state) {
+        mapInstance = state.mapInstance;
+    }
+    if ('mapRouteLayer' in state) {
+        mapRouteLayer = state.mapRouteLayer;
+    }
+    if ('mapMarkerLayer' in state) {
+        mapMarkerLayer = state.mapMarkerLayer;
+    }
+    if ('mapLegendControl' in state) {
+        mapLegendControl = state.mapLegendControl;
+    }
+    if ('mapLegendElement' in state) {
+        mapLegendElement = state.mapLegendElement;
+    }
+}
+
+function __getMapStateForTest() {
+    return {
+        mapInstance,
+        mapRouteLayer,
+        mapMarkerLayer,
+        mapLegendControl,
+        mapLegendElement
+    };
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        gtfsData,
+        parsedData,
+        initializeMap,
+        clearMapLayers,
+        updateMapLegend,
+        displayResults,
+        reconstructPath,
+        fmtStopLabel,
+        describeAction,
+        setStatus,
+        PERSON_COLORS,
+        __setMapStateForTest,
+        __getMapStateForTest
+    };
 }
