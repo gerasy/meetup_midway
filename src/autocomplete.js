@@ -115,6 +115,9 @@ export function setupAutocomplete(inputElement) {
             autocompleteContainer.appendChild(stationHeader);
 
             stations.forEach(station => {
+                const resultIndex = currentResults.length;
+                currentResults.push({ type: 'station', name: station });
+
                 const item = document.createElement('div');
                 item.className = 'autocomplete-item';
                 item.textContent = station;
@@ -126,16 +129,15 @@ export function setupAutocomplete(inputElement) {
                 `;
 
                 item.addEventListener('mouseenter', () => {
-                    selectedIndex = currentResults.length;
+                    selectedIndex = resultIndex;
                     highlightItem(selectedIndex);
                 });
 
                 item.addEventListener('click', () => {
-                    selectItem(currentResults.length);
+                    selectItem(resultIndex);
                 });
 
                 autocompleteContainer.appendChild(item);
-                currentResults.push({ type: 'station', name: station });
             });
         }
 
@@ -155,6 +157,9 @@ export function setupAutocomplete(inputElement) {
             autocompleteContainer.appendChild(addressHeader);
 
             addresses.forEach(address => {
+                const resultIndex = currentResults.length;
+                currentResults.push({ type: 'address', ...address });
+
                 const item = document.createElement('div');
                 item.className = 'autocomplete-item';
 
@@ -170,16 +175,15 @@ export function setupAutocomplete(inputElement) {
                 `;
 
                 item.addEventListener('mouseenter', () => {
-                    selectedIndex = currentResults.length;
+                    selectedIndex = resultIndex;
                     highlightItem(selectedIndex);
                 });
 
                 item.addEventListener('click', () => {
-                    selectItem(currentResults.length);
+                    selectItem(resultIndex);
                 });
 
                 autocompleteContainer.appendChild(item);
-                currentResults.push({ type: 'address', ...address });
             });
         }
 

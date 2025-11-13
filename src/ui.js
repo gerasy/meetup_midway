@@ -200,10 +200,17 @@ export function displayResults(meeting, persons, startTimeStr, stats = {}) {
             steps: path
         });
 
+        let startLocation;
+        if (S.isAddress) {
+            startLocation = S.stationName;
+        } else {
+            startLocation = fmtStopLabel(S.startStopId);
+        }
+
         html += `
             <div class="person-result">
                 <h4>Person ${S.label}</h4>
-                <p><strong>Start:</strong> ${sec2hm(S.t0)} at ${fmtStopLabel(S.startStopId)}</p>
+                <p><strong>Start:</strong> ${sec2hm(S.t0)} at ${startLocation}</p>
                 <p><strong>Arrival:</strong> ${sec2hm(arrTime)} (${Math.floor(elapsed / 60)} minutes travel time)</p>
                 <div><strong>Route:</strong></div>
         `;

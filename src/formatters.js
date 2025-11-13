@@ -11,6 +11,12 @@ export function fmtStopLabel(stopId) {
 
 export function describeAction(info) {
     if (info.mode === 'WALK') {
+        // Special handling for walks from addresses (from_stop is null)
+        if (info.source === 'ADDRESS' && !info.from_stop) {
+            const distanceStr = info.distance_m ? ` (≈${info.distance_m} m)` : '';
+            return `WALK from address: ${sec2hm(info.depart_sec)} → ${fmtStopLabel(info.to_stop)} in ${Math.floor(info.walk_sec / 60)} min${distanceStr}`;
+        }
+
         const extra = info.source === 'GEO' && info.distance_m ? ` (≈${info.distance_m} m)` : '';
         const src = info.source || '';
         return `WALK${src ? ` (${src})` : ''}: ${sec2hm(info.depart_sec)} ${fmtStopLabel(info.from_stop)} → ${fmtStopLabel(info.to_stop)} in ${Math.floor(info.walk_sec / 60)} min${extra}`;

@@ -193,8 +193,8 @@ function reconstructPathFromInfo(person, info) {
     return segments.reverse();
 }
 
-function createPerson({ label, stationId, stationName, startStopId, t0 }) {
-    if (!startStopId) {
+function createPerson({ label, stationId, stationName, startStopId, t0, isAddress, addressLat, addressLon }) {
+    if (!isAddress && !startStopId) {
         throw new Error(`No departing platforms found for ${stationName || stationId}.`);
     }
 
@@ -204,6 +204,9 @@ function createPerson({ label, stationId, stationName, startStopId, t0 }) {
         stationName,
         startStopId,
         t0,
+        isAddress: isAddress || false,
+        addressLat,
+        addressLon,
         pq: new MinHeap(),
         bestTimes: new Map(),
         reachedStopFirst: new Map(),
@@ -212,6 +215,52 @@ function createPerson({ label, stationId, stationName, startStopId, t0 }) {
 }
 
 function primePerson(person, midpoint) {
+    // If starting from an address, find all stations within 1km walking distance
+    if (person.isAddress && person.addressLat && person.addressLon) {
+        const MAX_INITIAL_WALK_M = 1000;
+        let stationsFound = 0;
+
+        // Iterate through all stops and find those within walking distance
+        parsedData.stopById.forEach((stop, stopId) => {
+            const stopLat = parseFloat(stop.stop_lat);
+            const stopLon = parseFloat(stop.stop_lon);
+
+            if (!isNaN(stopLat) && !isNaN(stopLon)) {
+                const distM = haversineM(person.addressLat, person.addressLon, stopLat, stopLon);
+
+                if (distM <= MAX_INITIAL_WALK_M) {
+                    const walkTime = Math.ceil(distM / WALK_SPEED_MPS);
+                    const arrivalTime = person.t0 + walkTime;
+                    const distToMidpoint = calculateDistanceToMidpoint(stopId, midpoint);
+
+                    // Add this stop as a starting point with initial walk time
+                    person.pq.push(
+                        [walkTime, arrivalTime, distToMidpoint, stopId],
+                        {
+                            owner: person.label,
+                            mode: 'WALK',
+                            source: 'ADDRESS',
+                            from_stop: null,
+                            to_stop: stopId,
+                            walk_sec: walkTime,
+                            depart_sec: person.t0,
+                            arrive_sec: arrivalTime,
+                            distance_m: Math.round(distM)
+                        }
+                    );
+                    stationsFound++;
+                }
+            }
+        });
+
+        if (stationsFound === 0) {
+            throw new Error(`No transit stations found within ${MAX_INITIAL_WALK_M}m of the address for ${person.label}.`);
+        }
+
+        return;
+    }
+
+    // Regular station start
     const distToMidpoint = calculateDistanceToMidpoint(person.startStopId, midpoint);
     person.pq.push(
         [0, person.t0, distToMidpoint, person.startStopId],
@@ -234,38 +283,52 @@ export function runMeetingSearch({ participants, startTimeSec }) {
     processGTFSData();
 
     const persons = participants.map(({ label, query, startStopId, isAddress, lat, lon }) => {
-        let stationId, name, chosenStart;
-
-        // Handle address input
+        // Handle address input - allow walking to any station within 1km
         if (isAddress && lat && lon) {
-            const nearest = findNearestStation(lat, lon, 2000); // 2km max
-            if (!nearest) {
-                throw new Error(`No transit station found near address for ${label}. Try a different location or enter a station name.`);
-            }
-            stationId = nearest.stationId;
-            name = `${nearest.name} (${Math.round(nearest.distance)}m from address)`;
-            chosenStart = pickStartPlatform(stationId, startTimeSec);
-        } else {
-            // Handle station name input
-            const resolved = resolveStation(query);
-            stationId = resolved.stationId;
-            name = resolved.name;
-            chosenStart = startStopId;
-            if (chosenStart) {
-                const mappedStation = parsedData.stopIdToStationId.get(chosenStart);
-                if (mappedStation && mappedStation !== stationId) {
-                    throw new Error(`Start platform ${chosenStart} does not belong to ${name}.`);
-                }
-            } else {
-                chosenStart = pickStartPlatform(stationId, startTimeSec);
-            }
+            return createPerson({
+                label,
+                stationId: null,
+                stationName: query,
+                startStopId: null,
+                t0: startTimeSec,
+                isAddress: true,
+                addressLat: lat,
+                addressLon: lon
+            });
         }
 
-        return createPerson({ label, stationId, stationName: name, startStopId: chosenStart, t0: startTimeSec });
+        // Handle station name input
+        const resolved = resolveStation(query);
+        const stationId = resolved.stationId;
+        const name = resolved.name;
+        let chosenStart = startStopId;
+
+        if (chosenStart) {
+            const mappedStation = parsedData.stopIdToStationId.get(chosenStart);
+            if (mappedStation && mappedStation !== stationId) {
+                throw new Error(`Start platform ${chosenStart} does not belong to ${name}.`);
+            }
+        } else {
+            chosenStart = pickStartPlatform(stationId, startTimeSec);
+        }
+
+        return createPerson({
+            label,
+            stationId,
+            stationName: name,
+            startStopId: chosenStart,
+            t0: startTimeSec,
+            isAddress: false
+        });
     });
 
     // Calculate geographical midpoint of all participants' starting locations
-    const startCoordinates = persons.map(p => getStopCoordinates(p.startStopId)).filter(c => c !== null);
+    const startCoordinates = persons.map(p => {
+        if (p.isAddress && p.addressLat && p.addressLon) {
+            return { lat: p.addressLat, lon: p.addressLon };
+        }
+        return getStopCoordinates(p.startStopId);
+    }).filter(c => c !== null);
     const midpoint = calculateGeographicMidpoint(startCoordinates);
 
     persons.forEach(person => primePerson(person, midpoint));
