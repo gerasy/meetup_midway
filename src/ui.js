@@ -13,7 +13,7 @@ export function reconstructPath(person, stopId) {
     return path;
 }
 
-export function displayResults(meeting, persons, startTimeStr) {
+export function displayResults(meeting, persons, startTimeStr, stats = {}) {
     if (typeof document === 'undefined') {
         return;
     }
@@ -24,15 +24,32 @@ export function displayResults(meeting, persons, startTimeStr) {
     }
 
     if (!meeting) {
-        resultsDiv.innerHTML = '<div class="status-error">No meeting found before search exhausted.</div>';
-        setStatus('Search complete - no meeting found', 'error');
+        const { totalVisitedNodes = 0, maxAccumulatedTime = 0, terminationReason = 'No meeting could be found.' } = stats;
+        resultsDiv.innerHTML = `
+            <div class="status-error">No meeting found before search exhausted.</div>
+            <div class="status-meta">
+                <p><strong>Visited nodes:</strong> ${totalVisitedNodes}</p>
+                <p><strong>Max trip explored:</strong> ${formatMinutes(maxAccumulatedTime)}</p>
+                <p><strong>Reason:</strong> ${terminationReason}</p>
+            </div>
+        `;
+        const statusDetail = terminationReason ? ` (${terminationReason})` : '';
+        setStatus(`Search complete - no meeting found${statusDetail}`, 'error');
         resetMap();
         return;
     }
 
     if (meeting.type === 'CAP') {
-        resultsDiv.innerHTML = `<div class="status-error">Search stopped: Person ${meeting.person.label} exceeded 2-hour travel time cap.</div>`;
-        setStatus('Search capped', 'error');
+        const { totalVisitedNodes = 0, maxAccumulatedTime = 0, terminationReason = `Person ${meeting.person.label} exceeded the 2-hour travel cap.` } = stats;
+        resultsDiv.innerHTML = `
+            <div class="status-error">Search stopped: Person ${meeting.person.label} exceeded 2-hour travel time cap.</div>
+            <div class="status-meta">
+                <p><strong>Visited nodes:</strong> ${totalVisitedNodes}</p>
+                <p><strong>Max trip explored:</strong> ${formatMinutes(maxAccumulatedTime)}</p>
+                <p><strong>Reason:</strong> ${terminationReason}</p>
+            </div>
+        `;
+        setStatus(`Search capped: ${terminationReason}`, 'error');
         resetMap();
         return;
     }
@@ -102,4 +119,45 @@ export function setStatus(message, type) {
 
     statusDiv.textContent = message;
     statusDiv.className = `status-${type}`;
+}
+
+export function showSelfCheckOutcome(outcome) {
+    if (typeof document === 'undefined') {
+        return;
+    }
+
+    const container = document.getElementById('selfCheckStatus');
+    if (!container) {
+        return;
+    }
+
+    if (!outcome) {
+        container.innerHTML = '';
+        return;
+    }
+
+    const type = outcome.success ? 'success' : 'error';
+    const lines = [];
+    lines.push(`<div class="status-${type}">${outcome.message}</div>`);
+
+    if (outcome.meetingStopId && outcome.success) {
+        lines.push(`<div class="status-meta"><p><strong>Meeting stop:</strong> ${fmtStopLabel(outcome.meetingStopId)}</p></div>`);
+    }
+
+    if (outcome.stats) {
+        const { totalVisitedNodes = 0, maxAccumulatedTime = 0, terminationReason } = outcome.stats;
+        lines.push(`
+            <div class="status-meta">
+                <p><strong>Visited nodes:</strong> ${totalVisitedNodes}</p>
+                <p><strong>Max trip explored:</strong> ${formatMinutes(maxAccumulatedTime)}</p>
+                ${terminationReason ? `<p><strong>Reason:</strong> ${terminationReason}</p>` : ''}
+            </div>
+        `);
+    }
+
+    container.innerHTML = lines.join('');
+
+    if (typeof window !== 'undefined' && typeof window.alert === 'function') {
+        window.alert(outcome.message);
+    }
 }

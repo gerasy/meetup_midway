@@ -146,17 +146,27 @@ export function runMeetingSearch({ participants, startTimeSec }) {
 
     processGTFSData();
 
-    const persons = participants.map(({ label, query }) => {
+    const persons = participants.map(({ label, query, startStopId }) => {
         const { stationId, name } = resolveStation(query);
-        const startStopId = pickStartPlatform(stationId, startTimeSec);
-        return createPerson({ label, stationId, stationName: name, startStopId, t0: startTimeSec });
+        let chosenStart = startStopId;
+        if (chosenStart) {
+            const mappedStation = parsedData.stopIdToStationId.get(chosenStart);
+            if (mappedStation && mappedStation !== stationId) {
+                throw new Error(`Start platform ${chosenStart} does not belong to ${name}.`);
+            }
+        } else {
+            chosenStart = pickStartPlatform(stationId, startTimeSec);
+        }
+        return createPerson({ label, stationId, stationName: name, startStopId: chosenStart, t0: startTimeSec });
     });
 
     persons.forEach(primePerson);
 
     let meeting = null;
     let iterations = 0;
-    const maxIterations = 100000;
+    const maxIterations = 500000;
+    let globalMaxAccum = 0;
+    let terminationReason = null;
 
     while (iterations++ < maxIterations) {
         let minEntry = null;
@@ -172,11 +182,18 @@ export function runMeetingSearch({ participants, startTimeSec }) {
             }
         }
 
-        if (!minEntry) break;
+        if (!minEntry) {
+            terminationReason = terminationReason || 'No more nodes could be expanded.';
+            break;
+        }
 
         const accum = minEntry.priority[0];
+        if (accum > globalMaxAccum) {
+            globalMaxAccum = accum;
+        }
         if (accum > MAX_TRIP_TIME_S) {
             meeting = { type: 'CAP', person: minPerson };
+            terminationReason = `Person ${minPerson.label} exceeded the 2-hour travel cap.`;
             break;
         }
 
@@ -210,7 +227,19 @@ export function runMeetingSearch({ participants, startTimeSec }) {
         enqueueRides(minPerson.pq, destStop, curTime, accum, info.owner);
     }
 
-    return { meeting, persons };
+    const totalVisitedNodes = persons.reduce((sum, person) => sum + person.bestTimes.size, 0);
+    if (!meeting && iterations > maxIterations) {
+        terminationReason = terminationReason || 'Search iteration limit reached.';
+    }
+
+    const stats = {
+        totalVisitedNodes,
+        maxAccumulatedTime: globalMaxAccum,
+        terminationReason,
+        iterations,
+    };
+
+    return { meeting, persons, stats };
 }
 
 export function findMeetingPoint() {
@@ -237,14 +266,71 @@ export function findMeetingPoint() {
 
         setStatus('Searching for meeting point...', 'loading');
 
-        const { meeting, persons } = runMeetingSearch({
+        const { meeting, persons, stats } = runMeetingSearch({
             participants: validation.people,
             startTimeSec: t0
         });
 
-        displayResults(meeting, persons, startTimeStr);
+        displayResults(meeting, persons, startTimeStr, stats);
     } catch (error) {
         setStatus('Error: ' + error.message, 'error');
         console.error(error);
+    }
+}
+
+export function runDeterministicRouteSelfCheck() {
+    if (gtfsData.stops.length === 0) {
+        return {
+            success: false,
+            message: 'Self-check could not run because GTFS data is missing.',
+        };
+    }
+
+    try {
+        const startTimeSec = toSeconds('10:04:30');
+        const participants = [
+            {
+                label: 'A',
+                query: 'U Gleisdreieck (Berlin)',
+                startStopId: 'de:11000:900017103::4'
+            },
+            {
+                label: 'B',
+                query: 'S+U Pankow (Berlin)',
+                startStopId: 'de:11000:900130002::2'
+            }
+        ];
+
+        const { meeting, stats } = runMeetingSearch({ participants, startTimeSec });
+
+        if (meeting && meeting.type === 'OK') {
+            return {
+                success: true,
+                message: 'Self-check passed: deterministic U2 route search succeeded.',
+                meetingStopId: meeting.stopId,
+                stats,
+                startTimeSec,
+                participants,
+            };
+        }
+
+        let failureReason = stats?.terminationReason || 'Unknown reason';
+        if (meeting && meeting.type === 'CAP') {
+            failureReason = `Travel cap exceeded for Person ${meeting.person.label}`;
+        }
+
+        return {
+            success: false,
+            message: `Self-check failed: ${failureReason}.`,
+            meetingStopId: meeting?.stopId ?? null,
+            stats,
+            startTimeSec,
+            participants,
+        };
+    } catch (error) {
+        return {
+            success: false,
+            message: `Self-check error: ${error.message}`,
+        };
     }
 }
