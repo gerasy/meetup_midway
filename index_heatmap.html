@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Point Heatmap</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #020617;
+            --panel: #0f172a;
+            --panel-soft: #111b33;
+            --panel-muted: #1e293b;
+            --text: #e2e8f0;
+            --subtle-text: #94a3b8;
+            --accent: #38bdf8;
+            --accent-strong: #0ea5e9;
+            --border: rgba(148, 163, 184, 0.2);
+            --success: #22c55e;
+            --warning: #fbbf24;
+            --danger: #f87171;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: radial-gradient(circle at top, #0f172a, var(--bg));
+            color: var(--text);
+        }
+        .container {
+            background: var(--panel);
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--border);
+        }
+        h1 {
+            color: var(--text);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        p {
+            color: var(--subtle-text);
+        }
+        .nav-links {
+            margin: 15px 0;
+            padding: 15px;
+            background: var(--panel-soft);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .nav-links a {
+            color: var(--accent);
+            text-decoration: none;
+            margin-right: 20px;
+            font-weight: 500;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        .upload-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--panel-soft);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .input-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text);
+        }
+        input[type="text"], input[type="time"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            background: var(--panel-muted);
+            color: var(--text);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input[type="text"]::placeholder {
+            color: var(--subtle-text);
+        }
+        input[type="text"]:focus, input[type="time"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.35);
+        }
+        button {
+            background: linear-gradient(120deg, var(--accent-strong), var(--accent));
+            color: #0f172a;
+            font-weight: 600;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 999px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.35);
+        }
+        button:disabled {
+            background: #475569;
+            color: #cbd5f5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #status {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .status-loading {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fcd34d;
+            border: 1px solid rgba(251, 191, 36, 0.4);
+        }
+        .status-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: #86efac;
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+        .status-error {
+            background: rgba(248, 113, 113, 0.15);
+            color: #fecaca;
+            border: 1px solid rgba(248, 113, 113, 0.4);
+        }
+        .person-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .person-controls button {
+            margin: 0;
+        }
+        .person-group {
+            position: relative;
+        }
+        .person-group-actions {
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .person-group .remove-person {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--subtle-text);
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+            transition: color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .person-group .remove-person:hover:not(:disabled) {
+            color: var(--text);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+        }
+        .person-group .remove-person:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #map {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            min-height: 600px;
+            border-radius: 14px;
+            margin: 25px 0;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--panel-muted);
+        }
+        #map canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: crosshair;
+        }
+        .legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(15, 23, 42, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            min-width: 200px;
+            pointer-events: none;
+        }
+        .legend h4 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: var(--text);
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 12px;
+        }
+        .legend-color {
+            width: 30px;
+            height: 15px;
+            margin-right: 10px;
+            border-radius: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .controls-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        .controls-row .input-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        .autocomplete-item:hover {
+            background: var(--accent) !important;
+            color: var(--bg) !important;
+        }
+        .autocomplete-item:last-child {
+            border-bottom: none !important;
+        }
+        #progressContainer {
+            margin: 20px 0;
+        }
+        .progress-label-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .progress-bar-container {
+            width: 100%;
+            height: 30px;
+            background: var(--panel-muted);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border);
+        }
+        #progressBar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-strong), var(--success));
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            font-weight: bold;
+            font-size: 12px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        .heatmap-info {
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--panel-soft);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        .heatmap-info p {
+            margin: 5px 0;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Meeting Point Heatmap</h1>
+        <p>Generate a heatmap showing optimal meeting points based on total travel time for all participants</p>
+
+        <div class="nav-links">
+            <a href="index.html">Point-to-Point Finder</a>
+            <a href="index_heatmap.html">Heatmap View (current)</a>
+        </div>
+
+        <div class="upload-section">
+            <h3>GTFS Data</h3>
+            <p>Transit data is automatically loaded from the gtfs_subset folder.</p>
+        </div>
+
+        <div class="controls-row">
+            <div class="input-group">
+                <label for="startTime">Start Time (HH:MM):</label>
+                <input type="time" id="startTime" value="10:00" min="10:00" max="12:00">
+            </div>
+            <div class="input-group">
+                <label for="gridResolution">Grid Resolution (meters):</label>
+                <input type="number" id="gridResolution" value="500" min="100" max="2000" step="100">
+            </div>
+        </div>
+
+        <div id="peopleInputs">
+            <div class="input-group person-group" data-person-group="A">
+                <label for="person-A">Person A Starting Location:</label>
+                <input type="text" id="person-A" data-person-input data-person-label="A" data-station-input value="U Uhlandstr. (Berlin)" placeholder="e.g., Alexanderplatz or Unter den Linden 1, Berlin">
+            </div>
+            <div class="input-group person-group" data-person-group="B">
+                <label for="person-B">Person B Starting Location:</label>
+                <input type="text" id="person-B" data-person-input data-person-label="B" data-station-input value="U Vinetastr. (Berlin)" placeholder="e.g., Alexanderplatz or Unter den Linden 1, Berlin">
+            </div>
+        </div>
+
+        <div class="person-controls">
+            <button id="addPerson" type="button">Add Another Person</button>
+            <button id="generateHeatmap" onclick="generateHeatmap()">Generate Heatmap</button>
+        </div>
+
+        <div id="status"></div>
+
+        <div id="progressContainer" style="display: none;">
+            <div class="progress-label-row">
+                <span id="progressLabel" style="font-weight: bold; color: var(--text);">Calculating heatmap...</span>
+                <span id="progressPercent" style="font-weight: bold; color: var(--accent);">0%</span>
+            </div>
+            <div class="progress-bar-container">
+                <div id="progressBar"></div>
+                <div class="progress-text">
+                    <span id="progressText">Processing...</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="heatmapInfo" class="heatmap-info" style="display: none;">
+            <p><strong>Heatmap Statistics:</strong></p>
+            <p id="statsText"></p>
+        </div>
+
+        <div id="map">
+            <canvas id="mapCanvas"></canvas>
+            <div class="legend">
+                <h4>Travel Time</h4>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #22c55e;"></div>
+                    <span>Best (shortest)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #84cc16;"></div>
+                    <span>Good</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #fbbf24;"></div>
+                    <span>Fair</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f97316;"></div>
+                    <span>Poor</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ef4444;"></div>
+                    <span>Worst (longest)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { loadGTFSFiles } from './src/gtfsLoader.js';
+        import { setupParticipantControls } from './src/participants.js';
+        import { gtfsData, parsedData } from './src/state.js';
+        import { processGTFSData, resolveStation, pickStartPlatform } from './src/gtfsProcessing.js';
+        import { toSeconds } from './src/parsing.js';
+        import { collectPersonInputs, validatePeopleInputs, runMeetingSearch } from './src/search.js';
+        import { haversineM } from './src/geometry.js';
+
+        let canvas = null;
+        let ctx = null;
+        let viewWidth = 0;
+        let viewHeight = 0;
+        let pixelRatio = 1;
+
+        let zoom = 1;
+        let panX = 0;
+        let panY = 0;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let panStartX = 0;
+        let panStartY = 0;
+
+        const MIN_ZOOM = 0.6;
+        const MAX_ZOOM = 8;
+        const WHEEL_ZOOM_FACTOR = 1.12;
+
+        const BACKGROUND_COLOR = '#020617';
+        const BORDER_FILL = '#0b1530';
+        const BORDER_STROKE = '#1f2a44';
+        const BERLIN_STOP_ID_PREFIX = 'de:11000:';
+
+        let boundaryLonLat = [];
+        let boundaryWorld = [];
+        let stopLonLat = [];
+        let stopWorld = [];
+        let heatmapPoints = [];
+        let heatmapWorld = [];
+
+        let minLon = null;
+        let maxLon = null;
+        let minLat = null;
+        let maxLat = null;
+        let scale = 1;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        function setStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            if (!statusDiv) return;
+
+            statusDiv.textContent = message;
+            statusDiv.className = '';
+
+            if (type === 'loading') {
+                statusDiv.className = 'status-loading';
+            } else if (type === 'success') {
+                statusDiv.className = 'status-success';
+            } else if (type === 'error') {
+                statusDiv.className = 'status-error';
+            }
+        }
+
+        function showProgress() {
+            const progressContainer = document.getElementById('progressContainer');
+            if (progressContainer) {
+                progressContainer.style.display = 'block';
+            }
+        }
+
+        function hideProgress() {
+            const progressContainer = document.getElementById('progressContainer');
+            if (progressContainer) {
+                progressContainer.style.display = 'none';
+            }
+        }
+
+        function updateProgress(percent, text) {
+            const progressBar = document.getElementById('progressBar');
+            const progressPercent = document.getElementById('progressPercent');
+            const progressText = document.getElementById('progressText');
+
+            if (progressBar) progressBar.style.width = percent + '%';
+            if (progressPercent) progressPercent.textContent = Math.round(percent) + '%';
+            if (progressText && text) progressText.textContent = text;
+        }
+
+        function getStopCoordinates(stopId) {
+            const stop = parsedData.stopById.get(stopId);
+            if (!stop) return null;
+            const lat = parseFloat(stop.stop_lat);
+            const lon = parseFloat(stop.stop_lon);
+            if (isNaN(lat) || isNaN(lon)) return null;
+            return { lat, lon };
+        }
+
+        function recalcBounds() {
+            let minLonVal = Infinity;
+            let maxLonVal = -Infinity;
+            let minLatVal = Infinity;
+            let maxLatVal = -Infinity;
+
+            const updateExtents = ({ lon, lat }) => {
+                if (!Number.isFinite(lon) || !Number.isFinite(lat)) return;
+                if (lon < minLonVal) minLonVal = lon;
+                if (lon > maxLonVal) maxLonVal = lon;
+                if (lat < minLatVal) minLatVal = lat;
+                if (lat > maxLatVal) maxLatVal = lat;
+            };
+
+            boundaryLonLat.forEach(ring => ring.forEach(updateExtents));
+            stopLonLat.forEach(updateExtents);
+            heatmapPoints.forEach(pt => updateExtents({ lon: pt.lon, lat: pt.lat }));
+
+            if (!Number.isFinite(minLonVal) || !Number.isFinite(minLatVal) ||
+                !Number.isFinite(maxLonVal) || !Number.isFinite(maxLatVal)) {
+                minLon = maxLon = minLat = maxLat = null;
+                return;
+            }
+
+            const lonSpan = Math.max(maxLonVal - minLonVal, 1e-6);
+            const latSpan = Math.max(maxLatVal - minLatVal, 1e-6);
+            const lonPad = Math.max(lonSpan * 0.05, 0.01);
+            const latPad = Math.max(latSpan * 0.05, 0.01);
+
+            minLon = minLonVal - lonPad;
+            maxLon = maxLonVal + lonPad;
+            minLat = minLatVal - latPad;
+            maxLat = maxLatVal + latPad;
+        }
+
+        function projectToBase(lon, lat) {
+            if (minLon === null || maxLon === null || minLat === null || maxLat === null) {
+                return null;
+            }
+            return {
+                x: (lon - minLon) * scale + offsetX,
+                y: (maxLat - lat) * scale + offsetY
+            };
+        }
+
+        function recomputeTransform(resetView = false) {
+            if (!canvas || minLon === null || maxLon === null || minLat === null || maxLat === null) {
+                return;
+            }
+
+            const lonSpan = Math.max(maxLon - minLon, 1e-6);
+            const latSpan = Math.max(maxLat - minLat, 1e-6);
+            const margin = 40;
+            const availableWidth = Math.max(viewWidth - margin * 2, 10);
+            const availableHeight = Math.max(viewHeight - margin * 2, 10);
+
+            scale = Math.min(availableWidth / lonSpan, availableHeight / latSpan);
+            offsetX = (viewWidth - lonSpan * scale) / 2;
+            offsetY = (viewHeight - latSpan * scale) / 2;
+
+            boundaryWorld = boundaryLonLat.map(ring =>
+                ring.map(pt => projectToBase(pt.lon, pt.lat)).filter(Boolean)
+            );
+            stopWorld = stopLonLat.map(pt => projectToBase(pt.lon, pt.lat)).filter(Boolean);
+            heatmapWorld = heatmapPoints.map(pt => ({
+                ...pt,
+                world: projectToBase(pt.lon, pt.lat)
+            })).filter(pt => pt.world !== null);
+
+            if (resetView) {
+                zoom = 1;
+                panX = 0;
+                panY = 0;
+            }
+        }
+
+        function worldToScreen(point) {
+            const cx = viewWidth / 2;
+            const cy = viewHeight / 2;
+            return {
+                x: (point.x - cx) * zoom + cx + panX,
+                y: (point.y - cy) * zoom + cy + panY
+            };
+        }
+
+        function drawPolygon(ring) {
+            if (!ring || ring.length === 0) return;
+            ctx.beginPath();
+            ring.forEach((worldPoint, idx) => {
+                const screen = worldToScreen(worldPoint);
+                if (idx === 0) {
+                    ctx.moveTo(screen.x, screen.y);
+                } else {
+                    ctx.lineTo(screen.x, screen.y);
+                }
+            });
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+        }
+
+        function drawStops() {
+            if (!stopWorld.length) return;
+            ctx.fillStyle = '#1f2937';
+            const size = Math.min(2, Math.max(1, 1.5 * Math.pow(zoom, 0.15)));
+            for (const worldPoint of stopWorld) {
+                const screen = worldToScreen(worldPoint);
+                ctx.beginPath();
+                ctx.arc(screen.x, screen.y, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function getHeatmapColor(value, minValue, maxValue) {
+            const normalized = (value - minValue) / (maxValue - minValue);
+
+            // Color gradient from green (best) to red (worst)
+            // Green -> Yellow-Green -> Yellow -> Orange -> Red
+            const colors = [
+                { r: 34, g: 197, b: 94 },    // #22c55e - green (best)
+                { r: 132, g: 204, b: 22 },   // #84cc16 - yellow-green
+                { r: 251, g: 191, b: 36 },   // #fbbf24 - yellow
+                { r: 249, g: 115, b: 22 },   // #f97316 - orange
+                { r: 239, g: 68, b: 68 }     // #ef4444 - red (worst)
+            ];
+
+            const scaledValue = normalized * (colors.length - 1);
+            const idx = Math.floor(scaledValue);
+            const fraction = scaledValue - idx;
+
+            if (idx >= colors.length - 1) {
+                const c = colors[colors.length - 1];
+                return `rgba(${c.r}, ${c.g}, ${c.b}, 0.7)`;
+            }
+
+            const c1 = colors[idx];
+            const c2 = colors[idx + 1];
+            const r = Math.round(c1.r + (c2.r - c1.r) * fraction);
+            const g = Math.round(c1.g + (c2.g - c1.g) * fraction);
+            const b = Math.round(c1.b + (c2.b - c1.b) * fraction);
+
+            return `rgba(${r}, ${g}, ${b}, 0.7)`;
+        }
+
+        function drawHeatmap() {
+            if (heatmapWorld.length === 0) return;
+
+            const minValue = Math.min(...heatmapWorld.map(pt => pt.totalTime));
+            const maxValue = Math.max(...heatmapWorld.map(pt => pt.totalTime));
+
+            // Sort by value so higher values are drawn first (behind)
+            const sorted = [...heatmapWorld].sort((a, b) => b.totalTime - a.totalTime);
+
+            for (const pt of sorted) {
+                const screen = worldToScreen(pt.world);
+                const color = getHeatmapColor(pt.totalTime, minValue, maxValue);
+
+                ctx.fillStyle = color;
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                ctx.lineWidth = 0.5;
+
+                const radius = Math.max(8, 12 / Math.sqrt(zoom));
+                ctx.beginPath();
+                ctx.arc(screen.x, screen.y, radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+            }
+        }
+
+        function draw() {
+            if (!ctx || viewWidth === 0 || viewHeight === 0) return;
+
+            ctx.clearRect(0, 0, viewWidth, viewHeight);
+            ctx.fillStyle = BACKGROUND_COLOR;
+            ctx.fillRect(0, 0, viewWidth, viewHeight);
+
+            ctx.fillStyle = BORDER_FILL;
+            ctx.strokeStyle = BORDER_STROKE;
+            ctx.lineWidth = 2;
+            boundaryWorld.forEach(drawPolygon);
+
+            drawStops();
+            drawHeatmap();
+        }
+
+        function handleWheel(evt) {
+            if (!canvas) return;
+            const mouseX = evt.offsetX;
+            const mouseY = evt.offsetY;
+            const direction = evt.deltaY < 0 ? 1 : -1;
+            const factor = direction > 0 ? WHEEL_ZOOM_FACTOR : 1 / WHEEL_ZOOM_FACTOR;
+            const newZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom * factor));
+            const scaleRatio = newZoom / zoom;
+            const deltaX = mouseX - (mouseX - panX) * scaleRatio;
+            const deltaY = mouseY - (mouseY - panY) * scaleRatio;
+            zoom = newZoom;
+            panX = deltaX;
+            panY = deltaY;
+            evt.preventDefault();
+            draw();
+        }
+
+        function handleMouseDown(evt) {
+            isDragging = true;
+            dragStartX = evt.clientX;
+            dragStartY = evt.clientY;
+            panStartX = panX;
+            panStartY = panY;
+        }
+
+        function handleMouseMove(evt) {
+            if (!isDragging) return;
+            const dx = evt.clientX - dragStartX;
+            const dy = evt.clientY - dragStartY;
+            panX = panStartX + dx;
+            panY = panStartY + dy;
+            draw();
+        }
+
+        function handleMouseUp() {
+            isDragging = false;
+        }
+
+        function resizeCanvas(resetView = false) {
+            if (!canvas || !ctx) return;
+            const rect = canvas.getBoundingClientRect();
+            pixelRatio = window.devicePixelRatio || 1;
+            viewWidth = rect.width;
+            viewHeight = rect.height;
+            canvas.width = rect.width * pixelRatio;
+            canvas.height = rect.height * pixelRatio;
+            canvas.style.width = `${rect.width}px`;
+            canvas.style.height = `${rect.height}px`;
+            ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+            recomputeTransform(resetView);
+            draw();
+        }
+
+        async function loadBoundary() {
+            if (typeof fetch === 'undefined') return;
+            try {
+                const response = await fetch('berlin-boundary.geojson');
+                if (!response.ok) {
+                    throw new Error(`Failed to load berlin-boundary.geojson (${response.status})`);
+                }
+                const geojson = await response.json();
+                const rings = [];
+                for (const feature of geojson.features || []) {
+                    const geometry = feature.geometry;
+                    if (!geometry) continue;
+                    if (geometry.type === 'Polygon') {
+                        if (Array.isArray(geometry.coordinates[0])) {
+                            rings.push(geometry.coordinates[0]);
+                        }
+                    } else if (geometry.type === 'MultiPolygon') {
+                        geometry.coordinates.forEach(poly => {
+                            if (Array.isArray(poly[0])) {
+                                rings.push(poly[0]);
+                            }
+                        });
+                    }
+                }
+                boundaryLonLat = rings.map(ring => ring.map(([lon, lat]) => ({ lon, lat })));
+                recalcBounds();
+                recomputeTransform(true);
+                draw();
+            } catch (err) {
+                console.error('Failed to load berlin-boundary.geojson', err);
+            }
+        }
+
+        function updateAllStationsOnMap() {
+            const seen = new Set();
+            const points = [];
+            parsedData.stopById.forEach(stop => {
+                const stopId = typeof stop.stop_id === 'string' ? stop.stop_id : '';
+                if (!stopId.startsWith(BERLIN_STOP_ID_PREFIX)) return;
+                const lat = parseFloat(stop.stop_lat);
+                const lon = parseFloat(stop.stop_lon);
+                if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+                const key = `${lat.toFixed(6)},${lon.toFixed(6)}`;
+                if (seen.has(key)) return;
+                seen.add(key);
+                points.push({ lat, lon });
+            });
+            stopLonLat = points.map(pt => ({ lon: pt.lon, lat: pt.lat }));
+            recalcBounds();
+            recomputeTransform(true);
+            draw();
+        }
+
+        function initializeMap() {
+            if (typeof document === 'undefined') return;
+            const canvasEl = document.getElementById('mapCanvas');
+            if (!canvasEl) return;
+            canvas = canvasEl;
+            ctx = canvas.getContext('2d');
+            canvas.addEventListener('wheel', handleWheel, { passive: false });
+            canvas.addEventListener('mousedown', handleMouseDown);
+            window.addEventListener('mousemove', handleMouseMove);
+            window.addEventListener('mouseup', handleMouseUp);
+            window.addEventListener('resize', () => resizeCanvas(false));
+            resizeCanvas(true);
+            loadBoundary();
+        }
+
+        // Generate a grid of sample points around the geographic center
+        function generateSamplePoints(participants, gridResolutionM) {
+            // Calculate the bounding box of all participant starting locations
+            let minLat = Infinity, maxLat = -Infinity;
+            let minLon = Infinity, maxLon = -Infinity;
+
+            participants.forEach(p => {
+                const coords = p.isAddress ?
+                    { lat: p.lat, lon: p.lon } :
+                    getStopCoordinates(p.startStopId);
+                if (coords) {
+                    minLat = Math.min(minLat, coords.lat);
+                    maxLat = Math.max(maxLat, coords.lat);
+                    minLon = Math.min(minLon, coords.lon);
+                    maxLon = Math.max(maxLon, coords.lon);
+                }
+            });
+
+            // Expand the bounding box by ~3km in each direction
+            const latDelta = 0.027; // ~3km in latitude
+            const lonDelta = 0.045; // ~3km in longitude (approximate for Berlin)
+            minLat -= latDelta;
+            maxLat += latDelta;
+            minLon -= lonDelta;
+            maxLon += lonDelta;
+
+            // Generate a grid of points
+            const points = [];
+            const latStep = gridResolutionM / 111000; // Convert meters to degrees latitude
+            const lonStep = gridResolutionM / (111000 * Math.cos(((minLat + maxLat) / 2) * Math.PI / 180));
+
+            for (let lat = minLat; lat <= maxLat; lat += latStep) {
+                for (let lon = minLon; lon <= maxLon; lon += lonStep) {
+                    // Find the nearest station to this point
+                    let nearestStop = null;
+                    let minDist = Infinity;
+
+                    parsedData.stopById.forEach((stop, stopId) => {
+                        const stopLat = parseFloat(stop.stop_lat);
+                        const stopLon = parseFloat(stop.stop_lon);
+                        if (Number.isFinite(stopLat) && Number.isFinite(stopLon)) {
+                            const dist = haversineM(lat, lon, stopLat, stopLon);
+                            if (dist < minDist && dist < 1000) { // Within 1km
+                                minDist = dist;
+                                nearestStop = { stopId, lat: stopLat, lon: stopLon };
+                            }
+                        }
+                    });
+
+                    if (nearestStop) {
+                        points.push(nearestStop);
+                    }
+                }
+            }
+
+            // Remove duplicates
+            const uniquePoints = [];
+            const seen = new Set();
+            points.forEach(pt => {
+                const key = pt.stopId;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    uniquePoints.push(pt);
+                }
+            });
+
+            return uniquePoints;
+        }
+
+        window.generateHeatmap = async function() {
+            try {
+                if (gtfsData.stops.length === 0) {
+                    setStatus('Please wait for GTFS files to load!', 'error');
+                    return;
+                }
+
+                const startTimeInput = document.getElementById('startTime');
+                if (!startTimeInput) {
+                    setStatus('Start time input not found.', 'error');
+                    return;
+                }
+
+                const gridResolutionInput = document.getElementById('gridResolution');
+                const gridResolutionM = parseInt(gridResolutionInput?.value || '500');
+
+                const startTimeStr = startTimeInput.value + ':00';
+                const t0 = toSeconds(startTimeStr);
+
+                const validation = validatePeopleInputs(collectPersonInputs());
+                if (!validation.ok) {
+                    setStatus(validation.error, 'error');
+                    return;
+                }
+
+                setStatus('Generating heatmap...', 'loading');
+                showProgress();
+                heatmapPoints = [];
+
+                // Process GTFS data if not already done
+                processGTFSData();
+
+                // Generate sample points
+                updateProgress(5, 'Generating sample points...');
+                const samplePoints = generateSamplePoints(validation.people, gridResolutionM);
+
+                if (samplePoints.length === 0) {
+                    hideProgress();
+                    setStatus('No valid stations found in the area.', 'error');
+                    return;
+                }
+
+                updateProgress(10, `Testing ${samplePoints.length} locations...`);
+
+                // For each sample point, calculate total travel time
+                const results = [];
+                for (let i = 0; i < samplePoints.length; i++) {
+                    const point = samplePoints[i];
+
+                    // Update progress
+                    const progress = 10 + (i / samplePoints.length) * 85;
+                    if (i % Math.max(1, Math.floor(samplePoints.length / 20)) === 0) {
+                        updateProgress(progress, `Testing location ${i + 1}/${samplePoints.length}...`);
+                        await new Promise(resolve => setTimeout(resolve, 0)); // Allow UI update
+                    }
+
+                    // Calculate travel time for each participant to this point
+                    let totalTime = 0;
+                    let maxTime = 0;
+                    let allReachable = true;
+
+                    for (const participant of validation.people) {
+                        try {
+                            // Create a temporary two-person search with this participant and the target point
+                            const tempParticipants = [
+                                participant,
+                                {
+                                    label: 'Target',
+                                    query: point.stopId,
+                                    startStopId: point.stopId,
+                                    isAddress: false
+                                }
+                            ];
+
+                            const { meeting, persons } = runMeetingSearch({
+                                participants: tempParticipants,
+                                startTimeSec: t0
+                            });
+
+                            if (meeting && meeting.type === 'OK') {
+                                // Find the travel time for this participant
+                                const person = persons.find(p => p.label === participant.label);
+                                if (person) {
+                                    const elapsed = person.reachedStopFirst.get(meeting.stopId)?.elapsed || 0;
+                                    totalTime += elapsed;
+                                    maxTime = Math.max(maxTime, elapsed);
+                                }
+                            } else {
+                                allReachable = false;
+                                break;
+                            }
+                        } catch (err) {
+                            console.error('Error calculating route:', err);
+                            allReachable = false;
+                            break;
+                        }
+                    }
+
+                    if (allReachable) {
+                        results.push({
+                            stopId: point.stopId,
+                            lat: point.lat,
+                            lon: point.lon,
+                            totalTime: totalTime,
+                            maxTime: maxTime
+                        });
+                    }
+                }
+
+                updateProgress(95, 'Rendering heatmap...');
+
+                if (results.length === 0) {
+                    hideProgress();
+                    setStatus('No reachable meeting points found.', 'error');
+                    return;
+                }
+
+                heatmapPoints = results;
+                recalcBounds();
+                recomputeTransform(true);
+                draw();
+
+                const minTime = Math.min(...results.map(r => r.totalTime)) / 60;
+                const maxTime = Math.max(...results.map(r => r.totalTime)) / 60;
+                const bestPoint = results.reduce((best, curr) =>
+                    curr.totalTime < best.totalTime ? curr : best
+                );
+
+                const statsDiv = document.getElementById('statsText');
+                const infoDiv = document.getElementById('heatmapInfo');
+                if (statsDiv && infoDiv) {
+                    statsDiv.innerHTML = `
+                        Evaluated ${results.length} locations<br>
+                        Best total time: ${minTime.toFixed(1)} minutes<br>
+                        Worst total time: ${maxTime.toFixed(1)} minutes<br>
+                        Best meeting point: ${bestPoint.stopId}
+                    `;
+                    infoDiv.style.display = 'block';
+                }
+
+                updateProgress(100, 'Complete!');
+                setTimeout(() => {
+                    hideProgress();
+                    setStatus(`Heatmap generated with ${results.length} locations`, 'success');
+                }, 500);
+
+            } catch (error) {
+                hideProgress();
+                setStatus('Error: ' + error.message, 'error');
+                console.error(error);
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setupParticipantControls();
+            initializeMap();
+            loadGTFSFiles().then(() => {
+                updateAllStationsOnMap();
+            });
+        });
+    </script>
+</body>
+</html>
