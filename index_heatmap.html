@@ -940,12 +940,12 @@
                 };
 
                 // Run the heatmap search that explores all nodes
+                // Use requestAnimationFrame to allow UI updates before starting
                 const result = await new Promise((resolve, reject) => {
-                    // Use requestAnimationFrame to allow UI updates
                     requestAnimationFrame(() => {
-                        requestAnimationFrame(() => {
+                        requestAnimationFrame(async () => {
                             try {
-                                const searchResult = runHeatmapSearch({
+                                const searchResult = await runHeatmapSearch({
                                     participants: validation.people,
                                     startTimeSec: t0,
                                     onProgress,

@@ -64,7 +64,7 @@ function loadSimpleNetworkFixture() {
     gtfsData.transfers = [];
 }
 
-test('runHeatmapSearch finds all reachable meeting points in simple network', () => {
+test('runHeatmapSearch finds all reachable meeting points in simple network', async () => {
     loadSimpleNetworkFixture();
 
     const startTimeSec = 10 * 3600; // 10:00
@@ -77,7 +77,7 @@ test('runHeatmapSearch finds all reachable meeting points in simple network', ()
     let stopUpdateCalls = 0;
     const discoveredStops = [];
 
-    const result = runHeatmapSearch({
+    const result = await runHeatmapSearch({
         participants,
         startTimeSec,
         onProgress: (percent, minutes, iterations, stopsFound) => {
@@ -131,7 +131,7 @@ test('runHeatmapSearch finds all reachable meeting points in simple network', ()
     assert.ok(['stop_B', 'stop_C'].includes(bestStop.stopId), 'best meeting point should be a middle station');
 });
 
-test('runHeatmapSearch with real GTFS data finds comprehensive results', () => {
+test('runHeatmapSearch with real GTFS data finds comprehensive results', async () => {
     loadRealGTFSSubset();
 
     const startTimeSec = 10 * 3600; // 10:00
@@ -143,7 +143,7 @@ test('runHeatmapSearch with real GTFS data finds comprehensive results', () => {
     let lastProgressPercent = -1;
     const progressUpdates = [];
 
-    const result = runHeatmapSearch({
+    const result = await runHeatmapSearch({
         participants,
         startTimeSec,
         onProgress: (percent, minutes, iterations, stopsFound) => {
@@ -206,7 +206,7 @@ test('runHeatmapSearch with real GTFS data finds comprehensive results', () => {
     }
 });
 
-test('runHeatmapSearch with three participants finds valid meeting points', () => {
+test('runHeatmapSearch with three participants finds valid meeting points', async () => {
     loadRealGTFSSubset();
 
     const startTimeSec = 10 * 3600; // 10:00
@@ -216,7 +216,7 @@ test('runHeatmapSearch with three participants finds valid meeting points', () =
         { label: 'C', query: 'S+U Pankow (Berlin)' }
     ];
 
-    const result = runHeatmapSearch({
+    const result = await runHeatmapSearch({
         participants,
         startTimeSec
     });
@@ -245,7 +245,7 @@ test('runHeatmapSearch with three participants finds valid meeting points', () =
     assert.equal(calculatedTotal, bestStop.totalTime, 'total should equal sum of individual times');
 });
 
-test('runHeatmapSearch handles participants starting from addresses', () => {
+test('runHeatmapSearch handles participants starting from addresses', async () => {
     loadRealGTFSSubset();
 
     const startTimeSec = 10 * 3600; // 10:00
@@ -268,7 +268,7 @@ test('runHeatmapSearch handles participants starting from addresses', () => {
         }
     ];
 
-    const result = runHeatmapSearch({
+    const result = await runHeatmapSearch({
         participants,
         startTimeSec
     });
@@ -287,7 +287,7 @@ test('runHeatmapSearch handles participants starting from addresses', () => {
     assert.ok(bestStop.times.every(t => t > 0), 'both participants should have walking time to transit');
 });
 
-test('runHeatmapSearch results are deterministic', () => {
+test('runHeatmapSearch results are deterministic', async () => {
     loadRealGTFSSubset();
 
     const startTimeSec = 10 * 3600;
@@ -297,8 +297,8 @@ test('runHeatmapSearch results are deterministic', () => {
     ];
 
     // Run twice with same parameters
-    const result1 = runHeatmapSearch({ participants, startTimeSec });
-    const result2 = runHeatmapSearch({ participants, startTimeSec });
+    const result1 = await runHeatmapSearch({ participants, startTimeSec });
+    const result2 = await runHeatmapSearch({ participants, startTimeSec });
 
     // Results should be identical
     assert.equal(result1.results.length, result2.results.length, 'should find same number of stops');

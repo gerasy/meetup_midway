@@ -9,6 +9,11 @@ import { findNearestStation } from './geocoding.js';
 
 const MIN_TRAVEL_TIME_S = 10;
 
+// Helper to yield control back to the browser for UI updates
+function yieldToUI() {
+    return new Promise(resolve => setTimeout(resolve, 0));
+}
+
 function getStopCoordinates(stopId) {
     const stop = parsedData.stopById.get(stopId);
     if (!stop) return null;
@@ -271,7 +276,7 @@ function primePerson(person, midpoint) {
     enqueueRides(person.pq, person.startStopId, person.t0, 0, person.label, midpoint);
 }
 
-export function runMeetingSearch({ participants, startTimeSec }) {
+export async function runMeetingSearch({ participants, startTimeSec }) {
     if (!Array.isArray(participants) || participants.length === 0) {
         throw new Error('No participants provided.');
     }
@@ -350,8 +355,10 @@ export function runMeetingSearch({ participants, startTimeSec }) {
 
     try {
         while (iterations++ < maxIterations) {
+            // Yield to browser every 1000 iterations for UI updates
             if (iterations % 1000 === 0) {
                 updateIterationAnimation(iterations);
+                await yieldToUI();
             }
 
             let minEntry = null;
@@ -526,11 +533,11 @@ export function findMeetingPoint() {
 
         setStatus('Searching for meeting point...', 'loading');
 
-        // Force a repaint by requesting animation frame twice
+        // Force a repaint before starting search
         requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
+            requestAnimationFrame(async () => {
                 try {
-                    const { meeting, persons, stats } = runMeetingSearch({
+                    const { meeting, persons, stats } = await runMeetingSearch({
                         participants: validation.people,
                         startTimeSec: t0
                     });
@@ -551,7 +558,7 @@ export function findMeetingPoint() {
     }
 }
 
-export function runHeatmapSearch({ participants, startTimeSec, onProgress, onStopUpdate }) {
+export async function runHeatmapSearch({ participants, startTimeSec, onProgress, onStopUpdate }) {
     if (!Array.isArray(participants) || participants.length === 0) {
         throw new Error('No participants provided.');
     }
@@ -625,6 +632,11 @@ export function runHeatmapSearch({ participants, startTimeSec, onProgress, onSto
 
     try {
         while (iterations++ < maxIterations) {
+            // Yield to browser every 1000 iterations for UI updates
+            if (iterations % 1000 === 0) {
+                await yieldToUI();
+            }
+
             let minEntry = null;
             let minPerson = null;
 
