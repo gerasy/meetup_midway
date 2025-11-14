@@ -754,7 +754,7 @@ export async function runHeatmapSearch({ participants, startTimeSec, onProgress,
     }
 }
 
-export function runDeterministicRouteSelfCheck() {
+export async function runDeterministicRouteSelfCheck() {
     if (gtfsData.stops.length === 0) {
         return {
             success: false,
@@ -777,7 +777,7 @@ export function runDeterministicRouteSelfCheck() {
             }
         ];
 
-        const { meeting, stats } = runMeetingSearch({ participants, startTimeSec });
+        const { meeting, stats } = await runMeetingSearch({ participants, startTimeSec });
 
         if (meeting && meeting.type === 'OK') {
             return {

@@ -262,7 +262,7 @@ test('randomly selected triple participants on the GTFS subset always meet', asy
 
 test('deterministic U2 self-check succeeds on the GTFS subset', async () => {
     loadRealGTFSSubset();
-    const outcome = runDeterministicRouteSelfCheck();
+    const outcome = await runDeterministicRouteSelfCheck();
     assert.equal(outcome.success, true, outcome.message);
     assert.equal(outcome.meetingStopId, 'de:11000:900100003::1');
     assert.ok(outcome.stats);
