@@ -118,13 +118,13 @@ function mulberry32(seed) {
     };
 }
 
-test('validatePeopleInputs rejects when fewer than two participants are provided', () => {
+test('validatePeopleInputs rejects when fewer than two participants are provided', async () => {
     const result = validatePeopleInputs([{ label: 'A', query: 'Alexanderplatz' }]);
     assert.equal(result.ok, false);
     assert.match(result.error, /at least two/i);
 });
 
-test('validatePeopleInputs rejects empty station queries', () => {
+test('validatePeopleInputs rejects empty station queries', async () => {
     const result = validatePeopleInputs([
         { label: 'A', query: 'Alexanderplatz' },
         { label: 'B', query: '' }
@@ -133,7 +133,7 @@ test('validatePeopleInputs rejects empty station queries', () => {
     assert.match(result.error, /Person B/i);
 });
 
-test('validatePeopleInputs enforces maximum participants', () => {
+test('validatePeopleInputs enforces maximum participants', async () => {
     const tooMany = Array.from({ length: MAX_PARTICIPANTS + 1 }, (_, idx) => ({
         label: String.fromCharCode(65 + idx),
         query: `Station ${idx}`
@@ -144,7 +144,7 @@ test('validatePeopleInputs enforces maximum participants', () => {
     assert.match(result.error, /maximum/i);
 });
 
-test('validatePeopleInputs passes for valid inputs', () => {
+test('validatePeopleInputs passes for valid inputs', async () => {
     const inputs = [
         { label: 'A', query: 'Alexanderplatz' },
         { label: 'B', query: 'U Spittelmarkt' },
@@ -156,7 +156,7 @@ test('validatePeopleInputs passes for valid inputs', () => {
     assert.deepEqual(result.people, inputs);
 });
 
-test('meeting persists when a participant already starts at the solution station', () => {
+test('meeting persists when a participant already starts at the solution station', async () => {
     loadPotsdamerFixture();
 
     const startTimeSec = 10 * 3600;
@@ -166,13 +166,13 @@ test('meeting persists when a participant already starts at the solution station
         { label: 'C', query: 'U Bülowstr. (Berlin)' }
     ];
 
-    const firstRun = runMeetingSearch({ participants: baseParticipants, startTimeSec });
+    const firstRun = await runMeetingSearch({ participants: baseParticipants, startTimeSec });
     assert.ok(firstRun.meeting, 'expected meeting to be found for three participants');
     assert.equal(firstRun.meeting.type, 'OK');
     assert.equal(firstRun.meeting.stopId, 'potsdamer');
 
     const withFourth = [...baseParticipants, { label: 'D', query: 'S+U Potsdamer Platz Bhf (Berlin)' }];
-    const secondRun = runMeetingSearch({ participants: withFourth, startTimeSec });
+    const secondRun = await runMeetingSearch({ participants: withFourth, startTimeSec });
     assert.ok(secondRun.meeting, 'expected meeting to still be found with fourth participant');
     assert.equal(secondRun.meeting.type, 'OK');
     assert.equal(secondRun.meeting.stopId, 'potsdamer');
@@ -185,7 +185,7 @@ test('meeting persists when a participant already starts at the solution station
     assert.equal(lastPerson.reachedStopFirst.get('potsdamer').elapsed, 0);
 });
 
-test('adding the solution station as a new participant maintains the meeting across random runs', () => {
+test('adding the solution station as a new participant maintains the meeting across random runs', async () => {
     loadLinearLineFixture();
     const rng = mulberry32(0xC0FFEE);
     const startTimeSec = 10 * 3600;
@@ -203,14 +203,14 @@ test('adding the solution station as a new participant maintains the meeting acr
             { label: 'B', query: stopNames[idxB] }
         ];
 
-        const baseline = runMeetingSearch({ participants, startTimeSec });
+        const baseline = await runMeetingSearch({ participants, startTimeSec });
         assert.ok(baseline.meeting, `expected meeting on baseline run ${run}`);
         assert.equal(baseline.meeting.type, 'OK');
         const meetingStop = baseline.meeting.stopId;
         const meetingName = gtfsData.stops.find(stop => stop.stop_id === meetingStop)?.stop_name;
         assert.ok(meetingName, 'meeting stop should map to a known station name');
 
-        const extended = runMeetingSearch({
+        const extended = await runMeetingSearch({
             participants: [...participants, { label: 'C', query: meetingName }],
             startTimeSec
         });
@@ -230,7 +230,7 @@ test('adding the solution station as a new participant maintains the meeting acr
     }
 });
 
-test('randomly selected triple participants on the GTFS subset always meet', () => {
+test('randomly selected triple participants on the GTFS subset always meet', async () => {
     loadRealGTFSSubset();
     const rng = mulberry32(0xBADA55);
     const startTimeSec = 10 * 3600;
@@ -249,7 +249,7 @@ test('randomly selected triple participants on the GTFS subset always meet', () 
             participants.push({ label: String.fromCharCode(65 + participants.length), query: name });
         }
 
-        const result = runMeetingSearch({ participants, startTimeSec });
+        const result = await runMeetingSearch({ participants, startTimeSec });
         assert.ok(result.meeting, `expected meeting for iteration ${iteration}`);
         assert.equal(result.meeting.type, 'OK');
         const meetingStop = result.meeting.stopId;
@@ -260,7 +260,7 @@ test('randomly selected triple participants on the GTFS subset always meet', () 
     }
 });
 
-test('deterministic U2 self-check succeeds on the GTFS subset', () => {
+test('deterministic U2 self-check succeeds on the GTFS subset', async () => {
     loadRealGTFSSubset();
     const outcome = runDeterministicRouteSelfCheck();
     assert.equal(outcome.success, true, outcome.message);
@@ -270,7 +270,7 @@ test('deterministic U2 self-check succeeds on the GTFS subset', () => {
     assert.ok(outcome.stats.maxAccumulatedTime <= 120 * 60, 'self-check should stay within two hours');
 });
 
-test('finds meeting point for two participants starting from real Berlin addresses', () => {
+test('finds meeting point for two participants starting from real Berlin addresses', async () => {
     loadRealGTFSSubset();
 
     const startTimeSec = 10 * 3600; // 10:00 AM
@@ -310,7 +310,7 @@ test('finds meeting point for two participants starting from real Berlin address
         }
     ];
 
-    const result = runMeetingSearch({ participants, startTimeSec });
+    const result = await runMeetingSearch({ participants, startTimeSec });
 
     // Verify meeting was found
     assert.ok(result.meeting, 'Should find a meeting point for two address-based participants');

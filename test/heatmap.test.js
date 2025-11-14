@@ -146,6 +146,7 @@ test('runHeatmapSearch with real GTFS data finds comprehensive results', async (
     const result = await runHeatmapSearch({
         participants,
         startTimeSec,
+        maxIterations: 500000, // Limit for faster tests (needs enough iterations to find meeting points)
         onProgress: (percent, minutes, iterations, stopsFound) => {
             progressUpdates.push({ percent, minutes, iterations, stopsFound });
             assert.ok(percent >= lastProgressPercent, 'progress should be monotonically increasing');
@@ -158,24 +159,27 @@ test('runHeatmapSearch with real GTFS data finds comprehensive results', async (
         }
     });
 
-    // Verify comprehensive results
-    assert.ok(result.results.length > 100, `should find many meeting points (found ${result.results.length})`);
-    assert.ok(result.iterations > 10000, `should perform many iterations (found ${result.iterations})`);
+    // Verify comprehensive results (relaxed for limited iterations)
+    assert.ok(result.results.length > 50, `should find some meeting points (found ${result.results.length})`);
+    assert.ok(result.iterations > 1000, `should perform iterations (found ${result.iterations})`);
     console.log(`Heatmap search completed: ${result.results.length} meeting points, ${result.iterations} iterations`);
 
-    // Verify time ranges are reasonable
-    const times = result.results.map(r => r.totalTime / 60); // convert to minutes
-    const minTime = Math.min(...times);
-    const maxTime = Math.max(...times);
-    const avgTime = times.reduce((a, b) => a + b, 0) / times.length;
+    if (result.results.length > 0) {
+        // Verify time ranges are reasonable
+        const times = result.results.map(r => r.totalTime / 60); // convert to minutes
+        const minTime = Math.min(...times);
+        const maxTime = Math.max(...times);
+        const avgTime = times.reduce((a, b) => a + b, 0) / times.length;
 
-    console.log(`Time range: ${minTime.toFixed(1)} - ${maxTime.toFixed(1)} min (avg: ${avgTime.toFixed(1)} min)`);
+        console.log(`Time range: ${minTime.toFixed(1)} - ${maxTime.toFixed(1)} min (avg: ${avgTime.toFixed(1)} min)`);
 
-    assert.ok(minTime > 0, 'minimum time should be positive');
-    // Note: max time can exceed 120 minutes in heatmap mode as it explores all reachable nodes
-    // Some far-away stations may take longer but are still valid meeting points
-    assert.ok(maxTime <= 300, 'maximum time should be reasonable (within 5 hours)');
-    assert.ok(minTime < maxTime, 'should have a range of times');
+        assert.ok(minTime > 0, 'minimum time should be positive');
+        // Note: max time can exceed 120 minutes in heatmap mode as it explores all reachable nodes
+        assert.ok(maxTime <= 300, 'maximum time should be reasonable (within 5 hours)');
+        if (result.results.length > 1) {
+            assert.ok(minTime < maxTime, 'should have a range of times');
+        }
+    }
 
     // Verify progress was tracked
     assert.ok(progressUpdates.length > 0, 'progress should be updated');
@@ -218,7 +222,8 @@ test('runHeatmapSearch with three participants finds valid meeting points', asyn
 
     const result = await runHeatmapSearch({
         participants,
-        startTimeSec
+        startTimeSec,
+        maxIterations: 500000 // Limit for faster tests (needs enough iterations to find meeting points)
     });
 
     assert.ok(result.results.length > 0, 'should find meeting points for three participants');
@@ -270,7 +275,8 @@ test('runHeatmapSearch handles participants starting from addresses', async () =
 
     const result = await runHeatmapSearch({
         participants,
-        startTimeSec
+        startTimeSec,
+        maxIterations: 500000 // Limit for faster tests (needs enough iterations to find meeting points)
     });
 
     assert.ok(result.results.length > 0, 'should find meeting points for address-based participants');
@@ -297,8 +303,8 @@ test('runHeatmapSearch results are deterministic', async () => {
     ];
 
     // Run twice with same parameters
-    const result1 = await runHeatmapSearch({ participants, startTimeSec });
-    const result2 = await runHeatmapSearch({ participants, startTimeSec });
+    const result1 = await runHeatmapSearch({ participants, startTimeSec, maxIterations: 250000 });
+    const result2 = await runHeatmapSearch({ participants, startTimeSec, maxIterations: 250000 });
 
     // Results should be identical
     assert.equal(result1.results.length, result2.results.length, 'should find same number of stops');

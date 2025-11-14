@@ -558,7 +558,7 @@ export function findMeetingPoint() {
     }
 }
 
-export async function runHeatmapSearch({ participants, startTimeSec, onProgress, onStopUpdate }) {
+export async function runHeatmapSearch({ participants, startTimeSec, onProgress, onStopUpdate, maxIterations = 200000000 }) {
     if (!Array.isArray(participants) || participants.length === 0) {
         throw new Error('No participants provided.');
     }
@@ -623,7 +623,7 @@ export async function runHeatmapSearch({ participants, startTimeSec, onProgress,
     // Track stops where all participants have arrived
     const commonStops = new Map(); // stopId -> { totalTime, maxTime, times: [] }
     let iterations = 0;
-    const maxIterations = 200000000;
+    // maxIterations is passed as parameter, defaults to 200000000
     let globalMaxAccum = 0;
     let lastProgressUpdateMinutes = 0;
     const PROGRESS_UPDATE_STEP_MIN = 0.5;

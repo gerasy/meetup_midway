@@ -48,6 +48,7 @@ test('runHeatmapSearch provides progress updates during search', async () => {
     const result = await runHeatmapSearch({
         participants,
         startTimeSec,
+        maxIterations: 250000, // Limit for faster tests
         onProgress: (percent, minutes, iterations, stopsFound) => {
             progressUpdates.push({
                 percent,

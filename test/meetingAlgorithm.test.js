@@ -69,10 +69,10 @@ const branchingDataset = {
     transfers: []
 };
 
-test('finds a straightforward meeting stop for two riders', () => {
+test('finds a straightforward meeting stop for two riders', async () => {
     seedGTFS(simpleDataset);
 
-    const { meeting, persons } = runMeetingSearch({
+    const { meeting, persons } = await runMeetingSearch({
         participants: [
             { label: 'A', query: 'Stop A' },
             { label: 'B', query: 'Stop B' }
@@ -87,10 +87,10 @@ test('finds a straightforward meeting stop for two riders', () => {
     assert.deepEqual(elapsed, [360, 360]);
 });
 
-test('chooses the meeting stop with the least total travel time', () => {
+test('chooses the meeting stop with the least total travel time', async () => {
     seedGTFS(branchingDataset);
 
-    const { meeting, persons } = runMeetingSearch({
+    const { meeting, persons } = await runMeetingSearch({
         participants: [
             { label: 'A', query: 'Stop A' },
             { label: 'B', query: 'Stop B' }
