@@ -324,7 +324,7 @@
 
         <div class="person-controls">
             <button id="addPerson" type="button">Add Another Person</button>
-            <button id="generateHeatmap" onclick="generateHeatmap()">Generate Heatmap</button>
+            <button id="generateHeatmap" onclick="generateHeatmap()" disabled>Generate Heatmap</button>
         </div>
 
         <div id="status"></div>
@@ -383,6 +383,7 @@
         import { toSeconds } from './src/parsing.js';
         import { collectPersonInputs, validatePeopleInputs, runHeatmapSearch } from './src/search.js';
         import { haversineM } from './src/geometry.js';
+        import { setStatus as setStatusUI } from './src/ui.js';
 
         let canvas = null;
         let ctx = null;
@@ -423,20 +424,9 @@
         let offsetX = 0;
         let offsetY = 0;
 
+        // Use the imported setStatus from ui.js
         function setStatus(message, type) {
-            const statusDiv = document.getElementById('status');
-            if (!statusDiv) return;
-
-            statusDiv.textContent = message;
-            statusDiv.className = '';
-
-            if (type === 'loading') {
-                statusDiv.className = 'status-loading';
-            } else if (type === 'success') {
-                statusDiv.className = 'status-success';
-            } else if (type === 'error') {
-                statusDiv.className = 'status-error';
-            }
+            setStatusUI(message, type);
         }
 
         function showProgress() {

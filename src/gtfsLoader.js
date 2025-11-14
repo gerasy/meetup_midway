@@ -40,7 +40,16 @@ export async function loadGTFSFiles() {
 
         setStatus('GTFS files loaded. Processing data...', 'loading');
         processGTFSData();
-        document.getElementById('findMeeting').disabled = false;
+
+        // Enable the search button if it exists (different buttons on different pages)
+        const findMeetingBtn = document.getElementById('findMeeting');
+        if (findMeetingBtn) {
+            findMeetingBtn.disabled = false;
+        }
+        const generateHeatmapBtn = document.getElementById('generateHeatmap');
+        if (generateHeatmapBtn) {
+            generateHeatmapBtn.disabled = false;
+        }
 
         setStatus('GTFS files loaded successfully.', 'success');
     } catch (error) {
