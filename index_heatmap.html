@@ -576,7 +576,17 @@
         }
 
         function getHeatmapColor(value, minValue, maxValue) {
-            const normalized = (value - minValue) / (maxValue - minValue);
+            // Handle edge cases
+            if (!Number.isFinite(value) || !Number.isFinite(minValue) || !Number.isFinite(maxValue)) {
+                return 'rgba(128, 128, 128, 0.7)'; // Gray for invalid values
+            }
+
+            if (minValue === maxValue) {
+                // If all values are the same, use middle color
+                return 'rgba(251, 191, 36, 0.7)'; // Yellow
+            }
+
+            const normalized = Math.max(0, Math.min(1, (value - minValue) / (maxValue - minValue)));
 
             // Color gradient from green (best) to red (worst)
             // Green -> Yellow-Green -> Yellow -> Orange -> Red
@@ -589,7 +599,7 @@
             ];
 
             const scaledValue = normalized * (colors.length - 1);
-            const idx = Math.floor(scaledValue);
+            const idx = Math.max(0, Math.min(colors.length - 2, Math.floor(scaledValue)));
             const fraction = scaledValue - idx;
 
             if (idx >= colors.length - 1) {
@@ -811,6 +821,11 @@
                 const onStopUpdate = (stopId, lat, lon, totalTime, maxTime) => {
                     stopMap.set(stopId, { stopId, lat, lon, totalTime, maxTime });
 
+                    // Log first few stops for debugging
+                    if (stopMap.size <= 5) {
+                        console.log(`Stop ${stopMap.size}: ${stopId} - Total: ${(totalTime/60).toFixed(1)}min, Max: ${(maxTime/60).toFixed(1)}min`);
+                    }
+
                     // Update heatmap points for rendering
                     heatmapPoints = Array.from(stopMap.values());
                     recalcBounds();
@@ -868,6 +883,35 @@
                     infoDiv.style.display = 'block';
                 }
 
+                // Log some sample stations for debugging
+                console.log('\n=== HEATMAP GENERATION COMPLETE ===');
+                console.log(`Total meeting points found: ${result.results.length}`);
+                console.log(`Time range: ${minTime.toFixed(1)} - ${maxTime.toFixed(1)} minutes`);
+
+                // Show best 5 stations
+                const sortedByTotal = [...result.results].sort((a, b) => a.totalTime - b.totalTime);
+                console.log('\nTop 5 Best Meeting Points:');
+                sortedByTotal.slice(0, 5).forEach((pt, i) => {
+                    console.log(`  ${i+1}. ${pt.stopId}: Total ${(pt.totalTime/60).toFixed(1)}min, Max ${(pt.maxTime/60).toFixed(1)}min`);
+                });
+
+                // Show worst 5 stations
+                console.log('\nTop 5 Worst Meeting Points:');
+                sortedByTotal.slice(-5).reverse().forEach((pt, i) => {
+                    console.log(`  ${i+1}. ${pt.stopId}: Total ${(pt.totalTime/60).toFixed(1)}min, Max ${(pt.maxTime/60).toFixed(1)}min`);
+                });
+
+                // Sample some middle range stations
+                console.log('\n5 Middle-Range Meeting Points:');
+                const middleStart = Math.floor(sortedByTotal.length / 2) - 2;
+                sortedByTotal.slice(middleStart, middleStart + 5).forEach((pt, i) => {
+                    console.log(`  ${i+1}. ${pt.stopId}: Total ${(pt.totalTime/60).toFixed(1)}min, Max ${(pt.maxTime/60).toFixed(1)}min`);
+                });
+
+                // Make results accessible for manual probing
+                window.heatmapResults = result.results;
+                console.log('\nResults stored in window.heatmapResults - use window.probeStation(stopId) to query');
+
                 updateProgress(100, 'Complete!');
                 setTimeout(() => {
                     hideProgress();
@@ -879,6 +923,38 @@
                 setStatus('Error: ' + error.message, 'error');
                 console.error(error);
             }
+        };
+
+        // Helper function to probe a specific station
+        window.probeStation = function(stopId) {
+            if (!window.heatmapResults) {
+                console.log('No heatmap results available. Generate a heatmap first.');
+                return null;
+            }
+
+            const result = window.heatmapResults.find(r => r.stopId === stopId);
+            if (!result) {
+                console.log(`Station ${stopId} not found in heatmap results.`);
+                console.log('Try searching by partial ID:');
+                const matches = window.heatmapResults.filter(r => r.stopId.includes(stopId));
+                if (matches.length > 0) {
+                    console.log(`Found ${matches.length} matches:`);
+                    matches.slice(0, 10).forEach(m => {
+                        console.log(`  ${m.stopId}: Total ${(m.totalTime/60).toFixed(1)}min, Max ${(m.maxTime/60).toFixed(1)}min`);
+                    });
+                }
+                return null;
+            }
+
+            console.log(`\nStation: ${result.stopId}`);
+            console.log(`Location: ${result.lat.toFixed(5)}, ${result.lon.toFixed(5)}`);
+            console.log(`Total time (all participants): ${(result.totalTime/60).toFixed(1)} minutes`);
+            console.log(`Max time (slowest participant): ${(result.maxTime/60).toFixed(1)} minutes`);
+            if (result.times) {
+                console.log(`Individual times: ${result.times.map(t => (t/60).toFixed(1) + 'min').join(', ')}`);
+            }
+
+            return result;
         };
 
         window.addEventListener('DOMContentLoaded', () => {
