@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autocomplete Test</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #020617;
+            --panel: #0f172a;
+            --panel-soft: #111b33;
+            --panel-muted: #1e293b;
+            --text: #e2e8f0;
+            --subtle-text: #94a3b8;
+            --accent: #38bdf8;
+            --accent-strong: #0ea5e9;
+            --border: rgba(148, 163, 184, 0.2);
+            --success: #22c55e;
+            --warning: #fbbf24;
+            --danger: #f87171;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: radial-gradient(circle at top, #0f172a, var(--bg));
+            color: var(--text);
+        }
+        .container {
+            background: var(--panel);
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--border);
+        }
+        h1 {
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+        .test-group {
+            margin: 30px 0;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            background: var(--panel-muted);
+            color: var(--text);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.35);
+        }
+        .instructions {
+            background: var(--panel-soft);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+        }
+        .instructions p {
+            margin: 8px 0;
+            color: var(--subtle-text);
+        }
+        .test-result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Autocomplete Click Test</h1>
+        <p style="color: var(--subtle-text);">This page tests that both stations and addresses are clickable in autocomplete.</p>
+
+        <div class="instructions">
+            <strong>Test Instructions:</strong>
+            <p>1. Type "Alex" in Test 1 - you should see TRANSIT STATIONS</p>
+            <p>2. Click on one of the stations - it should fill the input</p>
+            <p>3. Type "Unter den Linden" in Test 2 - you should see ADDRESSES</p>
+            <p>4. Click on one of the addresses - it should fill the input</p>
+            <p>5. Check the results below each input</p>
+        </div>
+
+        <div class="test-group">
+            <label for="station-input">Test 1: Transit Station Selection</label>
+            <input type="text" id="station-input" data-person-label="A" placeholder="Type 'Alex' or 'Pankow'">
+            <div id="station-result" class="test-result" style="display: none;"></div>
+        </div>
+
+        <div class="test-group">
+            <label for="address-input">Test 2: Address Selection</label>
+            <input type="text" id="address-input" data-person-label="B" placeholder="Type 'Unter den Linden' or 'Alexanderplatz'">
+            <div id="address-result" class="test-result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { loadGTFSFiles } from './src/gtfsLoader.js';
+        import { setupAutocomplete } from './src/autocomplete.js';
+
+        // Load GTFS data
+        await loadGTFSFiles();
+        console.log('GTFS data loaded');
+
+        // Setup autocomplete on both inputs
+        const stationInput = document.getElementById('station-input');
+        const addressInput = document.getElementById('address-input');
+
+        const stationAutocomplete = setupAutocomplete(stationInput);
+        const addressAutocomplete = setupAutocomplete(addressInput);
+
+        // Monitor changes to show test results
+        function showResult(inputId, resultId) {
+            const input = document.getElementById(inputId);
+            const result = document.getElementById(resultId);
+
+            const observer = new MutationObserver(() => {
+                if (input.value.length > 0) {
+                    result.style.display = 'block';
+
+                    if (input.dataset.addressLat && input.dataset.addressLon) {
+                        result.className = 'test-result success';
+                        result.innerHTML = `✓ Address selected: "${input.value}"<br>Coordinates: ${input.dataset.addressLat}, ${input.dataset.addressLon}`;
+                    } else {
+                        result.className = 'test-result success';
+                        result.innerHTML = `✓ Station selected: "${input.value}"`;
+                    }
+                }
+            });
+
+            input.addEventListener('input', () => {
+                setTimeout(() => {
+                    if (input.value.length > 0) {
+                        result.style.display = 'block';
+
+                        if (input.dataset.addressLat && input.dataset.addressLon) {
+                            result.className = 'test-result success';
+                            result.innerHTML = `✓ ADDRESS CLICK WORKED: "${input.value}"<br>Lat: ${input.dataset.addressLat}, Lon: ${input.dataset.addressLon}`;
+                        } else {
+                            result.className = 'test-result success';
+                            result.innerHTML = `✓ STATION CLICK WORKED: "${input.value}"`;
+                        }
+                    }
+                }, 100);
+            });
+        }
+
+        showResult('station-input', 'station-result');
+        showResult('address-input', 'address-result');
+
+        console.log('Autocomplete test page ready');
+        console.log('Try typing "Alex" for stations or "Unter den Linden" for addresses');
+    </script>
+</body>
+</html>

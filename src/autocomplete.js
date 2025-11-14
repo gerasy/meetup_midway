@@ -133,7 +133,8 @@ export function setupAutocomplete(inputElement) {
                     highlightItem(selectedIndex);
                 });
 
-                item.addEventListener('click', () => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent document click handler from closing dropdown
                     selectItem(resultIndex);
                 });
 
@@ -179,7 +180,8 @@ export function setupAutocomplete(inputElement) {
                     highlightItem(selectedIndex);
                 });
 
-                item.addEventListener('click', () => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent document click handler from closing dropdown
                     selectItem(resultIndex);
                 });
 
