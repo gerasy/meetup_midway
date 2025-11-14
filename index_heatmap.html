@@ -306,15 +306,9 @@
             <p>Transit data is automatically loaded from the gtfs_subset folder.</p>
         </div>
 
-        <div class="controls-row">
-            <div class="input-group">
-                <label for="startTime">Start Time (HH:MM):</label>
-                <input type="time" id="startTime" value="10:00" min="10:00" max="12:00">
-            </div>
-            <div class="input-group">
-                <label for="gridResolution">Grid Resolution (meters):</label>
-                <input type="number" id="gridResolution" value="500" min="100" max="2000" step="100">
-            </div>
+        <div class="input-group">
+            <label for="startTime">Start Time (HH:MM):</label>
+            <input type="time" id="startTime" value="10:00" min="10:00" max="12:00">
         </div>
 
         <div id="peopleInputs">
@@ -385,9 +379,9 @@
         import { loadGTFSFiles } from './src/gtfsLoader.js';
         import { setupParticipantControls } from './src/participants.js';
         import { gtfsData, parsedData } from './src/state.js';
-        import { processGTFSData, resolveStation, pickStartPlatform } from './src/gtfsProcessing.js';
+        import { processGTFSData } from './src/gtfsProcessing.js';
         import { toSeconds } from './src/parsing.js';
-        import { collectPersonInputs, validatePeopleInputs, runMeetingSearch } from './src/search.js';
+        import { collectPersonInputs, validatePeopleInputs, runHeatmapSearch } from './src/search.js';
         import { haversineM } from './src/geometry.js';
 
         let canvas = null;
@@ -784,75 +778,6 @@
             loadBoundary();
         }
 
-        // Generate a grid of sample points around the geographic center
-        function generateSamplePoints(participants, gridResolutionM) {
-            // Calculate the bounding box of all participant starting locations
-            let minLat = Infinity, maxLat = -Infinity;
-            let minLon = Infinity, maxLon = -Infinity;
-
-            participants.forEach(p => {
-                const coords = p.isAddress ?
-                    { lat: p.lat, lon: p.lon } :
-                    getStopCoordinates(p.startStopId);
-                if (coords) {
-                    minLat = Math.min(minLat, coords.lat);
-                    maxLat = Math.max(maxLat, coords.lat);
-                    minLon = Math.min(minLon, coords.lon);
-                    maxLon = Math.max(maxLon, coords.lon);
-                }
-            });
-
-            // Expand the bounding box by ~3km in each direction
-            const latDelta = 0.027; // ~3km in latitude
-            const lonDelta = 0.045; // ~3km in longitude (approximate for Berlin)
-            minLat -= latDelta;
-            maxLat += latDelta;
-            minLon -= lonDelta;
-            maxLon += lonDelta;
-
-            // Generate a grid of points
-            const points = [];
-            const latStep = gridResolutionM / 111000; // Convert meters to degrees latitude
-            const lonStep = gridResolutionM / (111000 * Math.cos(((minLat + maxLat) / 2) * Math.PI / 180));
-
-            for (let lat = minLat; lat <= maxLat; lat += latStep) {
-                for (let lon = minLon; lon <= maxLon; lon += lonStep) {
-                    // Find the nearest station to this point
-                    let nearestStop = null;
-                    let minDist = Infinity;
-
-                    parsedData.stopById.forEach((stop, stopId) => {
-                        const stopLat = parseFloat(stop.stop_lat);
-                        const stopLon = parseFloat(stop.stop_lon);
-                        if (Number.isFinite(stopLat) && Number.isFinite(stopLon)) {
-                            const dist = haversineM(lat, lon, stopLat, stopLon);
-                            if (dist < minDist && dist < 1000) { // Within 1km
-                                minDist = dist;
-                                nearestStop = { stopId, lat: stopLat, lon: stopLon };
-                            }
-                        }
-                    });
-
-                    if (nearestStop) {
-                        points.push(nearestStop);
-                    }
-                }
-            }
-
-            // Remove duplicates
-            const uniquePoints = [];
-            const seen = new Set();
-            points.forEach(pt => {
-                const key = pt.stopId;
-                if (!seen.has(key)) {
-                    seen.add(key);
-                    uniquePoints.push(pt);
-                }
-            });
-
-            return uniquePoints;
-        }
-
         window.generateHeatmap = async function() {
             try {
                 if (gtfsData.stops.length === 0) {
@@ -865,9 +790,6 @@
                     setStatus('Start time input not found.', 'error');
                     return;
                 }
-
-                const gridResolutionInput = document.getElementById('gridResolution');
-                const gridResolutionM = parseInt(gridResolutionInput?.value || '500');
 
                 const startTimeStr = startTimeInput.value + ':00';
                 const t0 = toSeconds(startTimeStr);
@@ -885,99 +807,62 @@
                 // Process GTFS data if not already done
                 processGTFSData();
 
-                // Generate sample points
-                updateProgress(5, 'Generating sample points...');
-                const samplePoints = generateSamplePoints(validation.people, gridResolutionM);
+                updateProgress(0, 'Initializing search...');
 
-                if (samplePoints.length === 0) {
-                    hideProgress();
-                    setStatus('No valid stations found in the area.', 'error');
-                    return;
-                }
+                // Create a map to track stops by ID for quick updates
+                const stopMap = new Map();
 
-                updateProgress(10, `Testing ${samplePoints.length} locations...`);
+                // Callback for progress updates
+                const onProgress = (percent, minutes, iterations, stopsFound) => {
+                    updateProgress(percent, `Explored ${minutes.toFixed(1)} min (${stopsFound} stops, ${iterations.toLocaleString()} iterations)`);
+                };
 
-                // For each sample point, calculate total travel time
-                const results = [];
-                for (let i = 0; i < samplePoints.length; i++) {
-                    const point = samplePoints[i];
+                // Callback for stop updates (real-time heatmap updates)
+                const onStopUpdate = (stopId, lat, lon, totalTime, maxTime) => {
+                    stopMap.set(stopId, { stopId, lat, lon, totalTime, maxTime });
 
-                    // Update progress
-                    const progress = 10 + (i / samplePoints.length) * 85;
-                    if (i % Math.max(1, Math.floor(samplePoints.length / 20)) === 0) {
-                        updateProgress(progress, `Testing location ${i + 1}/${samplePoints.length}...`);
-                        await new Promise(resolve => setTimeout(resolve, 0)); // Allow UI update
-                    }
+                    // Update heatmap points for rendering
+                    heatmapPoints = Array.from(stopMap.values());
+                    recalcBounds();
+                    recomputeTransform(false);
+                    draw();
+                };
 
-                    // Calculate travel time for each participant to this point
-                    let totalTime = 0;
-                    let maxTime = 0;
-                    let allReachable = true;
-
-                    for (const participant of validation.people) {
-                        try {
-                            // Create a temporary two-person search with this participant and the target point
-                            const tempParticipants = [
-                                participant,
-                                {
-                                    label: 'Target',
-                                    query: point.stopId,
-                                    startStopId: point.stopId,
-                                    isAddress: false
-                                }
-                            ];
-
-                            const { meeting, persons } = runMeetingSearch({
-                                participants: tempParticipants,
-                                startTimeSec: t0
-                            });
-
-                            if (meeting && meeting.type === 'OK') {
-                                // Find the travel time for this participant
-                                const person = persons.find(p => p.label === participant.label);
-                                if (person) {
-                                    const elapsed = person.reachedStopFirst.get(meeting.stopId)?.elapsed || 0;
-                                    totalTime += elapsed;
-                                    maxTime = Math.max(maxTime, elapsed);
-                                }
-                            } else {
-                                allReachable = false;
-                                break;
+                // Run the heatmap search that explores all nodes
+                const result = await new Promise((resolve, reject) => {
+                    // Use requestAnimationFrame to allow UI updates
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            try {
+                                const searchResult = runHeatmapSearch({
+                                    participants: validation.people,
+                                    startTimeSec: t0,
+                                    onProgress,
+                                    onStopUpdate
+                                });
+                                resolve(searchResult);
+                            } catch (error) {
+                                reject(error);
                             }
-                        } catch (err) {
-                            console.error('Error calculating route:', err);
-                            allReachable = false;
-                            break;
-                        }
-                    }
-
-                    if (allReachable) {
-                        results.push({
-                            stopId: point.stopId,
-                            lat: point.lat,
-                            lon: point.lon,
-                            totalTime: totalTime,
-                            maxTime: maxTime
                         });
-                    }
-                }
+                    });
+                });
 
-                updateProgress(95, 'Rendering heatmap...');
+                // Final update with all results
+                heatmapPoints = result.results;
+                recalcBounds();
+                recomputeTransform(true);
+                draw();
 
-                if (results.length === 0) {
+                if (result.results.length === 0) {
                     hideProgress();
                     setStatus('No reachable meeting points found.', 'error');
                     return;
                 }
 
-                heatmapPoints = results;
-                recalcBounds();
-                recomputeTransform(true);
-                draw();
-
-                const minTime = Math.min(...results.map(r => r.totalTime)) / 60;
-                const maxTime = Math.max(...results.map(r => r.totalTime)) / 60;
-                const bestPoint = results.reduce((best, curr) =>
+                const minTime = Math.min(...result.results.map(r => r.totalTime)) / 60;
+                const maxTime = Math.max(...result.results.map(r => r.totalTime)) / 60;
+                const bestPoint = result.results.reduce((best, curr) =>
                     curr.totalTime < best.totalTime ? curr : best
                 );
 
@@ -985,7 +870,7 @@
                 const infoDiv = document.getElementById('heatmapInfo');
                 if (statsDiv && infoDiv) {
                     statsDiv.innerHTML = `
-                        Evaluated ${results.length} locations<br>
+                        Explored ${result.totalStopsReached.toLocaleString()} meeting points in ${result.iterations.toLocaleString()} iterations<br>
                         Best total time: ${minTime.toFixed(1)} minutes<br>
                         Worst total time: ${maxTime.toFixed(1)} minutes<br>
                         Best meeting point: ${bestPoint.stopId}
@@ -996,7 +881,7 @@
                 updateProgress(100, 'Complete!');
                 setTimeout(() => {
                     hideProgress();
-                    setStatus(`Heatmap generated with ${results.length} locations`, 'success');
+                    setStatus(`Heatmap generated with ${result.results.length.toLocaleString()} locations`, 'success');
                 }, 500);
 
             } catch (error) {

@@ -551,6 +551,197 @@ export function findMeetingPoint() {
     }
 }
 
+export function runHeatmapSearch({ participants, startTimeSec, onProgress, onStopUpdate }) {
+    if (!Array.isArray(participants) || participants.length === 0) {
+        throw new Error('No participants provided.');
+    }
+
+    if (gtfsData.stops.length === 0) {
+        throw new Error('GTFS data has not been loaded.');
+    }
+
+    processGTFSData();
+
+    const persons = participants.map(({ label, query, startStopId, isAddress, lat, lon }) => {
+        // Handle address input - allow walking to any station within 1km
+        if (isAddress && lat && lon) {
+            return createPerson({
+                label,
+                stationId: null,
+                stationName: query,
+                startStopId: null,
+                t0: startTimeSec,
+                isAddress: true,
+                addressLat: lat,
+                addressLon: lon
+            });
+        }
+
+        // Handle station name input
+        const resolved = resolveStation(query);
+        const stationId = resolved.stationId;
+        const name = resolved.name;
+        let chosenStart = startStopId;
+
+        if (chosenStart) {
+            const mappedStation = parsedData.stopIdToStationId.get(chosenStart);
+            if (mappedStation && mappedStation !== stationId) {
+                throw new Error(`Start platform ${chosenStart} does not belong to ${name}.`);
+            }
+        } else {
+            chosenStart = pickStartPlatform(stationId, startTimeSec);
+        }
+
+        return createPerson({
+            label,
+            stationId,
+            stationName: name,
+            startStopId: chosenStart,
+            t0: startTimeSec,
+            isAddress: false
+        });
+    });
+
+    // Calculate geographical midpoint of all participants' starting locations
+    const startCoordinates = persons.map(p => {
+        if (p.isAddress && p.addressLat && p.addressLon) {
+            return { lat: p.addressLat, lon: p.addressLon };
+        }
+        return getStopCoordinates(p.startStopId);
+    }).filter(c => c !== null);
+    const midpoint = calculateGeographicMidpoint(startCoordinates);
+
+    persons.forEach(person => primePerson(person, midpoint));
+
+    // Track stops where all participants have arrived
+    const commonStops = new Map(); // stopId -> { totalTime, maxTime, times: [] }
+    let iterations = 0;
+    const maxIterations = 200000000;
+    let globalMaxAccum = 0;
+    let lastProgressUpdateMinutes = 0;
+    const PROGRESS_UPDATE_STEP_MIN = 0.5;
+    let lastUIUpdateIteration = 0;
+    const UI_UPDATE_INTERVAL = 5000; // Update UI every 5000 iterations
+
+    try {
+        while (iterations++ < maxIterations) {
+            let minEntry = null;
+            let minPerson = null;
+
+            for (const S of persons) {
+                if (S.pq.length > 0) {
+                    const entry = S.pq.heap[0];
+                    if (minEntry === null || entry.priority[0] < minEntry.priority[0]) {
+                        minEntry = entry;
+                        minPerson = S;
+                    }
+                }
+            }
+
+            if (!minEntry) {
+                // All queues exhausted, we've explored everything
+                break;
+            }
+
+            const accum = minEntry.priority[0];
+            if (accum > globalMaxAccum) {
+                globalMaxAccum = accum;
+            }
+            if (accum > MAX_TRIP_TIME_S) {
+                // Skip nodes beyond time limit but continue searching
+                minPerson.pq.pop();
+                continue;
+            }
+
+            // Update progress bar based on the furthest elapsed travel time explored so far
+            const exploredMinutes = globalMaxAccum / 60;
+            if (exploredMinutes - lastProgressUpdateMinutes >= PROGRESS_UPDATE_STEP_MIN) {
+                if (onProgress) {
+                    const progressPercent = Math.min(100, (globalMaxAccum / MAX_TRIP_TIME_S) * 100);
+                    onProgress(progressPercent, exploredMinutes, iterations, commonStops.size);
+                }
+                lastProgressUpdateMinutes = exploredMinutes;
+            }
+
+            const popped = minPerson.pq.pop();
+            const info = popped.data;
+            const destStop = info.to_stop;
+
+            const prevBest = minPerson.bestTimes.get(destStop);
+            if (prevBest !== undefined && prevBest <= accum) {
+                continue;
+            }
+            minPerson.bestTimes.set(destStop, accum);
+
+            if (info.mode !== 'START') {
+                minPerson.parent.set(destStop, { prevStop: info.from_stop, info });
+            }
+
+            const prevReach = minPerson.reachedStopFirst.get(destStop);
+            if (!prevReach || accum < prevReach.elapsed) {
+                minPerson.reachedStopFirst.set(destStop, { arrTime: info.arrive_sec, elapsed: accum });
+            }
+
+            // Check if all participants have reached this stop
+            if (persons.every(P => P.reachedStopFirst.has(destStop))) {
+                // Calculate total and max times
+                const times = persons.map(P => P.reachedStopFirst.get(destStop).elapsed);
+                const totalTime = times.reduce((sum, t) => sum + t, 0);
+                const maxTime = Math.max(...times);
+
+                // Only update if we found a better route to this stop
+                if (!commonStops.has(destStop) || totalTime < commonStops.get(destStop).totalTime) {
+                    commonStops.set(destStop, { totalTime, maxTime, times });
+
+                    // Update UI periodically with new stops
+                    if (onStopUpdate && (iterations - lastUIUpdateIteration >= UI_UPDATE_INTERVAL)) {
+                        const coords = getStopCoordinates(destStop);
+                        if (coords) {
+                            onStopUpdate(destStop, coords.lat, coords.lon, totalTime, maxTime);
+                        }
+                        lastUIUpdateIteration = iterations;
+                    }
+                }
+            }
+
+            const curTime = info.arrive_sec;
+            enqueuePathwayTransferWalks(minPerson.pq, destStop, curTime, accum, info.owner, midpoint);
+            enqueueGeoWalks(minPerson.pq, destStop, curTime, accum, info.owner, midpoint);
+            enqueueRides(minPerson.pq, destStop, curTime, accum, info.owner, midpoint);
+        }
+
+        // Final update with all stops
+        if (onProgress) {
+            onProgress(100, globalMaxAccum / 60, iterations, commonStops.size);
+        }
+
+        // Convert commonStops to array with coordinates
+        const results = [];
+        for (const [stopId, data] of commonStops) {
+            const coords = getStopCoordinates(stopId);
+            if (coords) {
+                results.push({
+                    stopId,
+                    lat: coords.lat,
+                    lon: coords.lon,
+                    totalTime: data.totalTime,
+                    maxTime: data.maxTime,
+                    times: data.times
+                });
+            }
+        }
+
+        return {
+            results,
+            iterations,
+            maxAccumulatedTime: globalMaxAccum,
+            totalStopsReached: commonStops.size
+        };
+    } finally {
+        // Cleanup
+    }
+}
+
 export function runDeterministicRouteSelfCheck() {
     if (gtfsData.stops.length === 0) {
         return {
