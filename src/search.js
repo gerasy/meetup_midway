@@ -53,16 +53,16 @@ export function collectPersonInputs() {
     });
 }
 
-export function validatePeopleInputs(people) {
+export function validatePeopleInputs(people, { allowSinglePerson = false } = {}) {
     if (people.length === 0) {
-        return { ok: false, error: 'Please add at least two participants.' };
+        return { ok: false, error: 'Please add at least one participant.' };
     }
 
     if (people.length > MAX_PARTICIPANTS) {
         return { ok: false, error: `A maximum of ${MAX_PARTICIPANTS} participants is supported.` };
     }
 
-    if (people.length < 2) {
+    if (!allowSinglePerson && people.length < 2) {
         return { ok: false, error: 'Please enter at least two participants.' };
     }
 
@@ -687,10 +687,10 @@ export function runHeatmapSearch({ participants, startTimeSec, onProgress, onSto
                 // Calculate total and max times
                 const times = persons.map(P => P.reachedStopFirst.get(destStop).elapsed);
                 const totalTime = times.reduce((sum, t) => sum + t, 0);
-                const maxTime = Math.max(...times);
+                const maxTime = Math.max(...times); // Latest arrival time - when everyone has arrived
 
-                // Only update if we found a better route to this stop
-                if (!commonStops.has(destStop) || totalTime < commonStops.get(destStop).totalTime) {
+                // Only update if we found a better route to this stop (using maxTime for comparison)
+                if (!commonStops.has(destStop) || maxTime < commonStops.get(destStop).maxTime) {
                     commonStops.set(destStop, { totalTime, maxTime, times });
 
                     // Update UI periodically with new stops

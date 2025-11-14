@@ -294,7 +294,7 @@
 <body>
     <div class="container">
         <h1>Meeting Point Heatmap</h1>
-        <p>Generate a heatmap showing optimal meeting points based on total travel time for all participants</p>
+        <p>Generate a heatmap showing reachable locations color-coded by travel/meeting time. Works with 1 or more people!</p>
 
         <div class="nav-links">
             <a href="index.html">Point-to-Point Finder</a>
@@ -415,6 +415,10 @@
         let stopWorld = [];
         let heatmapPoints = [];
         let heatmapWorld = [];
+
+        // Tooltip state
+        let tooltip = null;
+        let hoveredPoint = null;
 
         let minLon = null;
         let maxLon = null;
@@ -575,6 +579,10 @@
             }
         }
 
+        // Global min/max for color scaling
+        let globalMinTime = 0;
+        let globalMaxTime = 120;
+
         function getHeatmapColor(value, minValue, maxValue) {
             // Handle edge cases
             if (!Number.isFinite(value) || !Number.isFinite(minValue) || !Number.isFinite(maxValue)) {
@@ -590,6 +598,7 @@
 
             // Color gradient from green (best) to red (worst)
             // Green -> Yellow-Green -> Yellow -> Orange -> Red
+            // Using same colors as before to maintain consistency
             const colors = [
                 { r: 34, g: 197, b: 94 },    // #22c55e - green (best)
                 { r: 132, g: 204, b: 22 },   // #84cc16 - yellow-green
@@ -616,18 +625,37 @@
             return `rgba(${r}, ${g}, ${b}, 0.7)`;
         }
 
+        function updateLegend(minTimeMinutes, maxTimeMinutes) {
+            // Update legend with actual time values
+            const legendItems = document.querySelectorAll('.legend-item span');
+            if (legendItems.length >= 5) {
+                const range = maxTimeMinutes - minTimeMinutes;
+                legendItems[0].textContent = `Best (${minTimeMinutes.toFixed(0)} min)`;
+                legendItems[1].textContent = `${(minTimeMinutes + range * 0.25).toFixed(0)} min`;
+                legendItems[2].textContent = `${(minTimeMinutes + range * 0.50).toFixed(0)} min`;
+                legendItems[3].textContent = `${(minTimeMinutes + range * 0.75).toFixed(0)} min`;
+                legendItems[4].textContent = `Worst (${maxTimeMinutes.toFixed(0)} min)`;
+            }
+        }
+
         function drawHeatmap() {
             if (heatmapWorld.length === 0) return;
 
-            const minValue = Math.min(...heatmapWorld.map(pt => pt.totalTime));
-            const maxValue = Math.max(...heatmapWorld.map(pt => pt.totalTime));
+            // Use maxTime (latest arrival) for coloring - when everyone has arrived
+            const minValue = Math.min(...heatmapWorld.map(pt => pt.maxTime));
+            const maxValue = Math.max(...heatmapWorld.map(pt => pt.maxTime));
+
+            // Update global values and legend
+            globalMinTime = minValue / 60;
+            globalMaxTime = maxValue / 60;
+            updateLegend(globalMinTime, globalMaxTime);
 
             // Sort by value so higher values are drawn first (behind)
-            const sorted = [...heatmapWorld].sort((a, b) => b.totalTime - a.totalTime);
+            const sorted = [...heatmapWorld].sort((a, b) => b.maxTime - a.maxTime);
 
             for (const pt of sorted) {
                 const screen = worldToScreen(pt.world);
-                const color = getHeatmapColor(pt.totalTime, minValue, maxValue);
+                const color = getHeatmapColor(pt.maxTime, minValue, maxValue);
 
                 ctx.fillStyle = color;
                 ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
@@ -683,12 +711,90 @@
         }
 
         function handleMouseMove(evt) {
-            if (!isDragging) return;
-            const dx = evt.clientX - dragStartX;
-            const dy = evt.clientY - dragStartY;
-            panX = panStartX + dx;
-            panY = panStartY + dy;
-            draw();
+            if (isDragging) {
+                const dx = evt.clientX - dragStartX;
+                const dy = evt.clientY - dragStartY;
+                panX = panStartX + dx;
+                panY = panStartY + dy;
+                draw();
+                return;
+            }
+
+            // Check for hover over heatmap points
+            if (heatmapWorld.length > 0) {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = evt.clientX - rect.left;
+                const mouseY = evt.clientY - rect.top;
+
+                let closestPoint = null;
+                let closestDist = Infinity;
+                const radius = Math.max(8, 12 / Math.sqrt(zoom));
+
+                for (const pt of heatmapWorld) {
+                    const screen = worldToScreen(pt.world);
+                    const dx = mouseX - screen.x;
+                    const dy = mouseY - screen.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < radius && dist < closestDist) {
+                        closestDist = dist;
+                        closestPoint = pt;
+                    }
+                }
+
+                if (closestPoint !== hoveredPoint) {
+                    hoveredPoint = closestPoint;
+                    if (hoveredPoint) {
+                        showTooltip(evt.clientX, evt.clientY, hoveredPoint);
+                    } else {
+                        hideTooltip();
+                    }
+                }
+            }
+        }
+
+        function showTooltip(x, y, point) {
+            if (!tooltip) {
+                tooltip = document.createElement('div');
+                tooltip.style.position = 'fixed';
+                tooltip.style.background = 'rgba(15, 23, 42, 0.95)';
+                tooltip.style.color = '#e2e8f0';
+                tooltip.style.padding = '8px 12px';
+                tooltip.style.borderRadius = '6px';
+                tooltip.style.fontSize = '13px';
+                tooltip.style.pointerEvents = 'none';
+                tooltip.style.zIndex = '10000';
+                tooltip.style.border = '1px solid rgba(148, 163, 184, 0.2)';
+                tooltip.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+                tooltip.style.whiteSpace = 'nowrap';
+                document.body.appendChild(tooltip);
+            }
+
+            const timeMinutes = (point.maxTime / 60).toFixed(1);
+            const participantCount = point.times ? point.times.length : 1;
+
+            let content = `<div style="font-weight: 600; margin-bottom: 4px;">Meeting Time: ${timeMinutes} min</div>`;
+
+            if (participantCount > 1) {
+                content += `<div style="font-size: 11px; color: #94a3b8;">`;
+                point.times.forEach((time, i) => {
+                    content += `Person ${String.fromCharCode(65 + i)}: ${(time / 60).toFixed(1)} min<br>`;
+                });
+                content += `</div>`;
+            } else {
+                content += `<div style="font-size: 11px; color: #94a3b8;">Travel time from start</div>`;
+            }
+
+            tooltip.innerHTML = content;
+            tooltip.style.left = (x + 15) + 'px';
+            tooltip.style.top = (y + 15) + 'px';
+            tooltip.style.display = 'block';
+        }
+
+        function hideTooltip() {
+            if (tooltip) {
+                tooltip.style.display = 'none';
+            }
         }
 
         function handleMouseUp() {
@@ -794,7 +900,7 @@
                 const startTimeStr = startTimeInput.value + ':00';
                 const t0 = toSeconds(startTimeStr);
 
-                const validation = validatePeopleInputs(collectPersonInputs());
+                const validation = validatePeopleInputs(collectPersonInputs(), { allowSinglePerson: true });
                 if (!validation.ok) {
                     setStatus(validation.error, 'error');
                     return;
@@ -865,10 +971,11 @@
                     return;
                 }
 
-                const minTime = Math.min(...result.results.map(r => r.totalTime)) / 60;
-                const maxTime = Math.max(...result.results.map(r => r.totalTime)) / 60;
+                // Use maxTime (latest arrival) for all statistics
+                const minTime = Math.min(...result.results.map(r => r.maxTime)) / 60;
+                const maxTime = Math.max(...result.results.map(r => r.maxTime)) / 60;
                 const bestPoint = result.results.reduce((best, curr) =>
-                    curr.totalTime < best.totalTime ? curr : best
+                    curr.maxTime < best.maxTime ? curr : best
                 );
 
                 const statsDiv = document.getElementById('statsText');
@@ -888,24 +995,24 @@
                 console.log(`Total meeting points found: ${result.results.length}`);
                 console.log(`Time range: ${minTime.toFixed(1)} - ${maxTime.toFixed(1)} minutes`);
 
-                // Show best 5 stations
-                const sortedByTotal = [...result.results].sort((a, b) => a.totalTime - b.totalTime);
-                console.log('\nTop 5 Best Meeting Points:');
-                sortedByTotal.slice(0, 5).forEach((pt, i) => {
-                    console.log(`  ${i+1}. ${pt.stopId}: Total ${(pt.totalTime/60).toFixed(1)}min, Max ${(pt.maxTime/60).toFixed(1)}min`);
+                // Show best 5 stations (sorted by maxTime - latest arrival)
+                const sortedByMax = [...result.results].sort((a, b) => a.maxTime - b.maxTime);
+                console.log('\nTop 5 Best Meeting Points (fastest meeting time):');
+                sortedByMax.slice(0, 5).forEach((pt, i) => {
+                    console.log(`  ${i+1}. ${pt.stopId}: Meeting time ${(pt.maxTime/60).toFixed(1)}min`);
                 });
 
                 // Show worst 5 stations
                 console.log('\nTop 5 Worst Meeting Points:');
-                sortedByTotal.slice(-5).reverse().forEach((pt, i) => {
-                    console.log(`  ${i+1}. ${pt.stopId}: Total ${(pt.totalTime/60).toFixed(1)}min, Max ${(pt.maxTime/60).toFixed(1)}min`);
+                sortedByMax.slice(-5).reverse().forEach((pt, i) => {
+                    console.log(`  ${i+1}. ${pt.stopId}: Meeting time ${(pt.maxTime/60).toFixed(1)}min`);
                 });
 
                 // Sample some middle range stations
                 console.log('\n5 Middle-Range Meeting Points:');
-                const middleStart = Math.floor(sortedByTotal.length / 2) - 2;
-                sortedByTotal.slice(middleStart, middleStart + 5).forEach((pt, i) => {
-                    console.log(`  ${i+1}. ${pt.stopId}: Total ${(pt.totalTime/60).toFixed(1)}min, Max ${(pt.maxTime/60).toFixed(1)}min`);
+                const middleStart = Math.floor(sortedByMax.length / 2) - 2;
+                sortedByMax.slice(middleStart, middleStart + 5).forEach((pt, i) => {
+                    console.log(`  ${i+1}. ${pt.stopId}: Meeting time ${(pt.maxTime/60).toFixed(1)}min`);
                 });
 
                 // Make results accessible for manual probing
@@ -948,10 +1055,9 @@
 
             console.log(`\nStation: ${result.stopId}`);
             console.log(`Location: ${result.lat.toFixed(5)}, ${result.lon.toFixed(5)}`);
-            console.log(`Total time (all participants): ${(result.totalTime/60).toFixed(1)} minutes`);
-            console.log(`Max time (slowest participant): ${(result.maxTime/60).toFixed(1)} minutes`);
+            console.log(`Meeting time (when everyone arrives): ${(result.maxTime/60).toFixed(1)} minutes`);
             if (result.times) {
-                console.log(`Individual times: ${result.times.map(t => (t/60).toFixed(1) + 'min').join(', ')}`);
+                console.log(`Individual travel times: ${result.times.map(t => (t/60).toFixed(1) + 'min').join(', ')}`);
             }
 
             return result;
