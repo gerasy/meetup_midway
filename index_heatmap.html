@@ -1064,7 +1064,7 @@
         };
 
         window.addEventListener('DOMContentLoaded', () => {
-            setupParticipantControls();
+            setupParticipantControls({ minParticipants: 1 });
             initializeMap();
             loadGTFSFiles().then(() => {
                 updateAllStationsOnMap();

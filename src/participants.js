@@ -3,7 +3,7 @@ import { initializeStationSearchInputs } from './gtfsProcessing.js';
 import { setupAutocomplete } from './autocomplete.js';
 
 const LABELS = ['A', 'B', 'C', 'D', 'E'];
-const MIN_PARTICIPANTS = 2;
+let MIN_PARTICIPANTS = 2; // Default, can be configured per page
 
 function getCurrentCount() {
     return document.querySelectorAll('[data-person-input]').length;
@@ -137,7 +137,9 @@ function addAnotherPerson(container, button) {
     updateRemoveButtons(container);
 }
 
-export function setupParticipantControls() {
+export function setupParticipantControls({ minParticipants = 2 } = {}) {
+    MIN_PARTICIPANTS = minParticipants;
+
     const container = document.getElementById('peopleInputs');
     const addButton = document.getElementById('addPerson');
 
