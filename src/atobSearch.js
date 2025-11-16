@@ -190,44 +190,40 @@ async function searchRoutesAtoB({ startPoint, endPoint, startTimeSec }) {
         }
 
         // Expand: transit rides
-        const ridesByTripId = parsedData.departuresByStopAndTime.get(currentStop);
-        if (ridesByTripId) {
-            for (const [tripId, departureSec] of ridesByTripId.entries()) {
-                if (departureSec < currentTime) continue;
+        const rows = parsedData.rowsAtStop.get(currentStop) || [];
+        const validRows = rows.filter(r => r.dep_sec >= currentTime);
 
-                const trip = parsedData.tripsById.get(tripId);
-                if (!trip) continue;
+        for (const depRow of validRows) {
+            const tripId = depRow.trip_id;
+            const depTime = depRow.dep_sec;
+            const wait = depTime - currentTime;
 
-                const stopSeq = parsedData.stopSequences.get(tripId);
-                if (!stopSeq) continue;
+            const tripStops = parsedData.tripGroups.get(tripId) || [];
+            const afterStops = tripStops.filter(s => s.stop_sequence > depRow.stop_sequence);
 
-                const boardIdx = stopSeq.findIndex(ss => ss.stop_id === currentStop);
-                if (boardIdx === -1) continue;
+            for (const arrRow of afterStops) {
+                if (arrRow.arr_sec === null) continue;
+                const arrTime = arrRow.arr_sec;
+                const ride = arrTime - depTime;
+                const total = wait + ride;
 
-                for (let i = boardIdx + 1; i < stopSeq.length; i++) {
-                    const alightStop = stopSeq[i].stop_id;
-                    const alightTime = toSeconds(stopSeq[i].arrival_time);
+                const tripInf = parsedData.tripInfo.get(tripId);
 
-                    const rideDuration = alightTime - departureSec;
-                    const waitTime = departureSec - currentTime;
-                    const totalSegmentTime = waitTime + rideDuration;
-
-                    pq.push([accum + totalSegmentTime, alightTime, alightStop], {
-                        stopId: alightStop,
-                        arrivalTime: alightTime,
-                        path: [...path, {
-                            mode: 'TRANSIT',
-                            route_short_name: trip.route_short_name,
-                            trip_headsign: trip.trip_headsign,
-                            from_stop: currentStop,
-                            to_stop: alightStop,
-                            board_sec: departureSec,
-                            alight_sec: alightTime,
-                            depart_sec: currentTime,
-                            arrive_sec: alightTime
-                        }]
-                    });
-                }
+                pq.push([accum + total, arrTime, arrRow.stop_id], {
+                    stopId: arrRow.stop_id,
+                    arrivalTime: arrTime,
+                    path: [...path, {
+                        mode: 'TRANSIT',
+                        route_short_name: tripInf?.route_short_name || tripInf?.route_id,
+                        trip_headsign: tripInf?.trip_headsign || '',
+                        from_stop: currentStop,
+                        to_stop: arrRow.stop_id,
+                        board_sec: depTime,
+                        alight_sec: arrTime,
+                        depart_sec: currentTime,
+                        arrive_sec: arrTime
+                    }]
+                });
             }
         }
     }
