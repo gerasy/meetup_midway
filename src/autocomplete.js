@@ -143,9 +143,13 @@ export function setupAutocomplete(inputElement) {
                     selectItem(resultIndex);
                 };
 
-                item.addEventListener('mousedown', handleSelection);
-                item.addEventListener('touchstart', handleSelection);
-                item.addEventListener('click', handleSelection);
+                // Use early-phase events so selection runs before the global click handler hides the menu
+                item.addEventListener('mousedown', handleSelection, { passive: false });
+                item.addEventListener('touchstart', handleSelection, { passive: false });
+                item.addEventListener('click', (e) => {
+                    // Fallback in case click fires without prior pointer events
+                    handleSelection(e);
+                });
 
                 autocompleteContainer.appendChild(item);
             });
@@ -197,9 +201,13 @@ export function setupAutocomplete(inputElement) {
                     selectItem(resultIndex);
                 };
 
-                item.addEventListener('mousedown', handleSelection);
-                item.addEventListener('touchstart', handleSelection);
-                item.addEventListener('click', handleSelection);
+                // Use early-phase events so selection runs before the global click handler hides the menu
+                item.addEventListener('mousedown', handleSelection, { passive: false });
+                item.addEventListener('touchstart', handleSelection, { passive: false });
+                item.addEventListener('click', (e) => {
+                    // Fallback in case click fires without prior pointer events
+                    handleSelection(e);
+                });
 
                 autocompleteContainer.appendChild(item);
             });
