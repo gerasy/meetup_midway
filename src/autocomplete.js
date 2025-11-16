@@ -84,7 +84,8 @@ export function setupAutocomplete(inputElement) {
                 selectedAddress = null;
                 delete inputElement.dataset.addressLat;
                 delete inputElement.dataset.addressLon;
-            } else if (result.type === 'address') {
+            } else if (result.displayName && result.lat && result.lon) {
+                // This is an address result from Nominatim (has displayName, lat, lon)
                 inputElement.value = result.displayName;
                 selectedAddress = result;
 
@@ -177,15 +178,13 @@ export function setupAutocomplete(inputElement) {
                 const item = document.createElement('div');
                 item.className = 'autocomplete-item';
 
-                const mainText = document.createElement('div');
-                mainText.textContent = address.displayName;
-                mainText.style.cssText = 'font-size: 14px;';
-
-                item.appendChild(mainText);
+                // Use textContent directly like stations do
+                item.textContent = address.displayName;
                 item.style.cssText = `
                     padding: 10px 12px;
                     cursor: pointer;
                     border-bottom: 1px solid var(--border);
+                    font-size: 14px;
                 `;
 
                 item.addEventListener('mouseenter', () => {

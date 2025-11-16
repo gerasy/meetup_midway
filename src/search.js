@@ -6,6 +6,7 @@ import { toSeconds } from './parsing.js';
 import { displayResults, setStatus, beginIterationAnimation, updateIterationAnimation, endIterationAnimation, showProgress, hideProgress, updateProgress } from './ui.js';
 import { calculateGeographicMidpoint, haversineM } from './geometry.js';
 import { findNearestStation } from './geocoding.js';
+import { autoResolveAllAddresses } from './addressResolver.js';
 
 const MIN_TRAVEL_TIME_S = 10;
 
@@ -500,7 +501,7 @@ export async function runMeetingSearch({ participants, startTimeSec }) {
     return { meeting, persons, stats };
 }
 
-export function findMeetingPoint() {
+export async function findMeetingPoint() {
     try {
         if (gtfsData.stops.length === 0) {
             setStatus('Please upload GTFS files first!', 'error');
@@ -523,6 +524,21 @@ export function findMeetingPoint() {
 
         const startTimeStr = startTimeInput.value + ':00';
         const t0 = toSeconds(startTimeStr);
+
+        // Auto-resolve addresses
+        setStatus('Resolving addresses...', 'loading');
+        try {
+            const resolvedAddresses = await autoResolveAllAddresses();
+            const failed = resolvedAddresses.filter(r => r.failed);
+            if (failed.length > 0) {
+                const errorMsg = failed.map(f => `Person ${f.label}: ${f.error || 'Could not resolve address'}`).join('\n');
+                setStatus(`Address resolution failed:\n${errorMsg}`, 'error');
+                hideProgress();
+                return;
+            }
+        } catch (error) {
+            console.error('Error during auto-resolution:', error);
+        }
 
         const validation = validatePeopleInputs(collectPersonInputs());
         if (!validation.ok) {
