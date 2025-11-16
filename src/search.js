@@ -759,11 +759,30 @@ export async function runHeatmapSearch({ participants, startTimeSec, onProgress,
             }
         }
 
+        // Calculate average travel time and count of reachable stations for single-person searches
+        let avgTravelTime = null;
+        let reachableStationsCount = null;
+
+        if (persons.length === 1) {
+            // For single person, calculate average time across all reached stations
+            const person = persons[0];
+            const reachedStops = Array.from(person.bestTimes.entries());
+            reachableStationsCount = reachedStops.length;
+
+            if (reachedStops.length > 0) {
+                const totalTime = reachedStops.reduce((sum, [stopId, time]) => sum + time, 0);
+                avgTravelTime = totalTime / reachedStops.length;
+            }
+        }
+
         return {
             results,
             iterations,
             maxAccumulatedTime: globalMaxAccum,
-            totalStopsReached: commonStops.size
+            totalStopsReached: commonStops.size,
+            persons, // Return persons data for single-source analysis
+            avgTravelTime, // Average travel time for single-person searches (in seconds)
+            reachableStationsCount // Number of stations reachable for single-person searches
         };
     } finally {
         // Cleanup

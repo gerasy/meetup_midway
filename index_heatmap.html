@@ -982,12 +982,22 @@
                 const statsDiv = document.getElementById('statsText');
                 const infoDiv = document.getElementById('heatmapInfo');
                 if (statsDiv && infoDiv) {
-                    statsDiv.innerHTML = `
+                    let statsHTML = `
                         Explored ${result.totalStopsReached.toLocaleString()} meeting points in ${result.iterations.toLocaleString()} iterations<br>
                         Best total time: ${minTime.toFixed(1)} minutes<br>
                         Worst total time: ${maxTime.toFixed(1)} minutes<br>
                         Best meeting point: ${bestPoint.stopId}
                     `;
+
+                    // Add single-person specific statistics
+                    if (result.avgTravelTime !== null && result.reachableStationsCount !== null) {
+                        const avgMinutes = (result.avgTravelTime / 60).toFixed(1);
+                        statsHTML += `<br><strong>Single-Person Analysis:</strong><br>`;
+                        statsHTML += `Average travel time to all stations: ${avgMinutes} minutes<br>`;
+                        statsHTML += `Reachable stations: ${result.reachableStationsCount.toLocaleString()}`;
+                    }
+
+                    statsDiv.innerHTML = statsHTML;
                     infoDiv.style.display = 'block';
                 }
 
