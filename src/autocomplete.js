@@ -82,6 +82,8 @@ export function setupAutocomplete(inputElement) {
             if (result.type === 'station') {
                 inputElement.value = result.name;
                 selectedAddress = null;
+                delete inputElement.dataset.addressLat;
+                delete inputElement.dataset.addressLon;
             } else if (result.type === 'address') {
                 inputElement.value = result.displayName;
                 selectedAddress = result;
@@ -133,10 +135,17 @@ export function setupAutocomplete(inputElement) {
                     highlightItem(selectedIndex);
                 });
 
-                item.addEventListener('click', (e) => {
+                const handleSelection = (e) => {
+                    if (e.cancelable) {
+                        e.preventDefault();
+                    }
                     e.stopPropagation(); // Prevent document click handler from closing dropdown
                     selectItem(resultIndex);
-                });
+                };
+
+                item.addEventListener('mousedown', handleSelection);
+                item.addEventListener('touchstart', handleSelection);
+                item.addEventListener('click', handleSelection);
 
                 autocompleteContainer.appendChild(item);
             });
@@ -180,10 +189,17 @@ export function setupAutocomplete(inputElement) {
                     highlightItem(selectedIndex);
                 });
 
-                item.addEventListener('click', (e) => {
+                const handleSelection = (e) => {
+                    if (e.cancelable) {
+                        e.preventDefault();
+                    }
                     e.stopPropagation(); // Prevent document click handler from closing dropdown
                     selectItem(resultIndex);
-                });
+                };
+
+                item.addEventListener('mousedown', handleSelection);
+                item.addEventListener('touchstart', handleSelection);
+                item.addEventListener('click', handleSelection);
 
                 autocompleteContainer.appendChild(item);
             });
