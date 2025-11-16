@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transit Meeting Point Finder v0.4</title>
+    <title>A to B Navigation</title>
     <style>
         :root {
             color-scheme: dark;
@@ -47,15 +47,9 @@
         p {
             color: var(--subtle-text);
         }
-        .upload-section {
-            margin: 20px 0;
-            padding: 20px;
-            background: var(--panel-soft);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
         .input-group {
             margin: 15px 0;
+            position: relative;
         }
         label {
             display: block;
@@ -123,42 +117,65 @@
             color: #fecaca;
             border: 1px solid rgba(248, 113, 113, 0.4);
         }
-        .status-meta {
-            margin-top: 8px;
-            padding: 10px;
-            background: var(--panel-soft);
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            color: var(--subtle-text);
-        }
-        .status-meta p {
-            margin: 4px 0;
-        }
         #results {
             margin-top: 20px;
         }
-        .result-header {
-            background: linear-gradient(120deg, #0f766e, #0ea5e9);
-            color: white;
-            padding: 18px;
-            border-radius: 14px;
-            margin-bottom: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .person-result {
+        .route-card {
             background: var(--panel-soft);
-            padding: 18px;
-            margin: 10px 0;
+            padding: 20px;
+            margin: 15px 0;
             border-radius: 12px;
-            border-left: 4px solid var(--accent);
             border: 1px solid var(--border);
         }
+        .route-card.best {
+            border: 2px solid var(--success);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
+        }
+        .route-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .route-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text);
+        }
+        .route-time {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent);
+        }
+        .route-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .route-badge.fastest {
+            background: var(--success);
+            color: var(--bg);
+        }
+        .route-badge.alternative {
+            background: var(--warning);
+            color: var(--bg);
+        }
         .step {
-            margin: 6px 0;
-            padding: 10px;
+            margin: 8px 0;
+            padding: 12px;
             background: var(--panel-muted);
             border-radius: 8px;
-            font-size: 13px;
+            font-size: 14px;
+            border-left: 3px solid var(--accent);
+        }
+        .step-walk {
+            border-left-color: var(--subtle-text);
+        }
+        .step-transit {
+            border-left-color: var(--accent);
         }
         #map {
             position: relative;
@@ -182,59 +199,6 @@
         #map canvas:active {
             cursor: grabbing;
         }
-        .person-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
-        }
-        .person-controls button {
-            margin: 0;
-        }
-        .person-group {
-            position: relative;
-        }
-        .person-group-actions {
-            margin-top: 10px;
-            display: flex;
-            justify-content: flex-end;
-        }
-        .person-group .remove-person {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--subtle-text);
-            padding: 6px 16px;
-            border-radius: 999px;
-            font-size: 13px;
-            transition: color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        .person-group .remove-person:hover:not(:disabled) {
-            color: var(--text);
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
-        }
-        .person-group .remove-person:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        .file-input {
-            margin: 10px 0;
-        }
-        .file-list {
-            margin-top: 10px;
-            font-size: 12px;
-            color: #7f8c8d;
-        }
-        pre {
-            background: #0f172a;
-            color: var(--text);
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            font-size: 12px;
-            border: 1px solid var(--border);
-        }
         .autocomplete-item:hover {
             background: var(--accent) !important;
             color: var(--bg) !important;
@@ -246,60 +210,39 @@
 </head>
 <body>
     <div class="container">
-        <h1>Transit Meeting Point Finder</h1>
-        <p>Find the optimal meeting point for multiple people using public transit (GTFS data)</p>
+        <h1>A to B Navigation</h1>
+        <p>Find the 3 fastest transit routes between two locations</p>
 
         <div style="margin: 15px 0; padding: 15px; background: var(--panel-soft); border-radius: 8px; border: 1px solid var(--border);">
-            <a href="index.html" style="color: var(--accent); text-decoration: none; margin-right: 20px; font-weight: 500;">Meeting Point (current)</a>
+            <a href="index.html" style="color: var(--accent); text-decoration: none; margin-right: 20px; font-weight: 500;">Meeting Point</a>
             <a href="index_heatmap.html" style="color: var(--accent); text-decoration: none; margin-right: 20px; font-weight: 500;">Heatmap View</a>
-            <a href="index_atob.html" style="color: var(--accent); text-decoration: none; font-weight: 500;">A to B Navigation</a>
-        </div>
-
-        <div class="upload-section">
-            <h3>GTFS Data</h3>
-            <p>Transit data is automatically loaded from the gtfs_subset folder.</p>
+            <a href="index_atob.html" style="color: var(--accent); text-decoration: none; font-weight: 500;">A to B Navigation (current)</a>
         </div>
 
         <div class="input-group">
-            <label for="startTime">Start Time (HH:MM):</label>
+            <label for="startTime">Departure Time (HH:MM):</label>
             <input type="time" id="startTime" value="10:00" min="10:00" max="12:00">
         </div>
 
-        <div id="peopleInputs">
-            <div class="input-group person-group" data-person-group="A">
-                <label for="person-A">Person A Starting Location:</label>
-                <input type="text" id="person-A" data-person-input data-person-label="A" data-station-input value="⭐ U Uhlandstr. (Berlin)" placeholder="e.g., Alexanderplatz or Unter den Linden 1, Berlin">
-            </div>
-            <div class="input-group person-group" data-person-group="B">
-                <label for="person-B">Person B Starting Location:</label>
-                <input type="text" id="person-B" data-person-input data-person-label="B" data-station-input value="⭐ U Vinetastr. (Berlin)" placeholder="e.g., Alexanderplatz or Unter den Linden 1, Berlin">
-            </div>
+        <div class="input-group">
+            <label for="pointA">Starting Point (A):</label>
+            <input type="text" id="pointA" data-person-input data-person-label="A" data-station-input placeholder="e.g., Alexanderplatz or Unter den Linden 1, Berlin">
         </div>
 
-        <div class="person-controls">
-            <button id="addPerson" type="button">Add Another Person</button>
-            <button id="findMeeting" onclick="findMeetingPoint()">Find Meeting Point</button>
+        <div class="input-group">
+            <label for="pointB">Destination (B):</label>
+            <input type="text" id="pointB" data-person-input data-person-label="B" data-station-input placeholder="e.g., Alexanderplatz or Unter den Linden 1, Berlin">
         </div>
+
+        <button id="findRoutes" onclick="findRoutes()">Find Routes</button>
 
         <div id="status"></div>
-        <div id="progressContainer" style="margin: 20px 0;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                <span id="progressLabel" style="font-weight: bold; color: var(--text);">Ready to search</span>
-                <span id="progressTime" style="font-weight: bold; color: var(--accent);">0 min</span>
-            </div>
-            <div style="width: 100%; height: 30px; background: var(--panel-muted); border-radius: 10px; overflow: hidden; position: relative; border: 1px solid var(--border);">
-                <div id="progressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent-strong), var(--success)); transition: width 0.3s ease;"></div>
-                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; color: var(--text); font-weight: bold; font-size: 12px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">
-                    <span id="progressPercent">0%</span>
-                </div>
-            </div>
-        </div>
         <div id="results"></div>
         <div id="map">
             <canvas id="mapCanvas"></canvas>
         </div>
     </div>
 
-    <script type="module" src="src/main.js"></script>
+    <script type="module" src="src/atob.js"></script>
 </body>
 </html>

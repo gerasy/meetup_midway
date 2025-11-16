@@ -64,3 +64,9 @@ export function formatMinutes(seconds) {
     }
     return `${minutes.toFixed(1)} min`;
 }
+
+export function formatTime(seconds) {
+    const h = Math.floor(seconds / 3600) % 24;
+    const m = Math.floor((seconds % 3600) / 60);
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+}
