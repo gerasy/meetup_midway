@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transit Meeting Point Finder v0.4</title>
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
     <style>
         :root {
             color-scheme: dark;
@@ -169,18 +173,9 @@
             margin: 25px 0;
             overflow: hidden;
             border: 1px solid var(--border);
-            background: var(--panel-muted);
         }
-        #map canvas {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-            cursor: grab;
-        }
-        #map canvas:active {
-            cursor: grabbing;
+        #map.leaflet-container {
+            border-radius: 14px;
         }
         .person-controls {
             display: flex;
@@ -295,11 +290,13 @@
             </div>
         </div>
         <div id="results"></div>
-        <div id="map">
-            <canvas id="mapCanvas"></canvas>
-        </div>
+        <div id="map"></div>
     </div>
 
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        defer
+    ></script>
     <script type="module" src="src/main.js"></script>
 </body>
 </html>
