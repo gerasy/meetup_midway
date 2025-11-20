@@ -3,7 +3,7 @@ import { gtfsData, parsedData } from './state.js';
 import { processGTFSData, resolveStation, pickStartPlatform, nearbyStopsWithinRadius } from './gtfsProcessing.js';
 import { MinHeap } from './queue.js';
 import { toSeconds } from './parsing.js';
-import { displayResults, setStatus, beginIterationAnimation, updateIterationAnimation, endIterationAnimation, showProgress, hideProgress, updateProgress } from './ui.js';
+import { displayResults, setStatus, beginIterationAnimation, updateIterationAnimation, endIterationAnimation, showProgress, hideProgress, updateProgress, startPreviewCountdown, clearPreviewState } from './ui.js';
 import { calculateGeographicMidpoint, haversineM } from './geometry.js';
 import { findNearestStation } from './geocoding.js';
 import { autoResolveAllAddresses } from './addressResolver.js';
@@ -514,11 +514,13 @@ export async function findMeetingPoint() {
             resultsDiv.innerHTML = '';
         }
         showProgress();
+        startPreviewCountdown();
 
         const startTimeInput = document.getElementById('startTime');
         if (!startTimeInput) {
             setStatus('Start time input not found.', 'error');
             hideProgress();
+            clearPreviewState('Preview cancelled because the start time was missing.');
             return;
         }
 
@@ -544,6 +546,7 @@ export async function findMeetingPoint() {
         if (!validation.ok) {
             setStatus(validation.error, 'error');
             hideProgress();
+            clearPreviewState('Preview cancelled due to invalid participant inputs.');
             return;
         }
 
@@ -563,6 +566,7 @@ export async function findMeetingPoint() {
                 } catch (error) {
                     hideProgress();
                     setStatus('Error: ' + error.message, 'error');
+                    clearPreviewState('Preview cancelled because an error occurred.');
                     console.error(error);
                 }
             });
@@ -570,6 +574,7 @@ export async function findMeetingPoint() {
     } catch (error) {
         hideProgress();
         setStatus('Error: ' + error.message, 'error');
+        clearPreviewState('Preview cancelled because an error occurred.');
         console.error(error);
     }
 }

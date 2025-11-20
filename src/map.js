@@ -80,6 +80,53 @@ function coordsEqual(a, b) {
     return a && b && a[0] === b[0] && a[1] === b[1];
 }
 
+function stopsAlongTripSegment(step) {
+    if (!step.trip_id || !step.from_stop || !step.to_stop) {
+        return [step.to_stop].filter(Boolean);
+    }
+
+    const tripStops = parsedData.tripGroups.get(step.trip_id);
+    if (!tripStops || tripStops.length === 0) {
+        return [step.to_stop].filter(Boolean);
+    }
+
+    let fromIdx = -1;
+    let toIdx = -1;
+
+    for (let i = 0; i < tripStops.length; i += 1) {
+        const st = tripStops[i];
+        if (fromIdx === -1 && st.stop_id === step.from_stop) {
+            fromIdx = i;
+            continue;
+        }
+        if (fromIdx !== -1 && st.stop_id === step.to_stop) {
+            toIdx = i;
+            break;
+        }
+    }
+
+    if (fromIdx === -1 || toIdx === -1 || toIdx <= fromIdx) {
+        return [step.to_stop].filter(Boolean);
+    }
+
+    return tripStops
+        .slice(fromIdx + 1, toIdx + 1)
+        .map(st => st.stop_id)
+        .filter(Boolean);
+}
+
+function stopsForStep(step) {
+    if (!step) {
+        return [];
+    }
+
+    if (step.mode === 'TRANSIT' || step.mode === 'RIDE') {
+        return stopsAlongTripSegment(step);
+    }
+
+    return [step.to_stop].filter(Boolean);
+}
+
 export function computeRouteCoordinates(startStopId, steps, meetingStopId) {
     const coords = [];
     const startCoord = getStopCoordinates(startStopId);
@@ -88,10 +135,12 @@ export function computeRouteCoordinates(startStopId, steps, meetingStopId) {
     }
 
     for (const step of steps || []) {
-        const destCoord = getStopCoordinates(step.to_stop);
-        if (destCoord && !coordsEqual(coords.at(-1), destCoord)) {
-            coords.push(destCoord);
-        }
+        stopsForStep(step).forEach(stopId => {
+            const destCoord = getStopCoordinates(stopId);
+            if (destCoord && !coordsEqual(coords.at(-1), destCoord)) {
+                coords.push(destCoord);
+            }
+        });
     }
 
     if (meetingStopId) {
