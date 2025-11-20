@@ -3,6 +3,8 @@ import { fmtStopLabel, describeAction } from './formatters.js';
 import { showRoutesOnMap, resetMap } from './map.js';
 import { MAX_TRIP_TIME_S } from './constants.js';
 
+const PREVIEW_DELAY_MS = 20000;
+
 function scheduleMapUpdate(callback) {
     if (typeof callback !== 'function') {
         return;
@@ -31,6 +33,11 @@ function scheduleMapUpdate(callback) {
 const iterationAnimationState = {
     active: false,
     baseMessage: ''
+};
+
+const previewState = {
+    timer: null,
+    latest: null,
 };
 
 export function beginIterationAnimation() {
@@ -94,6 +101,70 @@ export function endIterationAnimation() {
     iterationAnimationState.baseMessage = '';
 }
 
+function getPreviewContainer() {
+    if (typeof document === 'undefined') {
+        return null;
+    }
+    return document.getElementById('preview');
+}
+
+function clearPreview(message = 'Press "Find Meeting Point" to see a preview here after ~20 seconds.') {
+    const container = getPreviewContainer();
+    if (!container) {
+        return;
+    }
+    container.innerHTML = message ? `<p>${message}</p>` : '';
+}
+
+function renderPreview() {
+    const container = getPreviewContainer();
+    if (!container) {
+        return;
+    }
+
+    previewState.timer = null;
+
+    if (!previewState.latest) {
+        container.innerHTML = '<p>Still searching... a preview will appear once a result is available.</p>';
+        return;
+    }
+
+    const { meetingLabel, meetingTime, startTime, fairnessLabel, peopleCount } = previewState.latest;
+
+    container.innerHTML = `
+        <h4>Preview</h4>
+        <p><strong>Location:</strong> ${meetingLabel}</p>
+        <p><strong>Meeting Time:</strong> ${meetingTime}</p>
+        <p><strong>Start Time:</strong> ${startTime}</p>
+        <p><strong>Participants:</strong> ${peopleCount}</p>
+        <p><strong>Fairness:</strong> ${fairnessLabel}</p>
+        <p><em>Generated about 20 seconds after starting the search.</em></p>
+    `;
+}
+
+export function startPreviewCountdown() {
+    if (previewState.timer) {
+        clearTimeout(previewState.timer);
+        previewState.timer = null;
+    }
+    previewState.latest = null;
+    clearPreview('Preparing preview... please wait about 20 seconds.');
+    previewState.timer = setTimeout(renderPreview, PREVIEW_DELAY_MS);
+}
+
+export function clearPreviewState(message) {
+    if (previewState.timer) {
+        clearTimeout(previewState.timer);
+        previewState.timer = null;
+    }
+    previewState.latest = null;
+    clearPreview(message);
+}
+
+function setPreviewData(data) {
+    previewState.latest = data;
+}
+
 export function reconstructPath(person, stopId) {
     const path = [];
     let cur = stopId;
@@ -116,6 +187,7 @@ export function displayResults(meeting, persons, startTimeStr, stats = {}) {
     }
 
     if (!meeting) {
+        clearPreviewState('No preview available. Adjust your inputs and try again.');
         const {
             totalVisitedNodes = 0,
             maxAccumulatedTime = 0,
@@ -145,6 +217,7 @@ export function displayResults(meeting, persons, startTimeStr, stats = {}) {
     }
 
     if (meeting.type === 'CAP') {
+        clearPreviewState('Preview unavailable because search was capped.');
         const {
             totalVisitedNodes = 0,
             maxAccumulatedTime = 0,
@@ -178,13 +251,27 @@ export function displayResults(meeting, persons, startTimeStr, stats = {}) {
     const maxElapsed = Math.max(...arrivals.map(a => a.elapsed));
     const minElapsed = Math.min(...arrivals.map(a => a.elapsed));
 
+    const fairnessLabel = arrivals.map(a => `${a.label}: ${formatMinutes(a.elapsed)}`).join(', ');
+
+    setPreviewData({
+        meetingLabel: fmtStopLabel(stopId),
+        meetingTime: sec2hm(meetTime),
+        startTime: startTimeStr,
+        fairnessLabel,
+        peopleCount: persons.length,
+    });
+
+    if (!previewState.timer) {
+        renderPreview();
+    }
+
     let html = `
         <div class="result-header">
             <h3>Meeting Point Found!</h3>
             <p><strong>Location:</strong> ${fmtStopLabel(stopId)}</p>
             <p><strong>Start Time:</strong> ${startTimeStr}</p>
             <p><strong>Meeting Time:</strong> ${sec2hm(meetTime)}</p>
-            <p><strong>Fairness:</strong> ${arrivals.map(a => `${a.label}: ${formatMinutes(a.elapsed)}`).join(', ')} |
+            <p><strong>Fairness:</strong> ${fairnessLabel} |
                Max: ${formatMinutes(maxElapsed)} | Diff: ${formatMinutes(maxElapsed - minElapsed)}</p>
         </div>
     `;

@@ -186,6 +186,18 @@
         .person-controls button {
             margin: 0;
         }
+        #preview {
+            margin: 20px 0;
+            padding: 16px;
+            background: var(--panel-soft);
+            border: 1px dashed var(--accent);
+            border-radius: 12px;
+            color: var(--subtle-text);
+        }
+        #preview h4 {
+            margin: 0 0 8px 0;
+            color: var(--text);
+        }
         .person-group {
             position: relative;
         }
@@ -289,6 +301,7 @@
                 </div>
             </div>
         </div>
+        <div id="preview" aria-live="polite"></div>
         <div id="results"></div>
         <div id="map"></div>
     </div>
