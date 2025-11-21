@@ -200,7 +200,7 @@ export function processGTFSData() {
         const to = pw.to_stop_id;
         const ttime = parseInt(pw.traversal_time, 10);
         if (from && to && ttime) {
-            const finalTime = Math.max(30, ttime);
+            const finalTime = Math.max(60, ttime);
             if (!parsedData.walkEdges.has(from)) {
                 parsedData.walkEdges.set(from, []);
             }
@@ -214,7 +214,7 @@ export function processGTFSData() {
         const to = tf.to_stop_id;
         const ttime = parseInt(tf.min_transfer_time, 10);
         if (from && to && ttime) {
-            const finalTime = Math.max(30, ttime);
+            const finalTime = Math.max(60, ttime);
             if (!parsedData.walkEdges.has(from)) {
                 parsedData.walkEdges.set(from, []);
             }
