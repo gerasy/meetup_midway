@@ -6,6 +6,7 @@ import { toSeconds, formatTime } from './parsing.js';
 import { haversineM } from './geometry.js';
 import { findNearestStation, searchAddress } from './geocoding.js';
 import { autoResolveAllAddresses } from './addressResolver.js';
+import { showRoutesOnMap } from './map.js';
 
 const MIN_TRAVEL_TIME_S = 10;
 const MAX_INITIAL_WALK_M = 1000;
@@ -89,6 +90,7 @@ async function searchRoutesAtoB({ startPoint, endPoint, startTimeSec }) {
         pq.push([start.walkTime, startTimeSec + start.walkTime, start.stopId], {
             stopId: start.stopId,
             arrivalTime: startTimeSec + start.walkTime,
+            startStopId: start.stopId,
             path: start.walkTime > 0 ? [{
                 mode: 'WALK',
                 from: 'START',
@@ -106,7 +108,7 @@ async function searchRoutesAtoB({ startPoint, endPoint, startTimeSec }) {
     while (pq.length > 0 && iterations++ < maxIterations && routes.length < 3) {
         const entry = pq.pop();
         const [accum, currentTime, currentStop] = entry.priority;
-        const { path } = entry.data;
+        const { path, startStopId } = entry.data;
 
         // Skip if we've already found a better route to this stop
         if (visited.has(currentStop)) {
@@ -136,7 +138,9 @@ async function searchRoutesAtoB({ startPoint, endPoint, startTimeSec }) {
             routes.push({
                 totalTime,
                 arrivalTime: finalTime,
-                path: finalPath
+                path: finalPath,
+                startStopId,
+                destStopId: endStopInfo.stopId
             });
 
             if (routes.length >= 3) break;
@@ -154,6 +158,7 @@ async function searchRoutesAtoB({ startPoint, endPoint, startTimeSec }) {
             pq.push([accum + travelTime, newTime, edge.to], {
                 stopId: edge.to,
                 arrivalTime: newTime,
+                startStopId,
                 path: [...path, {
                     mode: 'WALK',
                     from_stop: currentStop,
@@ -176,6 +181,7 @@ async function searchRoutesAtoB({ startPoint, endPoint, startTimeSec }) {
                 pq.push([accum + walkTime, newTime, nbr.stopId], {
                     stopId: nbr.stopId,
                     arrivalTime: newTime,
+                    startStopId,
                     path: [...path, {
                         mode: 'WALK',
                         from_stop: currentStop,
@@ -212,6 +218,7 @@ async function searchRoutesAtoB({ startPoint, endPoint, startTimeSec }) {
                 pq.push([accum + total, arrTime, arrRow.stop_id], {
                     stopId: arrRow.stop_id,
                     arrivalTime: arrTime,
+                    startStopId,
                     path: [...path, {
                         mode: 'TRANSIT',
                         route_short_name: tripInf?.route_short_name || tripInf?.route_id,
@@ -244,10 +251,15 @@ function getStopName(stopId) {
     return stop ? stop.stop_name : stopId;
 }
 
-function renderRoute(route, index) {
+let displayedRouteIndices = new Set();
+let currentRoutes = [];
+
+function renderRoute(route, index, fastestTime, { onToggle, isSelected }) {
     const card = document.createElement('div');
     card.className = 'route-card';
+    card.dataset.routeIndex = index;
     if (index === 0) card.classList.add('best');
+    if (isSelected) card.classList.add('selected');
 
     const header = document.createElement('div');
     header.className = 'route-header';
@@ -260,7 +272,7 @@ function renderRoute(route, index) {
 
     const badge = document.createElement('span');
     badge.className = `route-badge ${index === 0 ? 'fastest' : 'alternative'}`;
-    badge.textContent = index === 0 ? 'FASTEST' : `+${Math.round((route.totalTime - arguments[2]) / 60)}min`;
+    badge.textContent = index === 0 ? 'FASTEST' : `+${Math.round((route.totalTime - fastestTime) / 60)}min`;
     title.appendChild(badge);
 
     const time = document.createElement('div');
@@ -272,12 +284,22 @@ function renderRoute(route, index) {
     card.appendChild(header);
 
     const summary = document.createElement('div');
-    summary.style.cssText = 'color: var(--subtle-text); margin-bottom: 15px; font-size: 13px;';
+    summary.style.cssText = 'color: var(--subtle-text); margin-bottom: 10px; font-size: 13px;';
     summary.textContent = `Arrives at ${formatTime(route.arrivalTime)} • ${route.path.length} steps`;
     card.appendChild(summary);
 
+    const toggleBtn = document.createElement('button');
+    toggleBtn.type = 'button';
+    toggleBtn.className = 'map-toggle';
+    toggleBtn.textContent = isSelected ? 'Shown on map' : 'Show on map';
+    toggleBtn.addEventListener('click', event => {
+        event.stopPropagation();
+        onToggle?.();
+    });
+    card.appendChild(toggleBtn);
+
     // Render path steps
-    route.path.forEach((step, stepIdx) => {
+    route.path.forEach(step => {
         const stepDiv = document.createElement('div');
         stepDiv.className = `step step-${step.mode.toLowerCase()}`;
 
@@ -295,7 +317,65 @@ function renderRoute(route, index) {
         card.appendChild(stepDiv);
     });
 
+    card.addEventListener('click', event => {
+        if (event.target.closest('.map-toggle')) return;
+        onToggle?.();
+    });
+
     return card;
+}
+
+function updateMapSelection() {
+    if (currentRoutes.length === 0) {
+        showRoutesOnMap(null, []);
+        return;
+    }
+
+    const orderedIndices = Array.from(displayedRouteIndices).sort();
+    const meetingStopId = orderedIndices
+        .map(idx => currentRoutes[idx]?.destStopId)
+        .find(Boolean);
+    const pathData = orderedIndices
+        .map(idx => {
+            const route = currentRoutes[idx];
+            if (!route?.startStopId) return null;
+            return {
+                label: `Route ${idx + 1}`,
+                startStopId: route.startStopId,
+                steps: route.path
+            };
+        })
+        .filter(Boolean);
+
+    showRoutesOnMap(meetingStopId, pathData);
+}
+
+function setCardSelection(index, selected) {
+    const card = document.querySelector(`.route-card[data-route-index="${index}"]`);
+    if (!card) return;
+
+    card.classList.toggle('selected', selected);
+    const toggleBtn = card.querySelector('.map-toggle');
+    if (toggleBtn) {
+        toggleBtn.textContent = selected ? 'Shown on map' : 'Show on map';
+    }
+}
+
+function toggleRouteOnMap(index) {
+    if (index === 0) {
+        // Always keep the fastest route visible
+        return;
+    }
+
+    if (displayedRouteIndices.has(index)) {
+        displayedRouteIndices.delete(index);
+        setCardSelection(index, false);
+    } else {
+        displayedRouteIndices.add(index);
+        setCardSelection(index, true);
+    }
+
+    updateMapSelection();
 }
 
 export async function findTopRoutes() {
@@ -363,12 +443,8 @@ export async function findTopRoutes() {
 
         setStatus(`Found ${routes.length} route${routes.length > 1 ? 's' : ''}`, 'success');
 
-        // Display routes
-        const fastestTime = routes[0].totalTime;
-        routes.forEach((route, idx) => {
-            const routeCard = renderRoute(route, idx, fastestTime);
-            resultsDiv.appendChild(routeCard);
-        });
+        // Display routes and update the map
+        displayRoutes(routes);
 
     } catch (error) {
         console.error('Error finding routes:', error);
@@ -384,12 +460,23 @@ export function displayRoutes(routes) {
 
     if (routes.length === 0) {
         resultsDiv.innerHTML = '<p>No routes found</p>';
+        displayedRouteIndices = new Set();
+        currentRoutes = [];
+        updateMapSelection();
         return;
     }
 
     const fastestTime = routes[0].totalTime;
+    currentRoutes = routes;
+    displayedRouteIndices = new Set([0]);
+
     routes.forEach((route, idx) => {
-        const routeCard = renderRoute(route, idx, fastestTime);
+        const routeCard = renderRoute(route, idx, fastestTime, {
+            onToggle: () => toggleRouteOnMap(idx),
+            isSelected: displayedRouteIndices.has(idx)
+        });
         resultsDiv.appendChild(routeCard);
     });
+
+    updateMapSelection();
 }
