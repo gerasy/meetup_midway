@@ -81,27 +81,9 @@ export class CSAAtobAlgorithm extends AlgorithmInterface {
             });
         });
 
-        // Add geographic walks
-        parsedData.stopById.forEach((stop, stopId) => {
-            const nearby = nearbyStopsWithinRadius(stopId);
-            nearby.forEach(nbr => {
-                const walkTime = Math.ceil(nbr.distance / WALK_SPEED_MPS);
-                if (walkTime > MIN_TRAVEL_TIME_S) {
-                    const key = `${stopId}-${nbr.stopId}`;
-                    if (!processedPairs.has(key)) {
-                        processedPairs.add(key);
-                        connections.push({
-                            type: 'WALK',
-                            from_stop: stopId,
-                            to_stop: nbr.stopId,
-                            duration: walkTime,
-                            distance_m: Math.round(nbr.distance),
-                            source: 'GEO'
-                        });
-                    }
-                }
-            });
-        });
+        // Note: We don't pre-build geographic walks here because it's O(n²) on all stops
+        // Instead, we'll handle them dynamically during the search
+        // This is a key difference from Dijkstra which explores walks on-demand
 
         // Sort connections by departure/usage time
         // For transit: by departure time
@@ -205,7 +187,7 @@ export class CSAAtobAlgorithm extends AlgorithmInterface {
             for (const stopId of stopsToExpand) {
                 const arrivalTime = earliestArrival.get(stopId);
 
-                // Try all walks from this stop
+                // Try predefined walks (pathways/transfers) from this stop
                 for (const walkConn of walks) {
                     if (walkConn.from_stop !== stopId) continue;
 
@@ -221,6 +203,31 @@ export class CSAAtobAlgorithm extends AlgorithmInterface {
                             to_stop: walkConn.to_stop,
                             walk_sec: walkConn.duration,
                             distance_m: walkConn.distance_m,
+                            depart_sec: arrivalTime,
+                            arrive_sec: newArrival
+                        });
+                        improved = true;
+                    }
+                }
+
+                // Try geographic walks from this stop (computed on-demand)
+                const nearby = nearbyStopsWithinRadius(stopId);
+                for (const nbr of nearby) {
+                    const walkTime = Math.ceil(nbr.distance / WALK_SPEED_MPS);
+                    if (walkTime <= MIN_TRAVEL_TIME_S) continue;
+
+                    const newArrival = arrivalTime + walkTime;
+                    if (newArrival - startTimeSec > MAX_TRIP_TIME_S) continue;
+
+                    const currentBest = earliestArrival.get(nbr.stopId);
+                    if (currentBest === undefined || newArrival < currentBest) {
+                        earliestArrival.set(nbr.stopId, newArrival);
+                        parent.set(nbr.stopId, {
+                            type: 'WALK',
+                            from_stop: stopId,
+                            to_stop: nbr.stopId,
+                            walk_sec: walkTime,
+                            distance_m: Math.round(nbr.distance),
                             depart_sec: arrivalTime,
                             arrive_sec: newArrival
                         });
