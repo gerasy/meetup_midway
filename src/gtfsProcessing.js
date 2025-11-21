@@ -174,6 +174,27 @@ export function processGTFSData() {
         });
     });
 
+    parsedData.shapeById.clear();
+    gtfsData.shapes.forEach(shape => {
+        const shapeId = shape.shape_id;
+        const lat = parseFloat(shape.shape_pt_lat);
+        const lon = parseFloat(shape.shape_pt_lon);
+        const seq = parseInt(shape.shape_pt_sequence, 10) || 0;
+
+        if (!shapeId || !Number.isFinite(lat) || !Number.isFinite(lon)) {
+            return;
+        }
+
+        if (!parsedData.shapeById.has(shapeId)) {
+            parsedData.shapeById.set(shapeId, []);
+        }
+        parsedData.shapeById.get(shapeId).push({ lat, lon, seq });
+    });
+
+    parsedData.shapeById.forEach(points => {
+        points.sort((a, b) => a.seq - b.seq);
+    });
+
     gtfsData.pathways.forEach(pw => {
         const from = pw.from_stop_id;
         const to = pw.to_stop_id;

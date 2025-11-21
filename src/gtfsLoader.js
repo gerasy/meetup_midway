@@ -12,7 +12,8 @@ export async function loadGTFSFiles() {
         'trips.txt',
         'routes.txt',
         'pathways.txt',
-        'transfers.txt'
+        'transfers.txt',
+        'shapes.txt'
     ];
 
     try {
@@ -35,6 +36,8 @@ export async function loadGTFSFiles() {
                 gtfsData.pathways = parseCSV(text);
             } else if (fileName === 'transfers.txt') {
                 gtfsData.transfers = parseCSV(text);
+            } else if (fileName === 'shapes.txt') {
+                gtfsData.shapes = parseCSV(text);
             }
         }
 
