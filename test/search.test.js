@@ -96,6 +96,54 @@ function loadLinearLineFixture() {
     gtfsData.transfers = [];
 }
 
+function loadWalkingDominatesFixture() {
+    resetTestState();
+
+    gtfsData.stops = [
+        { stop_id: 'startA', stop_name: 'Start A', stop_lat: '52.0000', stop_lon: '13.0000', location_type: 0 },
+        { stop_id: 'startB', stop_name: 'Start B', stop_lat: '52.0000', stop_lon: '13.0150', location_type: 0 },
+        { stop_id: 'meeting', stop_name: 'Meeting Spot', stop_lat: '52.0040', stop_lon: '13.0075', location_type: 0 }
+    ];
+
+    gtfsData.routes = [
+        { route_id: 'BUS', route_short_name: 'Bus', route_long_name: 'Bus Route', route_type: 3 },
+        { route_id: 'SBAHN', route_short_name: 'S-Bahn', route_long_name: 'S-Bahn Route', route_type: 2 },
+        { route_id: 'TRAM', route_short_name: 'Tram', route_long_name: 'Tram Route', route_type: 0 }
+    ];
+
+    gtfsData.trips = [
+        { trip_id: 'bus_trip_A', route_id: 'BUS', service_id: 'WK', trip_headsign: 'To Meeting' },
+        { trip_id: 'sbahn_trip_A', route_id: 'SBAHN', service_id: 'WK', trip_headsign: 'To Meeting' },
+        { trip_id: 'tram_trip_A', route_id: 'TRAM', service_id: 'WK', trip_headsign: 'To Meeting' },
+        { trip_id: 'bus_trip_B', route_id: 'BUS', service_id: 'WK', trip_headsign: 'To Meeting' },
+        { trip_id: 'sbahn_trip_B', route_id: 'SBAHN', service_id: 'WK', trip_headsign: 'To Meeting' },
+        { trip_id: 'tram_trip_B', route_id: 'TRAM', service_id: 'WK', trip_headsign: 'To Meeting' }
+    ];
+
+    gtfsData.stopTimes = [
+        { trip_id: 'bus_trip_A', arrival_time: '10:00:00', departure_time: '10:00:00', stop_id: 'startA', stop_sequence: '1' },
+        { trip_id: 'bus_trip_A', arrival_time: '10:30:00', departure_time: '10:30:00', stop_id: 'meeting', stop_sequence: '2' },
+
+        { trip_id: 'sbahn_trip_A', arrival_time: '10:00:00', departure_time: '10:00:00', stop_id: 'startA', stop_sequence: '1' },
+        { trip_id: 'sbahn_trip_A', arrival_time: '10:31:00', departure_time: '10:31:00', stop_id: 'meeting', stop_sequence: '2' },
+
+        { trip_id: 'tram_trip_A', arrival_time: '10:00:00', departure_time: '10:00:00', stop_id: 'startA', stop_sequence: '1' },
+        { trip_id: 'tram_trip_A', arrival_time: '10:32:00', departure_time: '10:32:00', stop_id: 'meeting', stop_sequence: '2' },
+
+        { trip_id: 'bus_trip_B', arrival_time: '10:00:00', departure_time: '10:00:00', stop_id: 'startB', stop_sequence: '1' },
+        { trip_id: 'bus_trip_B', arrival_time: '10:30:30', departure_time: '10:30:30', stop_id: 'meeting', stop_sequence: '2' },
+
+        { trip_id: 'sbahn_trip_B', arrival_time: '10:00:00', departure_time: '10:00:00', stop_id: 'startB', stop_sequence: '1' },
+        { trip_id: 'sbahn_trip_B', arrival_time: '10:31:30', departure_time: '10:31:30', stop_id: 'meeting', stop_sequence: '2' },
+
+        { trip_id: 'tram_trip_B', arrival_time: '10:00:00', departure_time: '10:00:00', stop_id: 'startB', stop_sequence: '1' },
+        { trip_id: 'tram_trip_B', arrival_time: '10:32:30', departure_time: '10:32:30', stop_id: 'meeting', stop_sequence: '2' }
+    ];
+
+    gtfsData.pathways = [];
+    gtfsData.transfers = [];
+}
+
 function loadRealGTFSSubset() {
     resetTestState();
     const base = path.resolve('gtfs_subset');
@@ -227,6 +275,30 @@ test('adding the solution station as a new participant maintains the meeting acr
 
         const newParticipantArrival = extended.persons[2].reachedStopFirst.get(meetingStop).elapsed;
         assert.equal(newParticipantArrival, 0, 'added participant should already be at the meeting stop');
+    }
+});
+
+test('walking expansions continue until beating the first transit meeting', async () => {
+    loadWalkingDominatesFixture();
+    const startTimeSec = 10 * 3600;
+
+    const result = await runMeetingSearch({
+        participants: [
+            { label: 'A', query: 'Start A' },
+            { label: 'B', query: 'Start B' }
+        ],
+        startTimeSec
+    });
+
+    assert.ok(result.meeting, 'expected to find a meeting');
+    assert.equal(result.meeting.type, 'OK');
+    assert.equal(result.meeting.stopId, 'meeting');
+    assert.ok(result.meeting.maxTime < 10 * 60, 'walking should beat the 30+ minute rides');
+
+    for (const person of result.persons) {
+        const reach = person.reachedStopFirst.get('meeting');
+        assert.ok(reach, `participant ${person.label} should reach the meeting spot`);
+        assert.ok(reach.elapsed < 10 * 60, 'each participant should ultimately walk a short distance');
     }
 });
 
