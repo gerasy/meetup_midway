@@ -239,6 +239,14 @@
         </div>
 
         <div class="input-group">
+            <label for="algorithmSelect">Routing Algorithm:</label>
+            <select id="algorithmSelect" style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; background: var(--panel-muted); color: var(--text);">
+                <!-- Will be populated by JavaScript -->
+            </select>
+            <p style="font-size: 12px; color: var(--subtle-text); margin-top: 5px;">Choose the algorithm for finding routes. All algorithms find optimal routes.</p>
+        </div>
+
+        <div class="input-group">
             <label for="pointA">Starting Point (A):</label>
             <input type="text" id="pointA" data-person-input data-person-label="A" data-station-input placeholder="e.g., Alexanderplatz or Unter den Linden 1, Berlin">
         </div>
