@@ -81,6 +81,38 @@ export function validatePeopleInputs(people, { allowSinglePerson = false } = {})
     return { ok: true, people };
 }
 
+function computeDynamicWalkLimit(globalMaxAccum, bestMeeting) {
+    const capFromProgress = Math.min(MAX_WALK_TIME_S, Math.max(MIN_TRAVEL_TIME_S, globalMaxAccum + 60));
+    if (!bestMeeting || bestMeeting.maxTime === undefined) {
+        return capFromProgress;
+    }
+
+    return Math.max(MIN_TRAVEL_TIME_S, Math.min(capFromProgress, bestMeeting.maxTime));
+}
+
+function scheduleWalkReexpansions(person, newLimit, midpoint) {
+    for (const [stopId, bestElapsed] of person.bestTimes.entries()) {
+        const prevLimit = person.walkExpansionLimit.get(stopId) || 0;
+        if (prevLimit >= newLimit) continue;
+
+        const reach = person.reachedStopFirst.get(stopId);
+        if (!reach) continue;
+
+        const distToMidpoint = calculateDistanceToMidpoint(stopId, midpoint);
+        person.pq.push(
+            [bestElapsed, reach.arrTime, distToMidpoint, stopId],
+            {
+                owner: person.label,
+                mode: 'WALK_EXPAND',
+                from_stop: stopId,
+                to_stop: stopId,
+                depart_sec: reach.arrTime,
+                arrive_sec: reach.arrTime
+            }
+        );
+    }
+}
+
 function enqueuePathwayTransferWalks(pq, curStop, curTime, accum, owner, midpoint) {
     const edges = parsedData.walkEdges.get(curStop) || [];
     for (const edge of edges) {
@@ -98,13 +130,17 @@ function enqueuePathwayTransferWalks(pq, curStop, curTime, accum, owner, midpoin
     }
 }
 
-function enqueueGeoWalks(pq, curStop, curTime, accum, owner, midpoint) {
+function enqueueGeoWalks(pq, curStop, curTime, accum, owner, midpoint, person, walkLimitSec) {
     const nearby = nearbyStopsWithinRadius(curStop, MAX_WALK_RADIUS_M);
+    const prevLimit = person.walkExpansionLimit.get(curStop) || 0;
+    const effectiveLimit = Math.min(MAX_WALK_TIME_S, walkLimitSec);
+    if (effectiveLimit <= prevLimit) return;
+
     for (const { stopId: cand, distance: distM } of nearby) {
         if (parsedData.providedPairs.has(`${curStop}-${cand}`)) continue;
         let ttime = Math.ceil(distM / WALK_SPEED_MPS);
         ttime = Math.max(MIN_TRAVEL_TIME_S, ttime);
-        if (ttime <= MAX_WALK_TIME_S) {
+        if (ttime > prevLimit && ttime <= effectiveLimit) {
             const distToMidpoint = calculateDistanceToMidpoint(cand, midpoint);
             pq.push(
                 [accum + ttime, curTime + ttime, distToMidpoint, cand],
@@ -118,6 +154,8 @@ function enqueueGeoWalks(pq, curStop, curTime, accum, owner, midpoint) {
             );
         }
     }
+
+    person.walkExpansionLimit.set(curStop, effectiveLimit);
 }
 
 function enqueueRides(pq, curStop, curTime, accum, owner, midpoint) {
@@ -216,11 +254,15 @@ function createPerson({ label, stationId, stationName, startStopId, t0, isAddres
         pq: new MinHeap(),
         bestTimes: new Map(),
         reachedStopFirst: new Map(),
-        parent: new Map()
+        parent: new Map(),
+        walkExpansionLimit: new Map(),
+        lastWalkLimit: 0
     };
 }
 
-function primePerson(person, midpoint) {
+function primePerson(person, midpoint, walkLimitOverride = null) {
+    const initialWalkLimit = walkLimitOverride ?? computeDynamicWalkLimit(0, null);
+    person.lastWalkLimit = initialWalkLimit;
     // If starting from an address, find all stations within 1km walking distance
     if (person.isAddress && person.addressLat && person.addressLon) {
         const MAX_INITIAL_WALK_M = 1000;
@@ -273,7 +315,7 @@ function primePerson(person, midpoint) {
         { owner: person.label, mode: 'START', from_stop: null, to_stop: person.startStopId, depart_sec: person.t0, arrive_sec: person.t0 }
     );
     enqueuePathwayTransferWalks(person.pq, person.startStopId, person.t0, 0, person.label, midpoint);
-    enqueueGeoWalks(person.pq, person.startStopId, person.t0, 0, person.label, midpoint);
+    enqueueGeoWalks(person.pq, person.startStopId, person.t0, 0, person.label, midpoint, person, initialWalkLimit);
     enqueueRides(person.pq, person.startStopId, person.t0, 0, person.label, midpoint);
 }
 
@@ -340,6 +382,7 @@ export async function runMeetingSearch({ participants, startTimeSec }) {
     persons.forEach(person => primePerson(person, midpoint));
 
     let meeting = null;
+    let bestMeeting = null;
     let iterations = 0;
     const maxIterations = 200000000;
     let globalMaxAccum = 0;
@@ -362,6 +405,14 @@ export async function runMeetingSearch({ participants, startTimeSec }) {
                 await yieldToUI();
             }
 
+            const currentWalkLimit = computeDynamicWalkLimit(globalMaxAccum, bestMeeting);
+            for (const P of persons) {
+                if (currentWalkLimit > P.lastWalkLimit) {
+                    P.lastWalkLimit = currentWalkLimit;
+                    scheduleWalkReexpansions(P, currentWalkLimit, midpoint);
+                }
+            }
+
             let minEntry = null;
             let minPerson = null;
 
@@ -378,6 +429,14 @@ export async function runMeetingSearch({ participants, startTimeSec }) {
             if (!minEntry) {
                 terminationReason = terminationReason || 'All participant queues are empty; no further nodes can be expanded.';
                 terminationCode = terminationCode || 'EMPTY_QUEUE';
+                updateIterationAnimation(iterations);
+                break;
+            }
+
+            if (bestMeeting && minEntry.priority[0] >= bestMeeting.maxTime) {
+                meeting = bestMeeting;
+                terminationReason = terminationReason || 'All remaining actions would exceed or match the best meeting time found.';
+                terminationCode = terminationCode || 'OPTIMAL_FOUND';
                 updateIterationAnimation(iterations);
                 break;
             }
@@ -402,6 +461,14 @@ export async function runMeetingSearch({ participants, startTimeSec }) {
             const popped = minPerson.pq.pop();
             const info = popped.data;
             const destStop = info.to_stop;
+
+            if (info.mode === 'WALK_EXPAND') {
+                const reach = minPerson.reachedStopFirst.get(destStop);
+                if (reach) {
+                    enqueueGeoWalks(minPerson.pq, destStop, reach.arrTime, accum, info.owner, midpoint, minPerson, minPerson.lastWalkLimit);
+                }
+                continue;
+            }
 
             if (!longestPathRecord || accum > longestPathRecord.accumulatedSec) {
                 const pathSegments = reconstructPathFromInfo(minPerson, info);
@@ -429,14 +496,18 @@ export async function runMeetingSearch({ participants, startTimeSec }) {
             }
 
             if (persons.every(P => P.reachedStopFirst.has(destStop))) {
-                meeting = { type: 'OK', stopId: destStop };
-                updateIterationAnimation(iterations);
-                break;
+                const candidateTimes = persons.map(P => P.reachedStopFirst.get(destStop).elapsed);
+                const candidateMax = Math.max(...candidateTimes);
+                const candidateMeeting = { type: 'OK', stopId: destStop, maxTime: candidateMax };
+                if (!bestMeeting || candidateMax < bestMeeting.maxTime) {
+                    bestMeeting = candidateMeeting;
+                    meeting = bestMeeting;
+                }
             }
 
             const curTime = info.arrive_sec;
             enqueuePathwayTransferWalks(minPerson.pq, destStop, curTime, accum, info.owner, midpoint);
-            enqueueGeoWalks(minPerson.pq, destStop, curTime, accum, info.owner, midpoint);
+            enqueueGeoWalks(minPerson.pq, destStop, curTime, accum, info.owner, midpoint, minPerson, minPerson.lastWalkLimit);
             enqueueRides(minPerson.pq, destStop, curTime, accum, info.owner, midpoint);
         }
 
@@ -444,6 +515,10 @@ export async function runMeetingSearch({ participants, startTimeSec }) {
     }
     finally {
         endIterationAnimation();
+    }
+
+    if (!meeting && bestMeeting) {
+        meeting = bestMeeting;
     }
 
     const totalVisitedNodes = persons.reduce((sum, person) => sum + person.bestTimes.size, 0);
@@ -639,7 +714,7 @@ export async function runHeatmapSearch({ participants, startTimeSec, onProgress,
     }).filter(c => c !== null);
     const midpoint = calculateGeographicMidpoint(startCoordinates);
 
-    persons.forEach(person => primePerson(person, midpoint));
+    persons.forEach(person => primePerson(person, midpoint, MAX_WALK_TIME_S));
 
     // Track stops where all participants have arrived
     const commonStops = new Map(); // stopId -> { totalTime, maxTime, times: [] }
@@ -700,6 +775,14 @@ export async function runHeatmapSearch({ participants, startTimeSec, onProgress,
             const info = popped.data;
             const destStop = info.to_stop;
 
+            if (info.mode === 'WALK_EXPAND') {
+                const reach = minPerson.reachedStopFirst.get(destStop);
+                if (reach) {
+                    enqueueGeoWalks(minPerson.pq, destStop, reach.arrTime, accum, info.owner, midpoint, minPerson, minPerson.lastWalkLimit);
+                }
+                continue;
+            }
+
             const prevBest = minPerson.bestTimes.get(destStop);
             if (prevBest !== undefined && prevBest <= accum) {
                 continue;
@@ -739,7 +822,7 @@ export async function runHeatmapSearch({ participants, startTimeSec, onProgress,
 
             const curTime = info.arrive_sec;
             enqueuePathwayTransferWalks(minPerson.pq, destStop, curTime, accum, info.owner, midpoint);
-            enqueueGeoWalks(minPerson.pq, destStop, curTime, accum, info.owner, midpoint);
+            enqueueGeoWalks(minPerson.pq, destStop, curTime, accum, info.owner, midpoint, minPerson, minPerson.lastWalkLimit);
             enqueueRides(minPerson.pq, destStop, curTime, accum, info.owner, midpoint);
         }
 
