@@ -4,7 +4,8 @@ export const gtfsData = {
     trips: [],
     routes: [],
     pathways: [],
-    transfers: []
+    transfers: [],
+    shapes: []
 };
 
 export const parsedData = {
@@ -16,6 +17,7 @@ export const parsedData = {
     tripGroups: new Map(),
     tripInfo: new Map(),
     routeInfo: new Map(),
+    shapeById: new Map(),
     stationPopularity: new Map(),
     walkEdges: new Map(),
     providedPairs: new Set(),
@@ -37,6 +39,7 @@ export function resetParsedDataCollections() {
     parsedData.tripGroups.clear();
     parsedData.tripInfo.clear();
     parsedData.routeInfo.clear();
+    parsedData.shapeById.clear();
     parsedData.stationPopularity.clear();
     parsedData.walkEdges.clear();
     parsedData.providedPairs.clear();

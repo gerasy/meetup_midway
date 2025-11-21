@@ -1,4 +1,5 @@
 import { parsedData } from './state.js';
+import { haversineM } from './geometry.js';
 
 const ROUTE_COLORS = ['#2563eb', '#ef4444', '#facc15', '#22c55e', '#a855f7'];
 const MEETING_COLOR = '#a855f7';
@@ -80,6 +81,61 @@ function coordsEqual(a, b) {
     return a && b && a[0] === b[0] && a[1] === b[1];
 }
 
+function findClosestShapeIndex(points, coord) {
+    if (!coord || !points || points.length === 0) {
+        return -1;
+    }
+
+    let bestIdx = -1;
+    let bestDist = Number.POSITIVE_INFINITY;
+
+    points.forEach((pt, idx) => {
+        const d = haversineM(coord[0], coord[1], pt.lat, pt.lon);
+        if (d < bestDist) {
+            bestDist = d;
+            bestIdx = idx;
+        }
+    });
+
+    return bestIdx;
+}
+
+function shapeSegmentForRide(step) {
+    if (!step?.trip_id) {
+        return null;
+    }
+
+    const info = parsedData.tripInfo.get(step.trip_id);
+    const shapeId = info?.shape_id;
+    if (!shapeId) {
+        return null;
+    }
+
+    const points = parsedData.shapeById.get(shapeId);
+    if (!points || points.length === 0) {
+        return null;
+    }
+
+    const fromCoord = getStopCoordinates(step.from_stop);
+    const toCoord = getStopCoordinates(step.to_stop);
+    if (!fromCoord || !toCoord) {
+        return null;
+    }
+
+    const fromIdx = findClosestShapeIndex(points, fromCoord);
+    const toIdx = findClosestShapeIndex(points, toCoord);
+    if (fromIdx === -1 || toIdx === -1) {
+        return null;
+    }
+
+    const forward = fromIdx <= toIdx;
+    const start = forward ? fromIdx : toIdx;
+    const end = forward ? toIdx : fromIdx;
+
+    const segment = points.slice(start, end + 1).map(pt => [pt.lat, pt.lon]);
+    return forward ? segment : segment.reverse();
+}
+
 function stopsAlongTripSegment(step) {
     if (!step.trip_id || !step.from_stop || !step.to_stop) {
         return [step.to_stop].filter(Boolean);
@@ -135,6 +191,18 @@ export function computeRouteCoordinates(startStopId, steps, meetingStopId) {
     }
 
     for (const step of steps || []) {
+        if (step?.mode === 'RIDE') {
+            const segment = shapeSegmentForRide(step);
+            if (segment && segment.length > 0) {
+                segment.forEach(pt => {
+                    if (!coordsEqual(coords.at(-1), pt)) {
+                        coords.push(pt);
+                    }
+                });
+                continue;
+            }
+        }
+
         stopsForStep(step).forEach(stopId => {
             const destCoord = getStopCoordinates(stopId);
             if (destCoord && !coordsEqual(coords.at(-1), destCoord)) {
