@@ -87,11 +87,26 @@ export class CSAAtobAlgorithm extends AlgorithmInterface {
 
         // Sort connections by departure/usage time
         // For transit: by departure time
-        // For walks: they can be used anytime, so we'll handle them separately
+        // For walks: store by origin stop to avoid O(N*M) scans
+        const transitConnections = connections
+            .filter(c => c.type === 'TRANSIT')
+            .sort((a, b) => a.depart_time - b.depart_time);
+
+        const walksByFromStop = new Map();
+        let walkCount = 0;
+
+        connections.filter(c => c.type === 'WALK').forEach(conn => {
+            if (!walksByFromStop.has(conn.from_stop)) {
+                walksByFromStop.set(conn.from_stop, []);
+            }
+            walksByFromStop.get(conn.from_stop).push(conn);
+            walkCount++;
+        });
+
         this.connections = {
-            transit: connections.filter(c => c.type === 'TRANSIT')
-                .sort((a, b) => a.depart_time - b.depart_time),
-            walks: connections.filter(c => c.type === 'WALK')
+            transit: transitConnections,
+            walksByFromStop,
+            walkCount
         };
 
         return this.connections;
@@ -103,7 +118,7 @@ export class CSAAtobAlgorithm extends AlgorithmInterface {
         const startTime = performance.now();
 
         // Build/get cached connections
-        const { transit, walks } = this.buildConnections();
+        const { transit, walksByFromStop, walkCount } = this.buildConnections();
 
         // Initialize
         const startStops = resolvePointToStops(startPoint, startTimeSec);
@@ -188,9 +203,9 @@ export class CSAAtobAlgorithm extends AlgorithmInterface {
                 const arrivalTime = earliestArrival.get(stopId);
 
                 // Try predefined walks (pathways/transfers) from this stop
-                for (const walkConn of walks) {
-                    if (walkConn.from_stop !== stopId) continue;
-
+                const precomputedWalks = walksByFromStop.get(stopId) || [];
+                for (const walkConn of precomputedWalks) {
+                    
                     const newArrival = arrivalTime + walkConn.duration;
                     if (newArrival - startTimeSec > MAX_TRIP_TIME_S) continue;
 
@@ -312,7 +327,7 @@ export class CSAAtobAlgorithm extends AlgorithmInterface {
             visitedNodes: earliestArrival.size,
             routesFound: routes.length,
             executionTimeMs: endTime - startTime,
-            totalConnections: transit.length + walks.length
+            totalConnections: transit.length + walkCount
         };
 
         return routes;
